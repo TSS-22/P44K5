@@ -132,29 +132,29 @@ def check_note(note):
     else:
         return note
 
-def select_base_note(message):
-    print(f"Base note: {message.value}")
-    return message.value
+def select_base_note(note_value):
+    print(f"Base note: {note_value}")
+    return note_value
 
-def select_key_note(message):
-    temp_note = int((msg.value-64)/3)
-    print(temp_note)
+def select_key_note(note_value):
+    temp_note = int((note_value-64)/3)
     if controller_settings["mode"] == "Normal":
         return temp_note
     else:
         octave = int(temp_note/7)*12
         inter_octave = 0
-        temp = (temp_note%7)
-        for val in playModes_toneProg[controller_settings["mode"]][:temp]:
-            inter_octave = inter_octave + tone_progression[val]
-            print(octave)
-            print(inter_octave)
+
         if temp_note >= 0:
-            print(f"Key note: {(octave+inter_octave)}")
-            return (octave+inter_octave)
+            temp = (temp_note%7)
         else:
-            print(f"Key note: {(octave-inter_octave)}")
-            return (octave-inter_octave)
+            temp = (temp_note%-7)
+
+        for val in playModes_toneProg[controller_settings["mode"]][:temp]:
+                inter_octave = inter_octave + tone_progression[val]
+        print(f"Octave: {octave}")
+        print(f"Inter: {inter_octave}")
+        print(f"Key note: {(octave + inter_octave)}")
+        return (octave+inter_octave)
 
 
 def select_playMode(message):
@@ -185,6 +185,30 @@ def pad_released(controller_settings, state_pad, buffer_note, buffer_velocity, m
             
     buffer_note[message.note-base_note_offset] = []
     buffer_velocity = 0
+
+def knob_base_note(controller_settings, buffer_note, state_pad, message):
+    any_pad_on = False
+    for id_pad, pad_on in enumerate(state_pad):
+        if pad_on:
+            any_pad_on = True
+            temp_note = check_note(buffer_note[id_pad][0] + message.value-64)
+            buffer_note[id_pad].append(temp_note)
+            note_on(temp_note, buffer_velocity[id_pad], id_pad)
+
+    if not any_pad_on:
+        controller_settings["base_note"] = select_base_note(message.value)
+
+def knob_key_note(controller_settings, buffer_note, state_pad, message):
+    any_pad_on = False
+    for id_pad, pad_on in enumerate(state_pad):
+        if pad_on:
+            any_pad_on = True
+            temp_note = check_note(buffer_note[id_pad][0]+ select_key_note(message.value))
+            buffer_note[id_pad].append(temp_note)
+            note_on(temp_note, buffer_velocity[id_pad], id_pad)
+
+    if not any_pad_on:
+        controller_settings["key_note"] = select_key_note(message.value)
 
 def note_on(note, velocity, id_pad):
     print(f"Note on: {note} | Pad: {id_pad + 1}")
@@ -259,31 +283,15 @@ try:
         if msg.type == "control_change":
             # Knob 1: select_base_note  
             if msg.control == 70:
-                any_pad_on = False
-                for id_pad, pad_on in enumerate(state_pad):
-                    if pad_on:
-                        temp_note = check_note(buffer_note[id_pad][0]+msg.value-64)
-                        buffer_note[id_pad].append(temp_note)
-                        note_on(temp_note, buffer_velocity[id_pad], id_pad)
-
-                if not any_pad_on:
-                    controller_settings["base_note"] = select_base_note(msg)
-                    
+                knob_base_note(controller_settings, buffer_note, state_pad, msg)
+                
             # Knob 4: select_playMode
             elif msg.control == 73:
                 controller_settings["mode"] = select_playMode(msg)
 
             # Knob 5: select_keyNote
             elif msg.control == 74:
-                any_pad_on = False
-                for id_pad, pad_on in enumerate(state_pad):
-                    if pad_on:
-                        temp_note = check_note(buffer_note[id_pad][0]+msg.value-64)
-                        buffer_note[id_pad].append(temp_note)
-                        note_on(temp_note, buffer_velocity[id_pad], id_pad)
-
-                if not any_pad_on:
-                    controller_settings["key_note"] = select_key_note(msg)
+                knob_key_note(controller_settings, buffer_note, state_pad, msg)
 
             # Knob 8: select_playType
             elif msg.control == 77:
@@ -300,7 +308,7 @@ try:
         else:
             # Forward all other messages unchanged
             outport.send(msg)
-        # print("Sent:", msg)
+        print(f"NOTE:", {controller_settings["base_note"] + controller_settings["key_note"]})
 except KeyboardInterrupt:
     print("Stopped.")
 finally:

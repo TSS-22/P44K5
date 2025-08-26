@@ -42,7 +42,7 @@ state_pad = [
     
 
 knob_values_playModes = [
-    "Normal",
+    "None",
     "Ionian",
     "Dorian",
     "Phrygian",
@@ -63,20 +63,27 @@ tone_progression = [
     1,
 ]
 
-chord_minor = [0, 3, 7]
 chord_major = [0, 4, 7]
+chord_minor = [0, 3, 7]
 chord_dom7 = [0, 4, 7]
 chord_dim = [0, 3, 6]
 
-chord_progression = [chord_major,
-                    chord_minor,
-                    chord_minor,
-                    chord_major,
-                    chord_dom7,
-                    chord_minor,
-                    chord_dim,
-                    chord_major,
-                    ]
+play_type_chord_prog = {
+    "Single": 0,
+    "Normal": [chord_major,
+                chord_minor,
+                chord_minor,
+                chord_major,
+                chord_dom7,
+                chord_minor,
+                chord_dim,
+                chord_major,
+                ],
+    "Major": chord_major,
+    "Minor": chord_minor,
+    "Dom7": chord_dom7,
+    "Diminished": chord_dim,
+}
 
 playModes_chordProg = {
     "Ionian": [0,1,2,3,4,5,6,7],
@@ -111,7 +118,7 @@ note_progression = []
 
 controls_values = 0
 
-pot_max_value = 127+1 # +1 is for out of bound error handling
+pot_max_value = 127 + 1 # +1 is for out of bound error handling
 
 knob_quadrant_playModes = (pot_max_value/len(knob_values_playModes))
 knob_quadrant_PlayType = (pot_max_value/len(knob_values_playTypes))
@@ -138,7 +145,7 @@ def select_base_note(note_value):
 
 def select_key_note(note_value):
     temp_note = int((note_value-64)/3)
-    if controller_settings["mode"] == "Normal":
+    if controller_settings["mode"] == "None":
         return temp_note
     else:
         octave = int(temp_note/7)*12
@@ -146,13 +153,17 @@ def select_key_note(note_value):
 
         if temp_note >= 0:
             temp = (temp_note%7)
-        else:
-            temp = (temp_note%-7)
-
-        for val in playModes_toneProg[controller_settings["mode"]][:temp]:
+            for val in playModes_toneProg[controller_settings["mode"]][:temp]:
                 inter_octave = inter_octave + tone_progression[val]
+        else:
+            temp = (temp_note%-7)-1
+            for val in playModes_toneProg[controller_settings["mode"]][:temp:-1]:
+                inter_octave = inter_octave - tone_progression[val]
+
+        print(f"Note: {note_value}")
         print(f"Octave: {octave}")
         print(f"Inter: {inter_octave}")
+        # print(f"Mod: {temp_note%-7}")
         print(f"Key note: {(octave + inter_octave)}")
         return (octave+inter_octave)
 
@@ -172,9 +183,8 @@ def pad_pressed(controller_settings, state_pad, buffer_note, buffer_velocity, me
     note = check_note(message.note - base_note_offset + controller_settings["base_note"] + controller_settings["key_note"])
     
     buffer_velocity[id_pad] = message.velocity
-    buffer_note[id_pad].append(note)
 
-    note_on(note, message.velocity, id_pad)
+    note_on(buffer_note, note, message.velocity, id_pad)
     
 
 def pad_released(controller_settings, state_pad, buffer_note, buffer_velocity, message):
@@ -193,7 +203,7 @@ def knob_base_note(controller_settings, buffer_note, state_pad, message):
             any_pad_on = True
             temp_note = check_note(buffer_note[id_pad][0] + message.value-64)
             buffer_note[id_pad].append(temp_note)
-            note_on(temp_note, buffer_velocity[id_pad], id_pad)
+            note_on(buffer_note, temp_note, buffer_velocity[id_pad], id_pad)
 
     if not any_pad_on:
         controller_settings["base_note"] = select_base_note(message.value)
@@ -205,23 +215,27 @@ def knob_key_note(controller_settings, buffer_note, state_pad, message):
             any_pad_on = True
             temp_note = check_note(buffer_note[id_pad][0]+ select_key_note(message.value))
             buffer_note[id_pad].append(temp_note)
-            note_on(temp_note, buffer_velocity[id_pad], id_pad)
+            note_on(buffer_note,temp_note, buffer_velocity[id_pad], id_pad)
 
     if not any_pad_on:
         controller_settings["key_note"] = select_key_note(message.value)
 
-def note_on(note, velocity, id_pad):
-    print(f"Note on: {note} | Pad: {id_pad + 1}")
-    outport.send(mido.Message("note_on", note=note, velocity=velocity)) 
+def note_on(buffer_note, note, velocity, id_pad):
+    if controller_settings["mode"] == "None" or controller_settings["play_type"] == "Single":
+        buffer_note[id_pad].append(note)
+        outport.send(mido.Message("note_on", note=note, velocity=velocity))
+        print(f"Note on: {note} | Pad: {id_pad + 1}")
+    
+    elif controller_settings["play_type"] == "Normal":
+        for chord_interval in play_type_chord_prog[controller_settings["play_type"]][id_pad]:
+            buffer_note[id_pad].append(note + chord_interval)
+            outport.send(mido.Message("note_on", note=note + chord_interval, velocity=velocity))
 
-    # elif controller_settings["play_type"] == knob_values_playTypes[0]:
-    #     print(controller_settings["play_type"][message.note - base_note_offset])
-
-    #     for note_chord in chord_progression[controller_settings["play_type"][message.note - base_note_offset]]:
-    #         temp_note = message.note - base_note_offset + controller_settings["base_note"]  + note_chord
-    #         print(temp_note)
-    #         outport.send(mido.Message(message.type, note=temp_note, velocity=message.velocity))         
-
+    else:
+        for chord_interval in play_type_chord_prog[controller_settings["play_type"]]:
+            buffer_note[id_pad].append(note + chord_interval)
+            outport.send(mido.Message("note_on", note=note + chord_interval, velocity=velocity))
+    
 def note_off(note, velocity, id_pad):
     outport.send(mido.Message("note_off", note=note, velocity=velocity))
     print(f"Note off: {note} | Pad: {id_pad + 1}")
@@ -308,7 +322,7 @@ try:
         else:
             # Forward all other messages unchanged
             outport.send(msg)
-        print(f"NOTE:", {controller_settings["base_note"] + controller_settings["key_note"]})
+        # print(f"NOTE:", {controller_settings["base_note"] + controller_settings["key_note"]})
 except KeyboardInterrupt:
     print("Stopped.")
 finally:

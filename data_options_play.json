@@ -5,7 +5,32 @@
     "chord_dim": [0, 3, 6],
     "tone_progression": [2,2,1,2,2,2,1],
     "knob_values_playModes": ["None","Ionian","Dorian","Phrygian","Lydian","Myxolydian","Aeolian","Locrian"],
-    "knob_values_playTypes": ["Single","Normal","Major","Minor","Dom7","Diminished"],
+    "knob_values_playTypes": [
+        {
+            "name": "Single",
+            "chord": [0]
+        },
+        {
+            "name": "Normal",
+            "chord": []
+        },
+        {
+            "name": "Major",
+            "chord": [0, 4, 7]
+        },
+        {
+            "name": "Minor",
+            "chord": [0, 3, 7]
+        },
+        {
+            "name": "Dom7",
+            "chord": [0, 4, 7]
+        },
+        {
+            "name": "Diminished",
+            "chord": [0, 3, 6]
+        }
+    ],
     "playModes_toneProg": { 
                             "Ionian": [0,1,2,3,4,5,6],
                             "Dorian": [1,2,3,4,5,6,0],

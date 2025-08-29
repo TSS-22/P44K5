@@ -2,7 +2,7 @@ import json
 from init_software import correct_file_path
 
 class MidiController():
-
+    # TODO change the name of some function like select_playmode()as the plya might not be necessary. Make them more intuitive and simple
     # Have function that output midi commands
                 
     def __init__(self):
@@ -28,15 +28,18 @@ class MidiController():
         self.mode_prog_chord = {}    
         self._init_mode_prog_chord(data_options_play)
     
-        self.mode_prog_tone = {}
+        self.mode_prog_tone = {} # Still usefull with pad intervals ?
         self._init_mode_prog_tone(data_options_play)
 
-        self.selected_pad_interval = self.compute_pad_intervals()
+        self.selected_pad_interval = []
+        self.compute_pad_intervals()
 
-        self.chord_major = data_options_play["chord_major"]
-        self.chord_minor = data_options_play["chord_minor"]
-        self.chord_dom7 = data_options_play["chord_dom7"]
-        self.chord_dim = data_options_play["chord_dim"]
+        self.chord_play_type = [] # This architecture is prone to error, put list_play_type and chord_play_style together
+        # Create a dic with "name", "chord", that way I always have the name for single and normal. Actually that will make single the same as any mono chords play type
+        # Can't I make the normal one also just like any  other play type ?
+        # TODO Put the user file parser into a function when the need arise once the GUI is in working
+        self._init_chord_play_style(data_options_play)
+        
 
         self.pot_max_value = data_settings["pot_max_value"] + 1 # For out of oundary error prevention
         # Division/quadrant magnitude between each mode or play type
@@ -56,6 +59,25 @@ class MidiController():
             for val in data["playModes_toneProg"][key]:
                 self.mode_prog_tone[key].append(data["tone_progression"][val])
     
+    def _init_chord_play_style(self, data):
+        self.chord_play_type.append({
+            "name": "chord_major",
+            "intervals": data["chord_major"]
+        })
+        self.chord_play_type.append({
+            "name": "chord_minor",
+            "intervals": data["chord_minor"]
+        })
+        self.chord_play_type.append({
+            "name": "chord_dom7",
+            "intervals": data["chord_dom7"]
+        })
+        self.chord_play_type.append({
+            "name": "chord_dim",
+            "intervals": data["chord_dim"]
+        })
+        # Add user play style chord file processing here
+
 
     #############################
     # GENERAL LOGIC / UTILITIES #
@@ -80,9 +102,9 @@ class MidiController():
 
     def compute_pad_intervals(self):
         if self.selected_mode == "None":
-            self.tone_intervals = list(range(7))
+            self.selected_pad_interval = list(range(7))
         else:
-            self.tone_intervals = [-x for x in self.mode_prog_tone[self.selected_mode][:self.key_degree]] + [0] + self.mode_prog_tone[self.selected_mode][self.key_degree:]
+            self.selected_pad_interval = [-x for x in self.mode_prog_tone[self.selected_mode][:self.key_degree]] + [0] + self.mode_prog_tone[self.selected_mode][self.key_degree:]
 
     def select_base_note(note_value):
         self.base_note = note_value
@@ -104,7 +126,7 @@ class MidiController():
 
         if state_controller["mode"] == "None":
             self.key_note = temp_note
-            self.key_degree = degree
+            reset_key_degree()
 
         else:
             octave = int(temp_note/7)*12
@@ -112,25 +134,27 @@ class MidiController():
             # TODO use pad interval, it is already computed
             if temp_note >= 0:
                 temp = (temp_note%7)
-                for val in self.mode_prog_tone[self.selected_mode][:temp]:
+                for val in self.selected_pad_interval[:temp]:
                     inter_octave = inter_octave + val
                     degree = degree + 1
 
             else:
-                temp = (temp_note%-7)-1
+                temp = (temp_note%-7)-1 # To test
                 for val in self.mode_prog_tone[self.selected_mode][:temp:-1]:
                     inter_octave = inter_octave - val
                     degree = degree + 1
-
+            
             print(f"Key note: {(octave + inter_octave)}")
             print(f"Key degree: {degree}")
             self.key_degree = degree
             self.key_note= octave+inter_octave
+            self.compute_pad_intervals()
 
 
     # Used to select the modes.
     # Refer to "./data.py/knob_values_playModes" for more details about the possible values
     def select_playMode(self, input):
+        reset_key_degree()
         self.selected_mode = self.list_modes[int(input.value/self.knob_div_modes)]
         print(f"Mode: {self.list_modes[int(input.value/self.knob_div_modes)]}\n")
 
@@ -140,6 +164,9 @@ class MidiController():
     def select_playTypes(self, input):
         self.selected_play_type = self.list_play_type[int(inpuy.value/self.knob_div_playType)]
         print(f"Play type: {self.list_play_type[int(inpuy.value/self.knob_div_playType)]}\n")
+
+    def count_interval(self, id_pad):
+        return sum(self.selected_pad_interval[:id_pad])
 
 
     ##################
@@ -186,6 +213,7 @@ class MidiController():
         for id_pad, pad_on in enumerate(self.state_pad):
             if pad_on:
                 any_pad_on = True
+                # TODO
                 # Ca je peut surement le mettre en class variable ça va rendre les choses beaucoup plus simple
                 array_pad_interval = compute_pad_intervals(state_controller["key_degree"])
                 # WARNING I DON'T THINK THAT IS GOING TO WORKS ONCE THE KEY_NOTE IS CHANGED
@@ -194,7 +222,6 @@ class MidiController():
 
         if not any_pad_on:
             state_controller["key_note"] = self.select_key_note(input.value)
-            state_controller["key_degree"] = self.select_key_degree(input.value)
 
 
     ##########################
@@ -206,6 +233,31 @@ class MidiController():
             "note": note,
             "velocity": velocity
         })
+
+    def note_on(self, note, velocity, id_pad):
+        midi_message_note_on = []
+        # Should work because, key_degree is always zero when self.selected_mode == "None"
+        temp_note = note + count_interval(id_pad)
+
+        if self.selected_play_type == "Normal":
+            for chord_interval in self.mode_prog_chord[self.selected_mode][id_pad]:
+                midi_message_note_on.append(append_note_on(temp_note + chord_interval, velocity, id_pad))
+                
+        else:
+            for chord_interval in self.chord_play_type[self.selected_play_type]:
+                midi_message_note_on.append(append_note_on(temp_note + chord_interval, velocity, id_pad))
+
+        return midi_message_note_on
+
+    
+    def append_note_on(self, note, velocity, id_pad):
+            self.buffer_note[id_pad].append(note)
+            print(f"Note on: {note} | Pad: {id_pad + 1}")
+            return ({
+                    "message": "note_on", 
+                    "note": note,
+                    "velocity": velocity
+                })
         
     
 if __name__ == '__main__':

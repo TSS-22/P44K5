@@ -1,13 +1,10 @@
 from init_midi import init_midi_in, init_midi_out
-from init_software import init_state_app, init_state_controller, init_options_play
+from midi_controller import MidiController
 
-from logic import knob_base_note, reset_key_degree, select_playMode, knob_key_note, select_playTypes, pad_pressed, pad_released
+midi_controller = MidiController()
 
-state_app = init_state_app()
+midi_bridge = MidiBridge()
 
-state_controller = init_state_controller()
-
-data_options_play = init_options_play()
 # Do it in a class with a send and receive value for them, woudln't that works better ?
 state_controller["midi_in"] = init_midi_in(state_app["name_midi_in"])
 state_controller["midi_out"] = init_midi_out(state_app["name_midi_out"])

@@ -2,19 +2,20 @@ import sys
 import os
 import rtmidi
 import mido
-from midi_controller import MidiController
+import json
 
 class MidiBrige():
 
     def __init__(self):
+        with open(correct_file_path("data_settings.json"), "r") as file_settings:
+            data_settings = json.load(file_settings)
 
-        self.input_port() # TODO
-        self.output_port() # TODO
+        self.input_port = data_settings["name_midi_in"]
+        self.output_port = data_settings["name_midi_out"]
 
         self.init_midi_in()
         self.init_midi_out()
 
-        self.midi_controller = MidiController()
 
     def init_midi_in(self):
         try:
@@ -56,7 +57,7 @@ class MidiBrige():
         print(f"Routing MIDI from {self.input_port} to virtual port {self.output_port}...")
         try:
             for msg in self.input:
-                self.receive()
+                self.bridge_in(msg)
 
         except KeyboardInterrupt:
             print("Stopped.")
@@ -71,8 +72,13 @@ class MidiBrige():
         input("Press ENTER to exit...")
 
 
-    def receive_message(self):
-        return 
+    def bridge_out(self, list_message):
+        for msg in list_message:
+            if msg["message"] == "note_on" or msg["message"] == "note_off":
+                self.output.send(mido.Message(msg.message, note=msg.note, velocity=msg.velocity ))
+
+            else:
+                self.output.send(mido.Message(msg.message, msg.control, msg.value))
 
 
     def get_input_names(self):
@@ -89,3 +95,10 @@ class MidiBrige():
 
     def print_output_names(self):
         print(self.get_output_port)
+
+
+    def get_selected_input(self):
+        return self.input
+
+    def get_selected_ouput(self):
+        return self.output

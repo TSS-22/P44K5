@@ -3,8 +3,9 @@ import os
 import rtmidi
 import mido
 import json
+from init_software import correct_file_path
 
-class MidiBrige():
+class MidiBridge():
 
     def __init__(self):
         with open(correct_file_path("data_settings.json"), "r") as file_settings:
@@ -69,16 +70,19 @@ class MidiBrige():
         self.input.close()
         self.output.close()
         print("Shutdown.")
-        input("Press ENTER to exit...")
+        # input("Press ENTER to exit...")
 
 
     def bridge_out(self, list_message):
-        for msg in list_message:
-            if msg["message"] == "note_on" or msg["message"] == "note_off":
-                self.output.send(mido.Message(msg.message, note=msg.note, velocity=msg.velocity ))
+        if list_message:
+            for msg in list_message:
+                if msg["message"] == "note_on" or msg["message"] == "note_off":
+                    self.output.send(mido.Message(msg["message"], note=msg["note"], velocity=msg["velocity"] ))
 
-            else:
-                self.output.send(mido.Message(msg.message, msg.control, msg.value))
+                else:
+                    self.output.send(mido.Message(msg.message, msg.control, msg.value))
+        else:
+            pass # empty message list
 
 
     def get_input_names(self):

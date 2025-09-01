@@ -110,14 +110,17 @@ class MidiController:
         self.compute_pad_intervals()
 
     def compute_pad_intervals(self):
+
         if self.selected_mode == "None":
             self.selected_pad_interval = [0] + [1] * 7
         else:
+            print(f"prog selected : {self.mode_prog_tone[self.selected_mode]}")
             self.selected_pad_interval = (
-                [-x for x in self.mode_prog_tone[self.selected_mode][: self.key_degree]]
-                + [0]
-                + self.mode_prog_tone[self.selected_mode][self.key_degree :]
+                [0]
+                + self.mode_prog_tone[self.selected_mode][: 7 - self.key_degree]
+                + self.mode_prog_tone[self.selected_mode][::-1][: self.key_degree]
             )
+        print(self.selected_pad_interval)
 
     def count_interval(self, id_pad):
         return sum(self.selected_pad_interval[: id_pad + 1])
@@ -209,6 +212,7 @@ class MidiController:
     # to play the right notes. This is again done to simplify the process
     # of playing around in the same key.
     def select_key_note(self, input_val):
+        print(f"input key note: {input_val}")
         temp_note = int((input_val - 64) / 3)
         degree = 0
 

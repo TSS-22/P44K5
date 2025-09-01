@@ -112,6 +112,7 @@ class MidiController:
     def reset_key_degree(self):
         self.key_degree = 0
         self.compute_pad_intervals()
+        self.compute_mode_chord_prog()
 
     def compute_pad_intervals(self):
         if self.selected_mode == "None":

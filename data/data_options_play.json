@@ -12,7 +12,7 @@
         },
         {
             "name": "Normal",
-            "chord": []
+            "chord": [0]
         },
         {
             "name": "Major",

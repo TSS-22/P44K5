@@ -69,6 +69,7 @@ class MidiController:
             self.mode_prog_chord.update({key: []})
             for val in data["playModes_chordProg"][key]:
                 self.mode_prog_chord[key].append(data[data["ionian_chord_prog"][val]])
+        self.mode_prog_chord.update({"None": [[0]] * 8})
 
     def _init_mode_prog_tone(self, data):
         for key in data["playModes_toneProg"]:
@@ -118,13 +119,11 @@ class MidiController:
         if self.selected_mode == "None":
             self.selected_pad_interval = [0] + [1] * 7
         else:
-            print(f"prog selected : {self.mode_prog_tone[self.selected_mode]}")
             self.selected_pad_interval = (
                 [0]
                 + self.mode_prog_tone[self.selected_mode][self.key_degree :]
                 + self.mode_prog_tone[self.selected_mode][: self.key_degree]
             )
-        print(f"prog : {self.selected_pad_interval}")
 
     def compute_mode_chord_prog(self):
         if self.selected_mode != "None":
@@ -135,7 +134,6 @@ class MidiController:
                 + self.mode_prog_chord[self.selected_mode][:-1][: self.key_degree]
                 + [self.mode_prog_chord[self.selected_mode][:-1][self.key_degree]]
             )
-            print(self.selected_mode_chord_prog)
 
     def count_interval(self, id_pad):
         return sum(self.selected_pad_interval[: id_pad + 1])
@@ -148,7 +146,6 @@ class MidiController:
         id_pad = input.note - self.base_note_offset
         self.state_pad[id_pad] = 1
         # Should work because, key_degree is always zero when self.selected_mode == "None"
-        print(self.count_interval(id_pad))
         note = self.check_note(
             input.note
             - self.base_note_offset
@@ -168,8 +165,21 @@ class MidiController:
         self.state_pad[id_pad] = 0
         list_note_off = []
 
-        for note in self.buffer_note[input.note - self.base_note_offset]:
+        for note in self.buffer_note[id_pad]:
+            skip = False
+            for idx, pad in enumerate(self.state_pad):
+                if pad == 1:
+                    for note_other_pad in self.buffer_note[idx]:
+                        if note_other_pad == note:
+                            skip = True
+                            break
+                if skip:
+                    break
+            if skip:
+                continue
             list_note_off.append(self.note_off(note, id_pad))
+
+        # Check if any of the note are note in the other pad
 
         self.buffer_note[id_pad] = []
         self.buffer_velocity[id_pad] = 0
@@ -206,7 +216,8 @@ class MidiController:
 
         if not any_pad_on:
             self.select_key_note(input.value)
-            # print(f"Key note: {self.key_note}")
+            print(f"Key note: {self.key_note}")
+            print(f"Key degree: {self.key_degree}")
             return []
 
     ########################
@@ -227,10 +238,8 @@ class MidiController:
     # to play the right notes. This is again done to simplify the process
     # of playing around in the same key.
     def select_key_note(self, input_val):
-        print(f"input key note: {input_val}")
         temp_note = int((input_val - 64) / 3)
         degree = 0
-        print(f"temp_note: {temp_note}")
         if self.selected_mode == "None":
             self.key_note = temp_note
             self.reset_key_degree()
@@ -242,7 +251,6 @@ class MidiController:
 
             if temp_note >= 0:
                 temp = temp_note % 7
-                print(f"temp: {temp}")
                 for val in self.mode_prog_tone[self.selected_mode][:temp]:
                     inter_octave = inter_octave + abs(val)
                     degree = degree + 1
@@ -255,12 +263,10 @@ class MidiController:
                 if degree != 0:
                     degree = abs(degree - 7)
 
-            print(f"degree: {degree} | octave: {octave} | inter: {inter_octave}")
             self.key_degree = degree
             self.key_note = octave + inter_octave
             self.compute_pad_intervals()
             self.compute_mode_chord_prog()
-            print("\n\n")
 
             return octave + inter_octave
 

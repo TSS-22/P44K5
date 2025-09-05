@@ -58,13 +58,13 @@ class MidiBridge:
             input("Press ENTER to exit...")
             sys.exit(1)
 
-    def start(self):
+    def start(self, midi_controller):
         print(
             f"Routing MIDI from {self.input_port} to virtual port {self.output_port}..."
         )
         try:
             for msg in self.input:
-                self.bridge_in(msg)
+                self.bridge_out(midi_controller.receive_message(msg))
 
         except KeyboardInterrupt:
             print("Stopped.")
@@ -80,15 +80,7 @@ class MidiBridge:
     def bridge_out(self, midi_controller_ouput):
         if midi_controller_ouput.messages:
             for msg in midi_controller_ouput.messages:
-                if msg["message"] == "note_on" or msg["message"] == "note_off":
-                    self.output.send(
-                        mido.Message(
-                            msg["message"], note=msg["note"], velocity=msg["velocity"]
-                        )
-                    )
-
-                else:
-                    self.output.send(mido.Message(msg.message, msg.control, msg.value))
+                self.output.send(msg)
         else:
             pass  # empty message list
 

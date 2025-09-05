@@ -17,3 +17,6 @@ class MidiControllerSettings:
         # Division/quadrant magnitude between each mode or play type
         self.knob_div_modes = self.pot_max_value / len(self.list_modes)
         self.knob_div_playType = self.pot_max_value / len(self.list_play_type)
+
+        self.list_modes = data_options_play["knob_values_playModes"]
+        self.list_play_type = data_options_play["knob_values_playTypes"]

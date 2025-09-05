@@ -312,7 +312,7 @@ class MidiController:
     #######################
     # C'est un peu degueux ce manque de standardisation de l'ouput : empty/message
     def receive_message(self, message):
-        output = MidiControllerOutput()
+        output = MidiControllerOutput([message])
         # Note pressed
         if message.type == "note_on":
             output = self.pad_pressed(message)
@@ -339,10 +339,12 @@ class MidiController:
 
             # Unassigned command
             else:
-                output = message
+                # output = MidiControllerOutputmessage
+                pass
 
         # Unassigned command
         else:
-            output = message
+            # output = message
+            pass
 
         return output

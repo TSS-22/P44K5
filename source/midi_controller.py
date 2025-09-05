@@ -2,6 +2,7 @@ import json
 from utilities import correct_file_path as correct_file_path
 from midi_controller_output import MidiControllerOutput
 from midi_controller_buffer import MidiControllerBuffer
+from midi_controller_settings import MidiControllerSettings
 
 
 class MidiController:
@@ -19,16 +20,17 @@ class MidiController:
         ) as file_settings:
             data_settings = json.load(file_settings)
 
-        self.list_modes = data_options_play["knob_values_playModes"]
-        self.list_play_type = data_options_play["knob_values_playTypes"]
+        self.controller_settings = MidiControllerSettings(
+            data_options_play, data_settings
+        )
 
-        self.selected_mode = self.list_modes[0]
-        self.selected_play_type = self.list_play_type[0]
+        self.buffer = MidiControllerBuffer()
+
+        self.selected_mode = self.controller_settings.list_modes[0]
+        self.selected_play_type = self.controller_settings.list_play_type[0]
         self.base_note = 0
         self.key_note = 0
         self.key_degree = 0
-
-        self.buffer = MidiControllerBuffer()
 
         self.base_note_offset = data_settings["base_note_offset"]
 
@@ -52,19 +54,6 @@ class MidiController:
         # Can't I make the normal one also just like any  other play type ?
         # TODO Put the user file parser into a function when the need arise once the GUI is in working
         self._init_chord_play_style(data_options_play)
-
-        # Most likely will need to put that into a function to allow for user to change the settings.
-        self.pot_max_value = (
-            data_settings["pot_max_value"] + 1
-        )  # For out of oundary error prevention
-        self.id_knob_base_note = data_settings["id_knob_base_note"]
-        self.id_knob_key_note = data_settings["id_knob_key_note"]
-        self.id_knob_mode = data_settings["id_knob_mode"]
-        self.id_knob_play_type = data_settings["id_knob_play_type"]
-
-        # Division/quadrant magnitude between each mode or play type
-        self.knob_div_modes = self.pot_max_value / len(self.list_modes)
-        self.knob_div_playType = self.pot_max_value / len(self.list_play_type)
 
     def _init_mode_prog_chord(self, data):
         for key in data["playModes_chordProg"]:
@@ -270,18 +259,22 @@ class MidiController:
     def knob_playMode(self, input):
         # Should I reset or not ? good question
         self.reset_key_degree()
-        self.selected_mode = self.list_modes[int(input.value / self.knob_div_modes)]
-        print(f"Mode: {self.list_modes[int(input.value/self.knob_div_modes)]}\n")
+        self.selected_mode = self.controller_settings.list_modes[
+            int(input.value / self.controller_settings.knob_div_modes)
+        ]
+        print(
+            f"Mode: {self.controller_settings.list_modes[int(input.value/self.controller_settings.knob_div_modes)]}\n"
+        )
         return MidiControllerOutput()
 
     # Used to select the type of play, either chord like or single note.
     # Refer to "./data.py/knob_values_playTypes" for more details about the possible values
     def knob_playTypes(self, input):
-        self.selected_play_type = self.list_play_type[
-            int(input.value / self.knob_div_playType)
+        self.selected_play_type = self.controller_settings.list_play_type[
+            int(input.value / self.controller_settings.knob_div_playType)
         ]
         print(
-            f"Play type: {self.list_play_type[int(input.value/self.knob_div_playType)]}\n"
+            f"Play type: {self.controller_settings.list_play_type[int(input.value/self.controller_settings.knob_div_playType)]}\n"
         )
         return MidiControllerOutput()
 
@@ -329,19 +322,19 @@ class MidiController:
 
         elif message.type == "control_change":
             # Knob 1: select_base_note
-            if message.control == self.id_knob_base_note:
+            if message.control == self.controller_settings.id_knob_base_note:
                 output = self.knob_base_note(message)
 
             # Knob 5: select_keyNote
-            elif message.control == self.id_knob_key_note:
+            elif message.control == self.controller_settings.id_knob_key_note:
                 output = self.knob_key_note(message)
 
             # Knob 4: select_playMode
-            elif message.control == self.id_knob_mode:
+            elif message.control == self.controller_settings.id_knob_mode:
                 output = self.knob_playMode(message)
 
             # Knob 8: select_playType
-            elif message.control == self.id_knob_play_type:
+            elif message.control == self.controller_settings.id_knob_play_type:
                 output = self.knob_playTypes(message)
 
             # Unassigned command

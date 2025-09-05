@@ -84,18 +84,6 @@ class MidiBridge:
         else:
             pass  # empty message list
 
-    def get_input_names(self):
-        return mido.get_input_names()
-
-    def get_output_names(self):
-        return mido.get_output_names()
-
-    def print_input_names(self):
-        print(self.get_input_port)
-
-    def print_output_names(self):
-        print(self.get_output_port)
-
     def get_selected_input(self):
         return self.input
 

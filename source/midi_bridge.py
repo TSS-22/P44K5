@@ -59,7 +59,7 @@ class MidiBridge:
             input("Press ENTER to exit...")
             sys.exit(1)
 
-    async def start(self, midi_controller):
+    def start(self, midi_controller):
         print(
             f"Routing MIDI from {self.input_port} to virtual port {self.output_port}..."
         )

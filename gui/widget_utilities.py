@@ -7,3 +7,6 @@ class WidgetUtilities:
         image = Image.open(image_path)
         image = image.resize((width, height))
         return ImageTk.PhotoImage(image)
+
+    def rotate_image(self):
+        pass

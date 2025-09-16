@@ -4,6 +4,11 @@ from widget_base_note import WidgetBaseNote
 from widget_key_note import WidgetKeyNote
 from widget_panel_mode import WidgetPanelMode
 from widget_panel_play_type import WidgetPanelPlayType
+from widget_panel_chord import WidgetPanelChordType
+from widget_pad_grid import WidgetPadGrid
+
+# Change Play type and chord type by Chord and Chord flavor, or compo ? find something better suited
+
 
 canvas_height = 1200
 canvas_width = 760
@@ -36,5 +41,7 @@ widget_base_note = WidgetBaseNote(master=root, canvas=main_canvas)
 widget_key_note = WidgetKeyNote(master=root, canvas=main_canvas)
 widget_panel_mode = WidgetPanelMode(master=root, canvas=main_canvas)
 widget_panel_play_type = WidgetPanelPlayType(master=root, canvas=main_canvas)
+widget_panel_chord_type = WidgetPanelChordType(master=root, canvas=main_canvas)
+widget_pad_grid = WidgetPadGrid(master=root, canvas=main_canvas)
 
 root.mainloop()

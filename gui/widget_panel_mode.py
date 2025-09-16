@@ -27,11 +27,11 @@ class WidgetPanelMode(tk.Frame, WidgetUtilities):
         font_color="#340006",
         label_font="Arial",
         label_font_size=36,
-        rel_x=0.078,
+        rel_x=1 - 0.078,
         rel_y=0.19,
     ):
         super().__init__(master=master, width=widget_width, height=widget_height)
-        self.pos_x = int(canvas_width * rel_x) + 161  # HARDCODED
+        self.pos_x = int(canvas_width * rel_x) - 161  # HARDCODED
         self.pos_y = int(canvas_height * rel_y)
 
         # Background image

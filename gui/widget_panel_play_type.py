@@ -18,23 +18,23 @@ class WidgetPanelPlayType(tk.Frame, WidgetUtilities):
         self,
         master=None,
         canvas=None,
-        widget_width=488,
+        widget_width=654,
         widget_height=266,
         canvas_width=1200,
         canvas_height=760,
         font_color="#340006",
         label_font="Arial",
         label_font_size=36,
-        rel_x=1 - 0.078,
+        rel_x=0.078,
         rel_y=0.19,
     ):
         super().__init__(master=master, width=widget_width, height=widget_height)
-        self.pos_x = int(canvas_width * rel_x) - 161  # HARDCODED
+        self.pos_x = int(canvas_width * rel_x) + 244  # HARDCODED
         self.pos_y = int(canvas_height * rel_y)
 
         # Background image
         self.tk_bckgnd_img = self.load_image(
-            image_path="./res_2/png/bckgnd-panel_choices.png",
+            image_path="./res_2/png/backgnd-panel_play.png",
             width=widget_width,
             height=widget_height,
         )
@@ -52,7 +52,7 @@ class WidgetPanelPlayType(tk.Frame, WidgetUtilities):
             height=int(widget_height * 0.6),  # HARDCODED
         )
         self.wheel_slice_img = canvas.create_image(
-            self.pos_x,
+            self.pos_x - widget_width * 0.2,
             self.pos_y + int(widget_height * 0.118),
             anchor=tk.CENTER,
             image=self.tk_wheel_slice_img,
@@ -65,7 +65,7 @@ class WidgetPanelPlayType(tk.Frame, WidgetUtilities):
             height=int(widget_height * 0.6),  # HARDCODED
         )
         self.wheel_img = canvas.create_image(
-            self.pos_x,
+            self.pos_x - widget_width * 0.2,
             self.pos_y + int(widget_height * 0.118),
             anchor=tk.CENTER,
             image=self.tk_wheel_img,
@@ -78,7 +78,7 @@ class WidgetPanelPlayType(tk.Frame, WidgetUtilities):
             height=int(168 * 0.7),  # HARDCODED
         )
         self.knob_img = canvas.create_image(
-            self.pos_x,
+            self.pos_x - widget_width * 0.2,
             self.pos_y + int(widget_height * 0.118),
             anchor=tk.CENTER,
             image=self.tk_knob_img,
@@ -89,8 +89,10 @@ class WidgetPanelPlayType(tk.Frame, WidgetUtilities):
             base = 135 + 18
             angle_deg = idx * (270 / 6) + base  # Evenly spaced angles
             angle_rad = math.radians(angle_deg)
-            label_pos_x = self.pos_x + int((widget_height * 1.1) / 3) * math.cos(
-                angle_rad
+            label_pos_x = (
+                self.pos_x
+                - widget_width * 0.2
+                + int((widget_height * 1.1) / 3) * math.cos(angle_rad)
             )
             label_pos_y = (
                 self.pos_y

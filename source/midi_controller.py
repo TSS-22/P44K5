@@ -1,8 +1,8 @@
 import json
-from utilities import correct_file_path as correct_file_path
-from midi_controller_output import MidiControllerOutput
-from midi_controller_buffer import MidiControllerBuffer
-from midi_controller_settings import MidiControllerSettings
+from source.utilities import correct_file_path as correct_file_path
+from source.midi_controller_output import MidiControllerOutput
+from source.midi_controller_buffer import MidiControllerBuffer
+from source.midi_controller_settings import MidiControllerSettings
 
 
 class MidiController:

@@ -3,8 +3,8 @@ import os
 import rtmidi
 import mido
 import json
-from utilities import correct_file_path
-from midi_controller_output import MidiControllerOutput
+from source.utilities import correct_file_path
+from source.midi_controller_output import MidiControllerOutput
 import asyncio
 import socket
 

@@ -1,6 +1,6 @@
 import tkinter as tk
 import math
-from image_item import ImageItem
+from gui.image_item import ImageItem
 
 
 class WidgetPad(tk.Frame):

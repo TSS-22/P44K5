@@ -1,6 +1,6 @@
 import tkinter as tk
 import math
-from image_item import ImageItem
+from gui.image_item import ImageItem
 
 
 class WidgetPanelChordType(tk.Frame):
@@ -59,8 +59,8 @@ class WidgetPanelChordType(tk.Frame):
         self.img_knob = ImageItem(
             canvas=canvas,
             image_path="./res_2/png/knob.png",
-            width=int(168 * 0.7),  # HARDCODED
-            height=int(168 * 0.7),  # HARDCODED
+            width=int(168 * 0.85),  # HARDCODED
+            height=int(168 * 0.85),  # HARDCODED
             x=self.pos_x,
             y=self.pos_y + int(widget_height * 0.118),
         )

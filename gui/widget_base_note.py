@@ -1,5 +1,5 @@
 import tkinter as tk
-from image_item import ImageItem
+from gui.image_item import ImageItem
 
 
 class WidgetBaseNote(tk.Frame):
@@ -49,7 +49,7 @@ class WidgetBaseNote(tk.Frame):
             self.pos_x + self.arc_height,  # x1
             self.pos_y - int(widget_height * 0.475) + self.arc_height * 1.93,  # y1
             start=225,
-            extent=self.arc_division * 100,
+            extent=self.arc_division * 1,
             fill=arc_color,
             outline="",
         )
@@ -68,8 +68,8 @@ class WidgetBaseNote(tk.Frame):
         self.img_knob = ImageItem(
             canvas=canvas,
             image_path="./res_2/png/knob.png",
-            width=int(widget_width * 0.7),
-            height=int(widget_width * 0.7),
+            width=int(widget_width * 0.85),
+            height=int(widget_width * 0.85),
             x=self.pos_x,
             y=self.pos_y - int(widget_height * 0.3),
         )

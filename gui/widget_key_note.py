@@ -1,5 +1,5 @@
 import tkinter as tk
-from image_item import ImageItem
+from gui.image_item import ImageItem
 
 
 class WidgetKeyNote(tk.Frame):
@@ -49,7 +49,7 @@ class WidgetKeyNote(tk.Frame):
             self.pos_x + self.arc_height,  # x1
             self.pos_y - int(widget_height * 0.475) + self.arc_height * 1.93,  # y1
             start=225,
-            extent=self.arc_division * 100,
+            extent=self.arc_division * 1,
             fill=arc_color,
             outline="",
         )
@@ -63,38 +63,16 @@ class WidgetKeyNote(tk.Frame):
             x=self.pos_x,
             y=self.pos_y,
         )
-        # self.tk_bckgnd_img = self.load_image(
-        #     image_path="./res_2/png/bckgnd-key_note.png",
-        #     width=widget_width,
-        #     height=widget_height,
-        # )
-        # self.bckgnd = canvas.create_image(
-        #     self.pos_x,
-        #     self.pos_y,
-        #     anchor=tk.CENTER,
-        #     image=self.tk_bckgnd_img,
-        # )
 
         # Knob image
         self.img_knob = ImageItem(
             canvas=canvas,
             image_path="./res_2/png/knob.png",
-            width=int(widget_width * 0.7),
-            height=int(widget_width * 0.7),
+            width=int(widget_width * 0.85),
+            height=int(widget_width * 0.85),
             x=self.pos_x,
             y=self.pos_y - int(widget_height * 0.3),
         )
-        # self.tk_knob_img = self.load_image(
-        #     image_path="./res_2/png/knob.png",
-        #     width=int(widget_width * 0.7),
-        #     height=int(widget_width * 0.7),
-        # )
-        # self.knob_img = canvas.create_image(
-        #     self.pos_x,
-        #     self.pos_y - int(widget_height * 0.3),
-        #     anchor=tk.CENTER,
-        #     image=self.tk_knob_img,
-        # )
 
         # Label background key degree
         canvas.create_text(

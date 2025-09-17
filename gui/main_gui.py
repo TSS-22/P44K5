@@ -7,22 +7,6 @@ from widget_panel_play_type import WidgetPanelPlayType
 from widget_panel_chord import WidgetPanelChordType
 from widget_pad_grid import WidgetPadGrid
 
-# Change Play type and chord type by Chord and Chord flavor, or compo ? find something better suited
-
-
-# # Function to toggle visibility
-# def toggle_visibility():
-#     current_state = canvas.itemcget(image_item, "state")
-#     new_state = "hidden" if current_state == "normal" else "normal"
-#     canvas.itemconfig(image_item, state=new_state)
-
-
-# def rotate_image(angle):
-#     rotated_image = load_image_knob().rotate(angle)
-#     tk_rotated = ImageTk.PhotoImage(rotated_image)
-#     canvas.itemconfig(test_id_image, image=tk_rotated)
-#     canvas.image = tk_rotated  # Keep a reference
-
 
 canvas_height = 1200
 canvas_width = 760

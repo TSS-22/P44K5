@@ -1,7 +1,7 @@
 import tkinter as tk
 import math
-from widget_pad import WidgetPad
-from image_item import ImageItem
+from gui.widget_pad import WidgetPad
+from gui.image_item import ImageItem
 
 
 class WidgetPadGrid(tk.Frame):

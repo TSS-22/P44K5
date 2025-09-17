@@ -17,7 +17,7 @@ class ImageItem:
     def _load_image(self, width=None, height=None):
         img = Image.open(self.image_path)
         if width and height:
-            img = img.resize((width, height), Image.LANCZOS)
+            img = img.resize((width, height), Image.Resampling.LANCZOS)
         self.pil_image = img  # Store the PIL image for later manipulation
         return ImageTk.PhotoImage(img)
 

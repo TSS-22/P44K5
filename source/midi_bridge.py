@@ -1,11 +1,9 @@
 import sys
 import os
+import json
 import rtmidi
 import mido
-import json
 from source.utilities import correct_file_path
-from source.midi_controller_output import MidiControllerOutput
-import asyncio
 
 
 class MidiBridge:

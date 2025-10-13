@@ -1,12 +1,12 @@
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject, Signal, Slot
+from source.midi_bridge_message_out import MidiBridgeMessageOut
 
 
 class MainLogic(QObject):
-    # Define a signal to notify the UI
-    state_changed = Signal(str)  # Emits a string
 
-    def handle_midi(self):
-        pass
+    @Slot()
+    def handle_midi(self, list_midi_msg):
+        print("received messages")
 
     def do_work(self):
         # Simulate logic

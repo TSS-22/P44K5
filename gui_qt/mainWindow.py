@@ -29,6 +29,9 @@ class MainWindow(QMainWindow):
         self.threadpool = QThreadPool()
         thread_count = self.threadpool.maxThreadCount()
         self.worker = QtMidiConnector()
+
+        self.worker.signals.midi_messages.connect(self.logic.handle_midi)
+
         self.threadpool.start(self.worker)
 
         self.setWindowTitle("8P4K PowerHouse")
@@ -64,3 +67,8 @@ class MainWindow(QMainWindow):
         self.layout_container = QWidget()
         self.layout_container.setLayout(self.layout_col)
         self.setCentralWidget(self.layout_container)
+
+    def closeEvent(self, event):
+        # Ask the worker to stop
+        self.worker.stop()
+        event.accept()

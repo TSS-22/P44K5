@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from PySide6.QtCore import QThread, QThreadPool
+from PySide6.QtCore import QThread, QThreadPool, Slot
 
 from gui_qt.widgetBaseNote import WidgetBaseNote
 from gui_qt.widgetKeyNote import WidgetKeyNote
@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.logic = MainLogic()
+        self.logic.signal.base_note_changed.connect(self.updt_base_note)
 
         # Connecting the MidiCOntroller and MidiBridge to the UI
         self.threadpool = QThreadPool()
@@ -72,3 +73,7 @@ class MainWindow(QMainWindow):
         # Ask the worker to stop
         self.worker.stop()
         event.accept()
+
+    @Slot()
+    def updt_base_note(self, state):
+        print("update base note")

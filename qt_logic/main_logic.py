@@ -1,12 +1,16 @@
 from PySide6.QtCore import QObject, Signal, Slot
 from source.midi_bridge_message_out import MidiBridgeMessageOut
+from qt_logic.main_logic_signal import MainLogicSignal
 
 
 class MainLogic(QObject):
+    id_knob_base_note = 70  # HARDCODED
+    signal = MainLogicSignal()
 
     @Slot()
     def handle_midi(self, list_midi_msg):
-        print("received messages")
+        for msg in list_midi_msg:
+            print(msg)
 
     def do_work(self):
         # Simulate logic

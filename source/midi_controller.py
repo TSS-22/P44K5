@@ -158,7 +158,9 @@ class MidiController:
             + self.count_interval(id_pad)
             - id_pad
         )
-        return MidiControllerOutput(self.note_on(note, input.velocity, id_pad))
+        return MidiControllerOutput(
+            self.get_state(), self.note_on(note, input.velocity, id_pad)
+        )
 
     # Pad released
     def pad_released(self, input):
@@ -179,7 +181,7 @@ class MidiController:
                 continue
             list_note_off.append(self.note_off(note, id_pad))
         self.state.buffer.notes[id_pad] = []
-        return MidiControllerOutput(list_note_off)
+        return MidiControllerOutput(self.get_state(), list_note_off)
 
     #
     def knob_base_note(self, input):
@@ -191,13 +193,14 @@ class MidiController:
                     self.state.buffer.notes[id_pad][0] + input.value - 64
                 )
                 return MidiControllerOutput(
-                    self.note_on(temp_note, self.state.buffer.velocity[id_pad], id_pad)
+                    self.get_state(),
+                    self.note_on(temp_note, self.state.buffer.velocity[id_pad], id_pad),
                 )
 
         if not any_pad_on:
             self.select_base_note(input.value)
             print(f"Base note: {self.state.base_note}")
-            return MidiControllerOutput()
+            return MidiControllerOutput(self.get_state())
 
     #
     def knob_key_note(self, input):
@@ -210,7 +213,8 @@ class MidiController:
                     + self.select_key_note(input.value)
                 )
                 return MidiControllerOutput(
-                    self.note_on(temp_note, self.state.buffer.velocity[id_pad], id_pad)
+                    self.get_state(),
+                    self.note_on(temp_note, self.state.buffer.velocity[id_pad], id_pad),
                 )
 
         if not any_pad_on:
@@ -218,14 +222,14 @@ class MidiController:
             self.state.raw_key_knob = input.value
             print(f"Key note: {self.state.key_note}")
             print(f"Key degree: {self.state.key_degree}")
-            return MidiControllerOutput()
+            return MidiControllerOutput(self.get_state())
 
     ########################
     # BUSINESS LOGIC LAYER #
     ########################
     def select_base_note(self, note_value):
         self.state.base_note = note_value
-        return MidiControllerOutput()
+        return MidiControllerOutput(self.get_state())
 
     # When using no mode, it is equivalent to select_base_node
     # When using modes play, the mode stick to the base note to
@@ -282,7 +286,7 @@ class MidiController:
         print(
             f"Mode: {self.controller_settings.list_modes[int(input.value/self.controller_settings.knob_div_modes)]}\n"
         )
-        return MidiControllerOutput()
+        return MidiControllerOutput(self.get_state())
 
     # Used to select the type of play, either chord like or single note.
     # Refer to "./data.py/knob_values_playTypes" for more details about the possible values
@@ -294,11 +298,11 @@ class MidiController:
         print(
             f"Play type: {self.controller_settings.list_play_type[int(input.value/self.controller_settings.knob_div_playType)]}\n"
         )
-        return MidiControllerOutput()
+        return MidiControllerOutput(self.get_state())
 
     def knob_chordType(self, input):
         self.state.raw_knob_chord_type = input.value
-        return MidiControllerOutput()
+        return MidiControllerOutput(self.get_state())
 
     ##########################
     # MIDI MESSAGES COMMANDS #
@@ -337,7 +341,7 @@ class MidiController:
     #######################
     # C'est un peu degueux ce manque de standardisation de l'ouput : empty/message
     def receive_message(self, message):
-        output = MidiControllerOutput([message])
+        output = MidiControllerOutput(self.get_state(), [message])
         # Note pressed
         if message.type == "note_on":
             output = self.pad_pressed(message)

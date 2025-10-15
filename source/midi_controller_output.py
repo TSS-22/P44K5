@@ -1,9 +1,10 @@
 import mido
+from source.message_type import MessageType
 
 
 class MidiControllerOutput:
-
-    def __init__(self, list_message=[]):
+    def __init__(self, midi_controller_state, list_message=[]):
+        self.state = midi_controller_state
         self.messages = []
         for msg in list_message:
             if isinstance(msg, mido.Message):

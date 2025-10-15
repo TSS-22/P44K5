@@ -8,9 +8,8 @@ class MainLogic(QObject):
     signal = MainLogicSignal()
 
     @Slot()
-    def handle_midi(self, list_midi_msg):
-        for msg in list_midi_msg:
-            print(msg)
+    def handle_midi(self, midi_controller_state):
+        pass
 
     def do_work(self):
         # Simulate logic

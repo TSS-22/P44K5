@@ -16,3 +16,33 @@ class MidiControllerState:
         self.raw_knob_mode = 0
         self.raw_knob_play_type = 0
         self.raw_knob_chord_type = 0
+
+    def to_dict(self):
+        return {
+            "buffer": self.buffer.to_dict(),
+            "base_note": self.base_note,
+            "key_note": self.key_note,
+            "key_degree": self.key_degree,
+            "selected_mode": self.selected_mode,
+            "selected_play_type": self.selected_play_type,
+            "chord_type": self.chord_type,
+            "raw_key_knob": self.raw_key_knob,
+            "raw_knob_mode": self.raw_knob_mode,
+            "raw_knob_play_type": self.raw_knob_play_type,
+            "raw_knob_chord_type": self.raw_knob_chord_type,
+        }
+
+    def to_tuple(self):
+        return (
+            ("buffer", self.buffer.to_tuple()),
+            ("base_note", self.base_note),
+            ("key_note", self.key_note),
+            ("key_degree", self.key_degree),
+            ("selected_mode", self.selected_mode),
+            ("selected_play_type", self.selected_play_type),
+            ("chord_type", self.chord_type),
+            ("raw_key_knob", self.raw_key_knob),
+            ("raw_knob_mode", self.raw_knob_mode),
+            ("raw_knob_play_type", self.raw_knob_play_type),
+            ("raw_knob_chord_type", self.raw_knob_chord_type),
+        )

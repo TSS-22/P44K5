@@ -1,4 +1,4 @@
-from PySide6.QtCore import QRunnable, Signal, Slot
+from PySide6.QtCore import QRunnable, Signal, Slot, QObject
 
 from source.midi_controller import MidiController
 from source.midi_bridge import MidiBridge
@@ -14,17 +14,17 @@ class QtMidiConnector(QRunnable):
         self.midi_bridge = MidiBridge()
         self._is_running = False
 
-    @Slot()
     def run(self):
         print("starting thread")
         self._is_running = True
         while self._is_running:
             try:
                 for midi_msg in self.midi_bridge.input.iter_pending():
-                    messages = self.midi_bridge.bridge_out(
+                    midi_controller_state = self.midi_bridge.bridge_out(
                         self.midi_controller.receive_message(midi_msg)
                     )
-                    self.signals.midi_messages.emit(messages)
+                    self.signals.midi_messages.emit(midi_controller_state.to_tuple())
+                    # self.signals.midi_messages.emit(QObject())
             except KeyboardInterrupt:
                 print("Stopped.")
 

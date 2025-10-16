@@ -17,6 +17,7 @@ from gui_qt.widgetPadGrid import WidgetPadGrid
 
 from qt_logic.qt_midi_connector import QtMidiConnector
 from qt_logic.main_logic import MainLogic
+from qt_logic.map_note import map_note
 
 
 class MainWindow(QMainWindow):
@@ -78,3 +79,6 @@ class MainWindow(QMainWindow):
     def updt_base_note(self, base_note_val):
         print(base_note_val)
         self.wdgt_base_note.knob.setValue(base_note_val)
+        note = map_note[base_note_val % 12]
+        octave = int(base_note_val / 12) - 3
+        self.wdgt_base_note.lbl_note.setText(f"{note} {octave}")

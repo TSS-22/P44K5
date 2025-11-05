@@ -15,3 +15,9 @@ class MidiControllerOutput:
                         msg["message"], note=msg["note"], velocity=msg["velocity"]
                     )
                 )
+
+    def to_dict(self):
+        return {
+            "flag": self.flag,
+            "state": self.state.to_dict(),
+        }

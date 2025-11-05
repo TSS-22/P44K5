@@ -83,7 +83,7 @@ class MidiBridge:
         else:
             pass
 
-        return midi_controller_ouput.state
+        return midi_controller_ouput
 
     def get_selected_input(self):
         return self.input

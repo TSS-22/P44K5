@@ -20,10 +20,10 @@ class QtMidiConnector(QRunnable):
         while self._is_running:
             try:
                 for midi_msg in self.midi_bridge.input.iter_pending():
-                    midi_controller_state = self.midi_bridge.bridge_out(
+                    midi_controller_output = self.midi_bridge.bridge_out(
                         self.midi_controller.receive_message(midi_msg)
                     )
-                    self.signals.midi_messages.emit(midi_controller_state.to_dict())
+                    self.signals.midi_messages.emit(midi_controller_output.to_dict())
                     # self.signals.midi_messages.emit(QObject())
             except KeyboardInterrupt:
                 print("Stopped.")

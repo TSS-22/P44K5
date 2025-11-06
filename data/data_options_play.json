@@ -1,8 +1,8 @@
 {
-    "chord_major": [0, 4, 7],
-    "chord_minor": [0, 3, 7],
-    "chord_dom7": [0, 4, 7],
-    "chord_dim": [0, 3, 6],
+    "chord_major": [0, 4, 7, 9, 11, 14, 17, 21],
+    "chord_minor": [0, 3, 7, 8, 10, 14, 17, 20],
+    "chord_dom7": [0, 4, 7, 10, 14, 17, 21],
+    "chord_dim": [0, 3, 6, 9, 9, 14, 17, 21],
     "tone_progression": [2,2,1,2,2,2,1],
     "knob_values_playModes": ["None","Ionian","Dorian","Phrygian","Lydian","Myxolydian","Aeolian","Locrian"],
     "knob_values_playTypes": [

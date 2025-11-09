@@ -75,3 +75,27 @@ class WidgetPanelChord(QFrame):
 
         self.layout.addWidget(self.wheel_type)
         self.layout.addWidget(self.wheel_comp)
+
+    def update_chord(self, panel_chord_val):
+        print(panel_chord_val["raw_knob_chord_type"])
+        print(panel_chord_val["chord_type"])
+        self.wdgt_panel_chord.wheel_comp.knob.setValue(
+            (panel_chord_val["raw_knob_chord_type"] / 127)
+            * len(self.wdgt_panel_chord.list_chord_comp)
+        )
+        # idx = self.wdgt_panel_chord.list_chord_comp.index(panel_chord_val["chord_type"])
+        # self.wdgt_panel_chord.wheel_comp.radio_button[idx].setChecked(True)
+
+    def update_play(self, panel_play_val):
+        self.wdgt_panel_chord.wheel_type.knob.setValue(
+            (panel_play_val["raw_knob_play_type"] / 127)
+            * len(self.wdgt_panel_chord.list_chord_type)
+        )
+        #  Bad  data architecture correct this
+        if panel_play_val["selected_play_type"] == "Single":
+            idx = 0
+        else:
+            idx = self.wdgt_panel_chord.list_chord_type.index(
+                panel_play_val["selected_play_type"]["name"]
+            )
+        self.wdgt_panel_chord.wheel_type.radio_button[idx].setChecked(True)

@@ -53,3 +53,11 @@ class WidgetPanelMode(QFrame):
             widget_width=self.widget_width,
             parent=self,
         )
+
+    def update(self, panel_mode_val):
+        self.wdgt_panel_mode.wheel_mode.knob.setValue(
+            (panel_mode_val["raw_knob_mode"] / 127)
+            * len(self.wdgt_panel_mode.list_mode)
+        )
+        idx = self.wdgt_panel_mode.list_mode.index(panel_mode_val["selected_mode"])
+        self.wdgt_panel_mode.wheel_mode.radio_button[idx].setChecked(True)

@@ -181,3 +181,15 @@ class WidgetKeyNote(QFrame):
         self.lbl_octave_val.move(
             self.lbl_octave_val_position["x"], self.lbl_octave_val_position["y"]
         )
+
+    def update(self, key_deg_val):
+        self.wdgt_key_note.lbl_key_val.setText(f"{key_deg_val["key_degree"]+1}")
+        if key_deg_val["key_note"] >= 0:
+            self.wdgt_key_note.lbl_octave_val.setText(
+                f"{int(key_deg_val["key_degree_octave"]/12)}"
+            )
+        else:
+            self.wdgt_key_note.lbl_octave_val.setText(
+                f"{int(key_deg_val["key_degree_octave"]/12 - 1)}"
+            )
+        self.wdgt_key_note.knob.setValue(key_deg_val["raw_key_knob"])

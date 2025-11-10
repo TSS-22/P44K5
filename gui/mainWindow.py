@@ -6,18 +6,19 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QWidget,
+    QToolBar,
 )
-from PySide6.QtCore import QThread, QThreadPool, Slot
+from PySide6.QtCore import QThread, QThreadPool, Slot, QSize, Qt
+from PySide6.QtGui import QIcon
 
 from gui.widgetBaseNote import WidgetBaseNote
 from gui.widgetKeyNote import WidgetKeyNote
 from gui.widgetPanelMode import WidgetPanelMode
 from gui.widgetPanelChord import WidgetPanelChord
 from gui.widgetPadGrid import WidgetPadGrid
+from gui.action_bypass import QActionBypass
 
 from logic.gui.main_logic import MainLogic
-
-from logic.gui.map_note import map_note
 
 
 class MainWindow(QMainWindow):
@@ -47,6 +48,21 @@ class MainWindow(QMainWindow):
             background-image: url(ressources/gui/png/bckgnd-app.png);
             """
         )
+
+        self.toolbar = QToolBar("Top bar action")
+        self.toolbar.setStyleSheet(
+            """
+            border: none;
+            background: #eeeeee;
+            """
+        )
+
+        self.toolbar.setIconSize(QSize(22, 22))
+        self.addToolBar(self.toolbar)
+        self.toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        self.icon_stop = QIcon("../ressources/gui/icons/prohibition.png")
+        self.action_bypass = QActionBypass()
+        self.toolbar.addAction(self.action_bypass)
 
         self.wdgt_base_note = WidgetBaseNote(self)
         self.wdgt_key_note = WidgetKeyNote(self)

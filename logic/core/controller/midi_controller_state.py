@@ -9,6 +9,7 @@ class MidiControllerState:
         selected_chord_type=None,
         selected_chord_comp=None,
     ):
+        self.bypass = False
         self.buffer = MidiControllerBuffer()
         self.base_note = 0
         self.key_note = 0

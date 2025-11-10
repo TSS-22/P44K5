@@ -143,6 +143,9 @@ class MidiController:
     def count_interval(self, id_pad):
         return sum(self.selected_pad_interval[: id_pad + 1])
 
+    def toggle_bypass(self):
+        self.state.bypass = not self.state.bypass
+
     ##################
     # PHYSICAL LOGIC #
     ##################
@@ -387,41 +390,42 @@ class MidiController:
             state=self.get_state(),
             list_message=[message],
         )
-        # Note pressed
-        if message.type == "note_on":
-            output = self.pad_pressed(message)
+        if self.state.bypass is False:
+            # Note pressed
+            if message.type == "note_on":
+                output = self.pad_pressed(message)
 
-        elif message.type == "note_off":
-            output = self.pad_released(message)
+            elif message.type == "note_off":
+                output = self.pad_released(message)
 
-        elif message.type == "control_change":
-            # Knob 1: select_base_note
-            if message.control == self.controller_settings.id_knob_base_note:
-                output = self.knob_base_note(message)
+            elif message.type == "control_change":
+                # Knob 1: select_base_note
+                if message.control == self.controller_settings.id_knob_base_note:
+                    output = self.knob_base_note(message)
 
-            # Knob 5: select_keyNote
-            elif message.control == self.controller_settings.id_knob_key_note:
-                output = self.knob_key_note(message)
+                # Knob 5: select_keyNote
+                elif message.control == self.controller_settings.id_knob_key_note:
+                    output = self.knob_key_note(message)
 
-            # Knob 4: select_playMode
-            elif message.control == self.controller_settings.id_knob_mode:
-                output = self.knob_playMode(message)
+                # Knob 4: select_playMode
+                elif message.control == self.controller_settings.id_knob_mode:
+                    output = self.knob_playMode(message)
 
-            # Knob 8: select_playType
-            elif message.control == self.controller_settings.id_knob_play_type:
-                output = self.knob_playTypes(message)
+                # Knob 8: select_playType
+                elif message.control == self.controller_settings.id_knob_play_type:
+                    output = self.knob_playTypes(message)
 
-            # Knob 7:select_chordType
-            elif message.control == self.controller_settings.id_knob_chord_type:
-                output = self.knob_chordType(message)
+                # Knob 7:select_chordType
+                elif message.control == self.controller_settings.id_knob_chord_type:
+                    output = self.knob_chordType(message)
+                # Unassigned command
+                else:
+                    # output = MidiControllerOutputmessage
+                    pass
+
             # Unassigned command
             else:
-                # output = MidiControllerOutputmessage
+                # output = message
                 pass
-
-        # Unassigned command
-        else:
-            # output = message
-            pass
 
         return output

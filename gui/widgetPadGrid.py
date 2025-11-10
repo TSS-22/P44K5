@@ -9,13 +9,13 @@ class WidgetPadGrid(QFrame):
 
     list_note = [
         "C -3",
+        "C# -3",
         "D -3",
+        "D# -3",
         "E -3",
         "F -3",
+        "F# -3",
         "G -3",
-        "A -3",
-        "B -3",
-        "C -2",
     ]  # HARDOCDED + TEST
 
     def __init__(
@@ -50,12 +50,15 @@ class WidgetPadGrid(QFrame):
         )
         self.pads = []
         self.grid_layout = QGridLayout(self)
+        id_note = 0
         for row in range(1, -1, -1):
             for col in range(4):
-                if row == 0 and col == 0:
-                    pad = WidgetPad(parent=self, root=True, pad_pressed=True)
+                if row == 1 and col == 0:
+                    pad = WidgetPad(
+                        parent=self, root=True, note=self.list_note[id_note]
+                    )
                 else:
-                    pad = WidgetPad(parent=self)
+                    pad = WidgetPad(parent=self, note=self.list_note[id_note])
                 self.pads.append(
                     {
                         "pad": pad,
@@ -64,6 +67,7 @@ class WidgetPadGrid(QFrame):
                     }
                 )
                 self.grid_layout.addWidget(pad, row, col)
+                id_note = id_note + 1
 
     def update(self, pad_grid_val):
         idx_base_note = pad_grid_val["base_note"] % 12

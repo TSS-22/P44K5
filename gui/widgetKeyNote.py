@@ -112,7 +112,7 @@ class WidgetKeyNote(QFrame):
             "color": lbl_note_color,
         }
         ## Key degree
-        self.lbl_key_val = QLabel("7", parent=self)
+        self.lbl_key_val = QLabel("1", parent=self)
         self.lbl_key_val.setStyleSheet(
             f"""
             color: {self.lbl_val_properties["color"]};
@@ -125,7 +125,7 @@ class WidgetKeyNote(QFrame):
         )
 
         ## Octave
-        self.lbl_octave_val = QLabel("-3", parent=self)
+        self.lbl_octave_val = QLabel("0", parent=self)
 
         self.lbl_octave_val.setStyleSheet(
             f"""

@@ -317,26 +317,31 @@ class MidiController:
     # Refer to "./data.py/knob_values_playTypes" for more details about the possible values
     def knob_playTypes(self, input):
         self.state.raw_knob_play_type = input.value
-        self.state.selected_play_type = self.controller_settings.list_play_type[
+        return self.select_play(
             int(input.value / self.controller_settings.knob_div_playType)
-        ]
-        print(
-            f"Play type: {self.controller_settings.list_play_type[int(input.value/self.controller_settings.knob_div_playType)]}\n"
         )
+
+    def select_play(self, idx_play):
+        self.state.selected_play_type = self.controller_settings.list_play_type[
+            idx_play
+        ]
+        print(f"Play type: {self.controller_settings.list_play_type[idx_play]}\n")
         return MidiControllerOutput(
             flag=ControllerMessageFlag.PLAY_CHANGED, state=self.get_state()
         )
 
     def knob_chordType(self, input):
         self.state.raw_knob_chord_type = input.value
-        # self.controller_settings.list_chord_comp[
-        #     int(input.value / self.controller_settings.knob_div_chord_comp)
-        # ]
-        self.state.selected_chord_comp = self.controller_settings.list_chord_comp[
+        return self.select_chord_comp(
             int(input.value / self.controller_settings.knob_div_chord_comp)
+        )
+
+    def select_chord_comp(self, idx_chord_comp):
+        self.state.selected_chord_comp = self.controller_settings.list_chord_comp[
+            idx_chord_comp
         ]
         print(
-            f"Chord comp: {self.controller_settings.list_chord_comp[int(input.value/self.controller_settings.knob_div_chord_comp)]}\n"
+            f"Chord comp: {self.controller_settings.list_chord_comp[idx_chord_comp]}\n"
         )
         return MidiControllerOutput(
             flag=ControllerMessageFlag.CHORD_CHANGED, state=self.get_state()

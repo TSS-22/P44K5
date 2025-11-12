@@ -47,7 +47,7 @@ class WidgetKeyNote(QFrame):
             "val_max": 127,
             "val_start": 0,
         }
-        self.knob = KnobShow(parent=self, notchesVisible=True)
+        self.knob = QDial(parent=self, notchesVisible=True)
         self.knob.setFixedSize(
             self.knob_properties["size"], self.knob_properties["size"]
         )

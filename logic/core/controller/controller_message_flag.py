@@ -10,5 +10,6 @@ class ControllerMessageFlag(Enum):
     CHORD_CHANGED = "chord_changed"
     PLAY_CHANGED = "play_changed"
     KNOB_BASE_SLIDE = "knob_base_slide"
-    KNOB_KEY_SLIDE = "kno_key_slide"
+    KNOB_KEY_SLIDE = "knob_key_slide"
     BYPASS = "bypass"
+    GUI_CHANGE = "gui_change"

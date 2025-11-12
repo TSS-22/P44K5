@@ -75,52 +75,47 @@ class WidgetPadGrid(QFrame):
 
         list_note = []
 
-        if sum(pad_grid_val["pad_intervals"]) == 7:
-            print("wesh")
-        else:
-            temp_corrected_pad_intervals = (
-                pad_grid_val["pad_intervals"][1:][::-1][: pad_grid_val["key_degree"]][
-                    ::-1
-                ]
-                + pad_grid_val["pad_intervals"][
-                    1 : len(pad_grid_val["pad_intervals"])
-                    - pad_grid_val["key_degree"] :
-                ]
-            )
-            corrected_pad_intervals = (
-                [
-                    sum(
-                        temp_corrected_pad_intervals[: pad_grid_val["key_degree"]][
-                            : pad_grid_val["key_degree"]
-                        ]
-                    )
-                ]
-                + temp_corrected_pad_intervals[pad_grid_val["key_degree"] :]
-                + temp_corrected_pad_intervals[: pad_grid_val["key_degree"]]
-            )
-            for idx, _ in enumerate(pad_grid_val["velocity"]):
-                note_correction = sum(corrected_pad_intervals[: idx + 1])
-                list_note.append(map_note[(idx_base_note + note_correction) % 12])
-            if pad_grid_val["key_note"] >= 0:
-                key_octave = pad_grid_val["key_degree_octave"] / 12
-            else:
-                key_octave = int(pad_grid_val["key_degree_octave"] / 12 - 1)
-            octave_corrected = base_octave + key_octave
-            octave_correction = [0] * (8 - pad_grid_val["key_degree"] - 1) + [1] * (
-                pad_grid_val["key_degree"] + 1
-            )
-            for idx, velocity in enumerate(pad_grid_val["velocity"]):
-                # Root
-                if idx == pad_grid_val["key_degree"]:
-                    self.pads[idx]["pad"].put_root_backgrnd(True)
-                else:
-                    self.pads[idx]["pad"].put_root_backgrnd(False)
-                # Pressed
-                if velocity > 0:
-                    self.pads[idx]["pad"].put_pressed_backgrnd(True)
-                else:
-                    self.pads[idx]["pad"].put_pressed_backgrnd(False)
-                # Note
-                self.pads[idx]["pad"].button.setText(
-                    f"{list_note[idx]} {int(octave_corrected + octave_correction[idx])}"
+        temp_corrected_pad_intervals = (
+            pad_grid_val["pad_intervals"][1:][::-1][: pad_grid_val["key_degree"]][::-1]
+            + pad_grid_val["pad_intervals"][
+                1 : len(pad_grid_val["pad_intervals"]) - pad_grid_val["key_degree"] :
+            ]
+        )
+        corrected_pad_intervals = (
+            [
+                sum(
+                    temp_corrected_pad_intervals[: pad_grid_val["key_degree"]][
+                        : pad_grid_val["key_degree"]
+                    ]
                 )
+            ]
+            + temp_corrected_pad_intervals[pad_grid_val["key_degree"] :]
+            + temp_corrected_pad_intervals[: pad_grid_val["key_degree"]]
+        )
+        for idx, _ in enumerate(pad_grid_val["velocity"]):
+            note_correction = sum(corrected_pad_intervals[: idx + 1])
+            list_note.append(map_note[(idx_base_note + note_correction) % 12])
+        if pad_grid_val["key_note"] >= 0:
+            key_octave = pad_grid_val["key_degree_octave"] / 12
+        else:
+            key_octave = int(pad_grid_val["key_degree_octave"] / 12 - 1)
+        octave_corrected = base_octave + key_octave
+        # Correct for the pad that will be one octave higher, but this is the wrong correction: it needs to correct past the C not on the 8th one
+        octave_correction = [0] * (8 - pad_grid_val["key_degree"] - 1) + [1] * (
+            pad_grid_val["key_degree"] + 1
+        )
+        for idx, velocity in enumerate(pad_grid_val["velocity"]):
+            # Root
+            if idx == pad_grid_val["key_degree"]:
+                self.pads[idx]["pad"].put_root_backgrnd(True)
+            else:
+                self.pads[idx]["pad"].put_root_backgrnd(False)
+            # Pressed
+            if velocity > 0:
+                self.pads[idx]["pad"].put_pressed_backgrnd(True)
+            else:
+                self.pads[idx]["pad"].put_pressed_backgrnd(False)
+            # Note
+            self.pads[idx]["pad"].button.setText(
+                f"{list_note[idx]} {int(octave_corrected + octave_correction[idx])}"
+            )

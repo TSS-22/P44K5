@@ -1,7 +1,8 @@
-from PySide6.QtWidgets import QFrame, QVBoxLayout, QDial, QLabel
+from PySide6.QtWidgets import QFrame, QVBoxLayout, QDial, QLabel, QDial
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette, QColor, QFont
-from gui.knobShow import KnobShow
+
+# from gui.knobShow import KnobShow
 from logic.gui.map_note import map_note
 
 
@@ -48,7 +49,7 @@ class WidgetBaseNote(QFrame):
             "val_max": 127,
             "val_start": 0,
         }
-        self.knob = KnobShow(parent=self, notchesVisible=True)
+        self.knob = QDial(parent=self, notchesVisible=True)
         self.knob.setFixedSize(
             self.knob_properties["size"], self.knob_properties["size"]
         )

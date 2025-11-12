@@ -71,6 +71,13 @@ class MainWindow(QMainWindow):
         self.wdgt_panel_chord = WidgetPanelChord(self)
         self.wdgt_pad_grid = WidgetPadGrid(self)
 
+        self.wdgt_base_note.knob.valueChanged.connect(
+            self.logic_worker.gui_change_base_note
+        )
+        self.wdgt_key_note.knob.valueChanged.connect(
+            self.logic_worker.gui_change_key_note
+        )
+
         self.layout_col = QVBoxLayout(self)
         self.layout_row_up = QHBoxLayout(self)
         self.layout_row_down = QHBoxLayout(self)
@@ -96,7 +103,9 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def updt_base_note(self, state):
+        self.wdgt_base_note.knob.blockSignals(True)
         self.wdgt_base_note.update(state["base_note"])
+        self.wdgt_base_note.knob.blockSignals(False)
         self.wdgt_pad_grid.update(
             {
                 "velocity": state["buffer"]["velocity"],
@@ -110,6 +119,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def updt_key_degree(self, state):
+        self.wdgt_key_note.knob.blockSignals(True)
         self.wdgt_key_note.update(
             {
                 "key_degree": state["key_degree"],
@@ -118,6 +128,7 @@ class MainWindow(QMainWindow):
                 "raw_key_knob": state["raw_key_knob"],
             }
         )
+        self.wdgt_key_note.knob.blockSignals(False)
         self.wdgt_pad_grid.update(
             {
                 "velocity": state["buffer"]["velocity"],

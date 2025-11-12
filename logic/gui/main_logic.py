@@ -3,6 +3,7 @@ from PySide6.QtCore import QRunnable, Signal, Slot, QObject
 from logic.core.controller.midi_controller import MidiController
 from logic.core.bridge.midi_bridge import MidiBridge
 from logic.gui.main_logic_signals import MainLogicSignals
+from logic.gui.gui_input import GuiInput
 from logic.core.controller.controller_message_flag import ControllerMessageFlag
 
 
@@ -57,3 +58,12 @@ class MainLogic(QRunnable):
     @Slot()
     def toggle_bypass(self):
         self.midi_controller.toggle_bypass()
+
+    @Slot()
+    def gui_change_base_note(self, base_note):
+        self.midi_controller.knob_base_note(GuiInput(base_note))
+        self.signals.base_note_changed.emit(self.midi_controller.state.to_dict())
+
+    @Slot()
+    def gui_change_key_note(self, key_note):
+        print(key_note)

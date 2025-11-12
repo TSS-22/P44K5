@@ -6,6 +6,22 @@ from logic.core.controller.controller_message_flag import ControllerMessageFlag
 
 
 class MidiController:
+
+    list_note = [
+        "C",
+        "C#",
+        "D",
+        "D#",
+        "E",
+        "F",
+        "F#",
+        "G",
+        "G#",
+        "A",
+        "A#",
+        "B",
+    ]  # HARDCODED
+
     # TODO change the name of some function like knob_playMode()as the plya might not be necessary. Make them more intuitive and simple
     # TODO reorganize the code in subclasses or something else to make the class more digestable
     # TODO replace the rturn message from note_on etc, as a class?
@@ -146,6 +162,31 @@ class MidiController:
     def toggle_bypass(self):
         self.state.bypass = not self.state.bypass
         print(self.state.bypass)
+
+    def compute_pad_note(self):
+        # Get the state of the pads
+        pads_state = []
+        for i in range(0, len(self.state.pad_intervals)):
+            interval = 0
+            for j in range(i + 1):
+                interval += self.state.pad_intervals[j]
+            pads_state.append(self.state.base_note + self.state.key_note + interval)
+            print(
+                f"pad {i}: {
+                    self.state.base_note + self.state.key_note + interval
+                    }"
+            )
+        # Compute the note associated with the index calculated above
+        pads_note = []
+        for val in pads_state:
+            pads_note.append(self.list_note[val % len(self.list_note)])
+
+        print(pads_note)
+        # Compute the octave
+        pads_octave = []
+        for val in pads_state:
+            print(int(val / 12) - 3)
+            pads_octave.append(int(val / 12) - 3)  # HARDCODED
 
     ##################
     # PHYSICAL LOGIC #
@@ -397,6 +438,7 @@ class MidiController:
             state=self.get_state(),
             list_message=[message],
         )
+        self.compute_pad_note()
         if self.state.bypass is False:
             # Note pressed
             if message.type == "note_on":

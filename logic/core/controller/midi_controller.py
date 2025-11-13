@@ -63,7 +63,7 @@ class MidiController:
         self.compute_pad_intervals()
 
         # TODO I think that the base list for chord should be just 7 chord as the 8th is always a repeat of the first one (and not twice a Major chord as it is now)
-        self.selected_mode_chord_prog = []
+        self.state.selected_mode_chord_prog = []
         self.compute_mode_chord_prog()
 
         self.chord_play_type = (
@@ -142,7 +142,7 @@ class MidiController:
 
     def compute_mode_chord_prog(self):
         if self.state.selected_mode != "None":
-            self.selected_mode_chord_prog = (
+            self.state.selected_mode_chord_prog = (
                 self.mode_prog_chord[self.state.selected_mode][:-1][
                     self.state.key_degree :
                 ]  # -1 to discard the double major atm
@@ -161,7 +161,6 @@ class MidiController:
 
     def toggle_bypass(self):
         self.state.bypass = not self.state.bypass
-        print(self.state.bypass)
 
     def compute_pad_note(self):
         # Get the state of the pads
@@ -171,16 +170,13 @@ class MidiController:
             for j in range(i + 1):
                 interval += self.state.pad_intervals[j]
             pads_state.append(self.state.base_note + self.state.key_note + interval)
-            print(
-                f"pad {i}: {
-                    self.state.base_note + self.state.key_note + interval
-                    }"
-            )
 
         pads_note = []
         pads_octave = []
         pads_root = []
+        pads_note_chord = []
         for val in pads_state:
+            notes_chords = []
             # Compute the note associated with the index calculated above
             pads_note.append(self.list_note[val % len(self.list_note)])
             # Compute the octave
@@ -190,18 +186,28 @@ class MidiController:
                 pads_root.append(True)
             else:
                 pads_root.append(False)
-
-        # Test print
-        for i in range(0, 8):
-            print(f"pad {i}: {pads_note[i]} {pads_octave[i]} | root: {pads_root[i]}")
-
-        # Compute the root note
-        (self.state.base_note - 127)  # HARDCODED
+            # Compute the chord notes
+            for chord_index in self.state.selected_chord_comp["comp"]:
+                if self.state.selected_play_type["name"] == "Single":
+                    notes_chords.append(self.list_note[val % len(self.list_note)])
+                    break
+                elif self.state.selected_play_type["name"] == "Normal":
+                    pass
+                else:
+                    notes_chords.append(
+                        self.list_note[
+                            (val + self.state.selected_play_type["chord"][chord_index])
+                            % len(self.list_note)
+                        ]
+                    )
+            print(f"notes_chords: {notes_chords}")
+            pads_note_chord.append(notes_chords)
 
         self.state.pads_state = pads_state
         self.state.pad_notes = pads_note
         self.state.pad_octaves = pads_octave
         self.state.pad_roots = pads_root
+        self.state.pad_notes_chords = pads_note_chord
 
     ##################
     # PHYSICAL LOGIC #
@@ -418,7 +424,7 @@ class MidiController:
             and self.state.selected_mode != "None"
         ):
             for chord_interval in [
-                self.selected_mode_chord_prog[id_pad][i]
+                self.state.selected_mode_chord_prog[id_pad][i]
                 for i in self.state.selected_chord_comp["comp"]
             ]:
                 midi_message_note_on.append(

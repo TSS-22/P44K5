@@ -8,6 +8,7 @@ class MidiControllerState:
         selected_play_type=None,
         selected_chord_type=None,
         selected_chord_comp=None,
+        selected_mode_chord_prog=[],
     ):
         self.bypass = False
         self.buffer = MidiControllerBuffer()
@@ -16,6 +17,7 @@ class MidiControllerState:
         self.key_degree = 0
         self.key_degree_octave = 0
         self.selected_mode = selected_mode
+        self.selected_mode_chord_prog = selected_mode_chord_prog
         self.selected_play_type = selected_play_type
         self.selected_chord_comp = selected_chord_comp
         self.chord_type = selected_chord_type
@@ -55,6 +57,16 @@ class MidiControllerState:
             False,
             False,
         ]
+        self.pad_notes_chords = [
+            "C",
+            "C#",
+            "D",
+            "D#",
+            "E",
+            "F",
+            "F#",
+            "G",
+        ]
 
     def to_dict(self):
         return {
@@ -66,6 +78,7 @@ class MidiControllerState:
             "selected_mode": self.selected_mode,
             "selected_play_type": self.selected_play_type,
             "selected_chord_comp": self.selected_chord_comp,
+            "selected_mode_chord_prog": self.selected_mode_chord_prog,
             "chord_type": self.chord_type,
             "raw_key_knob": self.raw_key_knob,
             "raw_knob_mode": self.raw_knob_mode,
@@ -76,6 +89,7 @@ class MidiControllerState:
             "pad_notes": self.pad_notes,
             "pad_octaves": self.pad_octaves,
             "pad_roots": self.pad_roots,
+            "pad_notes_chords": self.pad_notes_chords,
         }
 
     def to_tuple(self):
@@ -88,6 +102,7 @@ class MidiControllerState:
             ("selected_mode", self.selected_mode),
             ("selected_play_type", self.selected_play_type),
             ("selected_chord_comp", self.selected_chord_comp),
+            ("selected_mode_chord_prog", self.selected_mode_chord_prog),
             ("chord_type", self.chord_type),
             ("raw_key_knob", self.raw_key_knob),
             ("raw_knob_mode", self.raw_knob_mode),
@@ -98,4 +113,5 @@ class MidiControllerState:
             ("pad_notes", self.pad_notes),
             ("pad_octaves", self.pad_octaves),
             ("pad_roots", self.pad_roots),
+            ("pad_notes_chords", self.pad_notes_chords),
         )

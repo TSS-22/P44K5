@@ -70,41 +70,6 @@ class WidgetPadGrid(QFrame):
                 id_note = id_note + 1
 
     def update(self, pad_grid_val):
-        # idx_base_note = pad_grid_val["base_note"] % 12
-        # base_octave = int(pad_grid_val["base_note"] / 12) - 3
-
-        # list_note = []
-
-        # temp_corrected_pad_intervals = (
-        #     pad_grid_val["pad_intervals"][1:][::-1][: pad_grid_val["key_degree"]][::-1]
-        #     + pad_grid_val["pad_intervals"][
-        #         1 : len(pad_grid_val["pad_intervals"]) - pad_grid_val["key_degree"] :
-        #     ]
-        # )
-        # corrected_pad_intervals = (
-        #     [
-        #         sum(
-        #             temp_corrected_pad_intervals[: pad_grid_val["key_degree"]][
-        #                 : pad_grid_val["key_degree"]
-        #             ]
-        #         )
-        #     ]
-        #     + temp_corrected_pad_intervals[pad_grid_val["key_degree"] :]
-        #     + temp_corrected_pad_intervals[: pad_grid_val["key_degree"]]
-        # )
-        # for idx, _ in enumerate(pad_grid_val["velocity"]):
-        #     note_correction = sum(corrected_pad_intervals[: idx + 1])
-        #     list_note.append(map_note[(idx_base_note + note_correction) % 12])
-        # if pad_grid_val["key_note"] >= 0:
-        #     key_octave = pad_grid_val["key_degree_octave"] / 12
-        # else:
-        #     key_octave = int(pad_grid_val["key_degree_octave"] / 12 - 1)
-        # octave_corrected = base_octave + key_octave
-        # # Correct for the pad that will be one octave higher, but this is the wrong correction: it needs to correct past the C not on the 8th one
-        # octave_correction = [0] * (8 - pad_grid_val["key_degree"] - 1) + [1] * (
-        #     pad_grid_val["key_degree"] + 1
-        # )
-        print(pad_grid_val["pad_notes"])
         for idx, velocity in enumerate(pad_grid_val["velocity"]):
             # Note/Chord display
             self.pads[idx]["pad"].button.setText(

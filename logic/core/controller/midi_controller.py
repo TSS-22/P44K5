@@ -176,34 +176,42 @@ class MidiController:
                     self.state.base_note + self.state.key_note + interval
                     }"
             )
-        # Compute the note associated with the index calculated above
+
         pads_note = []
-        for val in pads_state:
-            pads_note.append(self.list_note[val % len(self.list_note)])
-
-        print(pads_note)
-        # Compute the octave
         pads_octave = []
+        pads_root = []
         for val in pads_state:
-            print(int(val / 12) - 3)
+            # Compute the note associated with the index calculated above
+            pads_note.append(self.list_note[val % len(self.list_note)])
+            # Compute the octave
             pads_octave.append(int(val / 12) - 3)  # HARDCODED
+            # Compute root
+            if (val - self.state.base_note) % 12 == 0:  # HARDCODED
+                pads_root.append(True)
+            else:
+                pads_root.append(False)
 
+        # Test print
         for i in range(0, 8):
-            print(f"pad {i}: {pads_note[i]} {pads_octave[i]}")
+            print(f"pad {i}: {pads_note[i]} {pads_octave[i]} | root: {pads_root[i]}")
+
+        # Compute the root note
+        (self.state.base_note - 127)  # HARDCODED
 
         self.state.pads_state = pads_state
         self.state.pad_notes = pads_note
         self.state.pad_octaves = pads_octave
+        self.state.pad_roots = pads_root
 
     ##################
     # PHYSICAL LOGIC #
     ##################
     # Pad pressed
-    def pad_pressed(self, input):
-        id_pad = input.note - self.base_note_offset
-        self.state.buffer.velocity[id_pad] = input.velocity
+    def pad_pressed(self, input_val):
+        id_pad = input_val.note - self.base_note_offset
+        self.state.buffer.velocity[id_pad] = input_val.velocity
         note = self.check_note(
-            input.note
+            input_val.note
             - self.base_note_offset
             + self.state.base_note
             + self.state.key_note
@@ -213,12 +221,12 @@ class MidiController:
         return MidiControllerOutput(
             flag=ControllerMessageFlag.PAD_PRESSED,
             state=self.get_state(),
-            list_message=self.note_on(note, input.velocity, id_pad),
+            list_message=self.note_on(note, input_val.velocity, id_pad),
         )
 
     # Pad released
-    def pad_released(self, input):
-        id_pad = input.note - self.base_note_offset
+    def pad_released(self, input_val):
+        id_pad = input_val.note - self.base_note_offset
         self.state.buffer.velocity[id_pad] = 0
         list_note_off = []
         for note in self.state.buffer.notes[id_pad]:
@@ -242,13 +250,13 @@ class MidiController:
         )
 
     #
-    def knob_base_note(self, input):
+    def knob_base_note(self, input_val):
         any_pad_on = False
         for id_pad, pad in enumerate(self.state.buffer.velocity):
             if pad > 0:
                 any_pad_on = True
                 temp_note = self.check_note(
-                    self.state.buffer.notes[id_pad][0] + input.value - 64
+                    self.state.buffer.notes[id_pad][0] + input_val.value - 64
                 )
                 return MidiControllerOutput(
                     flag=ControllerMessageFlag.KNOB_BASE_SLIDE,
@@ -259,21 +267,21 @@ class MidiController:
                 )
 
         if not any_pad_on:
-            self.select_base_note(input.value)
+            self.select_base_note(input_val.value)
             print(f"Base note: {self.state.base_note}")
             return MidiControllerOutput(
                 flag=ControllerMessageFlag.BASE_NOTE_CHANGED, state=self.get_state()
             )
 
     #
-    def knob_key_note(self, input):
+    def knob_key_note(self, input_val):
         any_pad_on = False
         for id_pad, pad in enumerate(self.state.buffer.velocity):
             if pad > 0:
                 any_pad_on = True
                 temp_note = self.check_note(
                     self.state.buffer.notes[id_pad][0]
-                    + self.select_key_note(input.value)
+                    + self.select_key_note(input_val.value)
                 )
                 return MidiControllerOutput(
                     flag=ControllerMessageFlag.KNOB_KEY_SLIDE,
@@ -284,8 +292,8 @@ class MidiController:
                 )
 
         if not any_pad_on:
-            self.select_key_note(input.value)
-            self.state.raw_key_knob = input.value
+            self.select_key_note(input_val.value)
+            self.state.raw_key_knob = input_val.value
             print(f"Key note: {self.state.key_note}")
             print(f"Key degree: {self.state.key_degree}")
             return MidiControllerOutput(
@@ -347,10 +355,10 @@ class MidiController:
 
     # Used to select the modes.
     # Refer to "./data.py/knob_values_playModes" for more details about the possible values
-    def knob_playMode(self, input):
-        self.state.raw_knob_mode = input.value
+    def knob_playMode(self, input_val):
+        self.state.raw_knob_mode = input_val.value
         return self.select_mode(
-            int(input.value / self.controller_settings.knob_div_modes)
+            int(input_val.value / self.controller_settings.knob_div_modes)
         )
 
     def select_mode(self, idx_mode):
@@ -363,10 +371,10 @@ class MidiController:
 
     # Used to select the type of play, either chord like or single note.
     # Refer to "./data.py/knob_values_playTypes" for more details about the possible values
-    def knob_playTypes(self, input):
-        self.state.raw_knob_play_type = input.value
+    def knob_playTypes(self, input_val):
+        self.state.raw_knob_play_type = input_val.value
         return self.select_play(
-            int(input.value / self.controller_settings.knob_div_playType)
+            int(input_val.value / self.controller_settings.knob_div_playType)
         )
 
     def select_play(self, idx_play):
@@ -378,10 +386,10 @@ class MidiController:
             flag=ControllerMessageFlag.PLAY_CHANGED, state=self.get_state()
         )
 
-    def knob_chordType(self, input):
-        self.state.raw_knob_chord_type = input.value
+    def knob_chordType(self, input_val):
+        self.state.raw_knob_chord_type = input_val.value
         return self.select_chord_comp(
-            int(input.value / self.controller_settings.knob_div_chord_comp)
+            int(input_val.value / self.controller_settings.knob_div_chord_comp)
         )
 
     def select_chord_comp(self, idx_chord_comp):

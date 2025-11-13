@@ -111,10 +111,8 @@ class WidgetPadGrid(QFrame):
                 f"{pad_grid_val["pad_notes"][idx]} {pad_grid_val["pad_octaves"][idx]}"
             )
             # Root
-            if idx == (7 - pad_grid_val["key_degree"]):  # Better but still wrong
-                self.pads[idx]["pad"].put_root_backgrnd(True)
-            else:
-                self.pads[idx]["pad"].put_root_backgrnd(False)
+            self.pads[idx]["pad"].put_root_backgrnd(pad_grid_val["pad_roots"][idx])
+
             # Pressed
             if velocity > 0:
                 self.pads[idx]["pad"].put_pressed_backgrnd(True)

@@ -179,5 +179,6 @@ class MainWindow(QMainWindow):
                 "key_degree_octave": state["key_degree_octave"],
                 "pad_notes": state["pad_notes"],
                 "pad_octaves": state["pad_octaves"],
+                "pad_roots": state["pad_roots"],
             }
         )

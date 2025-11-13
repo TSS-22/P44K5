@@ -10,6 +10,7 @@ class WidgetPad(QFrame):
         parent=None,
         note="C -3",
         root=False,
+        chord=[0],
         pad_pressed=False,
         widget_width=180,
         widget_height=180,
@@ -80,7 +81,36 @@ class WidgetPad(QFrame):
             """
         )
 
-        self.stack = QStackedLayout()
+        self.lbl_chord = QLabel("t-e-s-t-e-s-t-e", parent=self)
+        self.lbl_chord_properties = {
+            "size_x": self.widget_width * 0.5,
+            "size_y": self.widget_height * 0.1,
+            "font": font,
+            "font_size": font_size * 0.20,
+            "color": font_color,
+        }
+        self.chord_font = self.lbl_chord.font()
+        self.chord_font.setFamily(self.lbl_chord_properties["font"])
+        self.chord_font.setPointSize(self.lbl_chord_properties["font_size"])
+        self.lbl_chord.setFont(self.chord_font)
+
+        self.lbl_chord.setStyleSheet(
+            f"""
+            color: {self.lbl_chord_properties["color"]};
+            background: transparent;
+            qproperty-alignment: AlignCenter;
+            """
+        )
+        # self.lbl_chord.setFixedSize(
+        #     self.lbl_chord_properties["size_x"], self.lbl_chord_properties["size_y"]
+        # )
+        self.lbl_chord_position = {
+            "x": self.widget_width / 2,
+            "y": self.widget_height * 0.80,
+        }
+        self.lbl_chord.move(self.lbl_chord_position["x"], self.lbl_chord_position["y"])
+
+        # self.stack = QStackedLayout()
 
     def update_bckgrnd_only(self, widget, background_style):
         current_style = widget.styleSheet()

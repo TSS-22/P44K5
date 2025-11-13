@@ -45,6 +45,16 @@ class MidiControllerState:
             -3,
             -3,
         ]
+        self.pad_roots = [
+            True,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+        ]
 
     def to_dict(self):
         return {
@@ -65,6 +75,7 @@ class MidiControllerState:
             "pad_values": self.pad_values,
             "pad_notes": self.pad_notes,
             "pad_octaves": self.pad_octaves,
+            "pad_roots": self.pad_roots,
         }
 
     def to_tuple(self):
@@ -86,4 +97,5 @@ class MidiControllerState:
             ("pad_values", self.pad_values),
             ("pad_notes", self.pad_notes),
             ("pad_octaves", self.pad_octaves),
+            ("pad_roots", self.pad_roots),
         )

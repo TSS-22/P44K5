@@ -146,27 +146,27 @@ class MainWindow(QMainWindow):
     @Slot()
     def updt_panel_chord(self, state):
         # Add the update of the pad text with the note(s) played
-        self.wdgt_panel_chord.wheel_type.knob.blockSignals(True)
+        self.wdgt_panel_chord.wheel_comp.knob.blockSignals(True)
         self.wdgt_panel_chord.update_chord(
             {
                 "raw_knob_chord_type": state["raw_knob_chord_type"],
                 "selected_chord_comp": state["selected_chord_comp"],
             }
         )
-        self.wdgt_panel_chord.wheel_type.knob.blockSignals(False)
+        self.wdgt_panel_chord.wheel_comp.knob.blockSignals(False)
         self.updt_pad_grid(state)
 
     @Slot()
     def updt_panel_play(self, state):
         # Add the update of the pad text with the note(s) played
-        self.wdgt_panel_chord.wheel_comp.knob.blockSignals(True)
+        self.wdgt_panel_chord.wheel_type.knob.blockSignals(True)
         self.wdgt_panel_chord.update_play(
             {
                 "raw_knob_play_type": state["raw_knob_play_type"],
                 "selected_play_type": state["selected_play_type"],
             }
         )
-        self.wdgt_panel_chord.wheel_comp.knob.blockSignals(False)
+        self.wdgt_panel_chord.wheel_type.knob.blockSignals(False)
         self.updt_pad_grid(state)
 
     @Slot()

@@ -81,7 +81,7 @@ class WidgetPad(QFrame):
             """
         )
 
-        self.lbl_chord = QLabel("t-e-s-t-e-s-t-e", parent=self)
+        self.lbl_chord = QLabel(note.split()[0], parent=self)
         self.lbl_chord_properties = {
             "size_x": self.widget_width,
             "size_y": self.widget_height * 0.1,
@@ -104,7 +104,7 @@ class WidgetPad(QFrame):
             self.lbl_chord_properties["size_x"], self.lbl_chord_properties["size_y"]
         )
         self.lbl_chord_position = {
-            "x": 0,
+            "x": self.widget_height * 0.1,
             "y": self.widget_height * 0.80,
         }
         self.lbl_chord.move(self.lbl_chord_position["x"], self.lbl_chord_position["y"])

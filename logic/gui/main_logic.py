@@ -80,7 +80,7 @@ class MainLogic(QRunnable):
     def gui_change_play(self, knob_value):
         self.midi_controller.select_play(knob_value)
         self.midi_controller.state.raw_knob_play_type = (
-            knob_value * 21.166666666666666666666666666667
+            knob_value * 21.16666667
         )  # HARDCODED
         self.signals.panel_play_changed.emit(self.midi_controller.state.to_dict())
 
@@ -88,6 +88,6 @@ class MainLogic(QRunnable):
     def gui_change_chord_comp(self, knob_value):
         self.midi_controller.select_chord_comp(knob_value)
         self.midi_controller.state.raw_knob_chord_type = (
-            knob_value * 18.142857142857142857142857142857
+            knob_value * 18.142857142
         )  # HARDCODED
         self.signals.panel_chord_changed.emit(self.midi_controller.state.to_dict())

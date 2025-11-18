@@ -212,7 +212,6 @@ class MidiController:
                             % len(self.list_note)
                         ]
                     )
-            # print(f"notes_chords: {notes_chords}")
             pads_note_chord.append(notes_chords)
 
         self.state.pads_state = pads_state

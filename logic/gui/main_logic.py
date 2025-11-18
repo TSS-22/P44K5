@@ -86,8 +86,8 @@ class MainLogic(QRunnable):
 
     @Slot()
     def gui_change_chord_size(self, knob_value):
-        print(f"chord size knob: {knob_value}")
-        self.midi_controller.state.raw_knob_chord_size = (
+        print(f"chord size knob: {knob_value * 18.142857142}")
+        self.midi_controller.state.raw_knob_chord_size = int(
             knob_value * 18.142857142
         )  # HARDCODED
         self.midi_controller.select_chord_size(knob_value)

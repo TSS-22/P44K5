@@ -8,6 +8,6 @@ class MainLogicSignals(QObject):
     base_note_changed = Signal(dict)
     key_note_changed = Signal(dict)
     panel_mode_changed = Signal(dict)
-    panel_chord_changed = Signal(dict)
     panel_chord_comp_changed = Signal(dict)
+    panel_chord_size_changed = Signal(dict)
     pad_grid_changed = Signal(dict)

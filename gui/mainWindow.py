@@ -33,11 +33,11 @@ class MainWindow(QMainWindow):
         self.logic_worker.signals.base_note_changed.connect(self.updt_base_note)
         self.logic_worker.signals.key_note_changed.connect(self.updt_key_degree)
         self.logic_worker.signals.panel_mode_changed.connect(self.updt_panel_mode)
+        self.logic_worker.signals.panel_chord_comp_changed.connect(
+            self.updt_panel_chord_comp
+        )
         self.logic_worker.signals.panel_chord_size_changed.connect(
             self.updt_panel_chord_size
-        )
-        self.logic_worker.signals.panel_chord_comp_changed.connect(
-            self.updt_panel_chord_size_comp
         )
         self.logic_worker.signals.pad_grid_changed.connect(self.updt_pad_grid)
 

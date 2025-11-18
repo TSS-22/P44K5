@@ -6,7 +6,6 @@ class MidiControllerState:
         self,
         selected_mode=None,
         selected_chord_comp=None,
-        selected_chord_comp=None,
         selected_chord_size=None,
         selected_mode_chord_prog=[],
     ):
@@ -20,10 +19,9 @@ class MidiControllerState:
         self.selected_mode_chord_prog = selected_mode_chord_prog
         self.selected_chord_comp = selected_chord_comp
         self.selected_chord_size = selected_chord_size
-        self.chord_comp = selected_chord_comp
         self.raw_key_knob = 0
         self.raw_knob_mode = 0
-        self.raw_knob_chord_comp = 0
+        self.raw_knob_chord_size = 0
         self.raw_knob_chord_comp = 0
         self.pad_intervals = []
         self.pad_values = []
@@ -79,11 +77,10 @@ class MidiControllerState:
             "selected_chord_comp": self.selected_chord_comp,
             "selected_chord_size": self.selected_chord_size,
             "selected_mode_chord_prog": self.selected_mode_chord_prog,
-            "chord_comp": self.chord_comp,
             "raw_key_knob": self.raw_key_knob,
             "raw_knob_mode": self.raw_knob_mode,
             "raw_knob_chord_comp": self.raw_knob_chord_comp,
-            "raw_knob_chord_comp": self.raw_knob_chord_comp,
+            "raw_knob_chord_size": self.raw_knob_chord_size,
             "pad_intervals": self.pad_intervals,
             "pad_values": self.pad_values,
             "pad_notes": self.pad_notes,
@@ -103,11 +100,10 @@ class MidiControllerState:
             ("selected_chord_comp", self.selected_chord_comp),
             ("selected_chord_size", self.selected_chord_size),
             ("selected_mode_chord_prog", self.selected_mode_chord_prog),
-            ("chord_comp", self.chord_comp),
             ("raw_key_knob", self.raw_key_knob),
             ("raw_knob_mode", self.raw_knob_mode),
             ("raw_knob_chord_comp", self.raw_knob_chord_comp),
-            ("raw_knob_chord_comp", self.raw_knob_chord_comp),
+            ("raw_knob_chord_size", self.raw_knob_chord_size),
             ("pad_intervals", self.pad_intervals),
             ("pad_values", self.pad_values),
             ("pad_notes", self.pad_notes),

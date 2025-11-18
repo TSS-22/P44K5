@@ -45,10 +45,10 @@ class MainLogic(QRunnable):
             self.signals.key_note_changed.emit(midi_controller_output["state"])
         elif midi_controller_output["flag"] == ControllerMessageFlag.MODE_CHANGED:
             self.signals.panel_mode_changed.emit(midi_controller_output["state"])
-        elif midi_controller_output["flag"] == ControllerMessageFlag.CHORD_SIZE_CHANGED:
-            self.signals.panel_chord_comp_changed.emit(midi_controller_output["state"])
         elif midi_controller_output["flag"] == ControllerMessageFlag.CHORD_COMP_CHANGED:
             self.signals.panel_chord_comp_changed.emit(midi_controller_output["state"])
+        elif midi_controller_output["flag"] == ControllerMessageFlag.CHORD_SIZE_CHANGED:
+            self.signals.panel_chord_size_changed.emit(midi_controller_output["state"])
         elif (
             midi_controller_output["flag"] == ControllerMessageFlag.PAD_PRESSED
             or ControllerMessageFlag.PAD_RELEASED
@@ -71,23 +71,24 @@ class MainLogic(QRunnable):
 
     @Slot()
     def gui_change_mode(self, knob_value):
-        print(knob_value)
-        self.midi_controller.select_mode(knob_value)
         self.midi_controller.state.raw_knob_mode = knob_value * 15.875  # HARDCODED
+        self.midi_controller.select_mode(knob_value)
         self.signals.panel_mode_changed.emit(self.midi_controller.state.to_dict())
 
     @Slot()
     def gui_change_chord_comp(self, knob_value):
-        self.midi_controller.select_chord_comp(knob_value)
+        print(f"chord comp knob: {knob_value}")
         self.midi_controller.state.raw_knob_chord_comp = (
             knob_value * 21.16666667
         )  # HARDCODED
+        self.midi_controller.select_chord_comp(knob_value)
         self.signals.panel_chord_comp_changed.emit(self.midi_controller.state.to_dict())
 
     @Slot()
     def gui_change_chord_size(self, knob_value):
-        self.midi_controller.select_chord_size(knob_value)
-        self.midi_controller.state.raw_knob_chord_comp = (
+        print(f"chord size knob: {knob_value}")
+        self.midi_controller.state.raw_knob_chord_size = (
             knob_value * 18.142857142
         )  # HARDCODED
-        self.signals.panel_chord_changed.emit(self.midi_controller.state.to_dict())
+        self.midi_controller.select_chord_size(knob_value)
+        self.signals.panel_chord_size_changed.emit(self.midi_controller.state.to_dict())

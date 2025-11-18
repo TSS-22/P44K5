@@ -148,18 +148,6 @@ class MainWindow(QMainWindow):
         self.updt_pad_grid(state)
 
     @Slot()
-    def updt_panel_chord_size(self, state):
-        self.wdgt_panel_chord.wheel_chord_size.knob.blockSignals(True)
-        self.wdgt_panel_chord.update_chord_size(
-            {
-                "raw_knob_chord_comp": state["raw_knob_chord_comp"],
-                "selected_chord_size": state["selected_chord_size"],
-            }
-        )
-        self.wdgt_panel_chord.wheel_chord_size.knob.blockSignals(False)
-        self.updt_pad_grid(state)
-
-    @Slot()
     def updt_panel_chord_comp(self, state):
         self.wdgt_panel_chord.wheel_chord_comp.knob.blockSignals(True)
         self.wdgt_panel_chord.update_chord_comp(
@@ -169,6 +157,19 @@ class MainWindow(QMainWindow):
             }
         )
         self.wdgt_panel_chord.wheel_chord_comp.knob.blockSignals(False)
+        self.updt_pad_grid(state)
+
+    @Slot()
+    def updt_panel_chord_size(self, state):
+        print(state["raw_knob_chord_size"])
+        self.wdgt_panel_chord.wheel_chord_size.knob.blockSignals(True)
+        self.wdgt_panel_chord.update_chord_size(
+            {
+                "raw_knob_chord_size": state["raw_knob_chord_size"],
+                "selected_chord_size": state["selected_chord_size"],
+            }
+        )
+        self.wdgt_panel_chord.wheel_chord_size.knob.blockSignals(False)
         self.updt_pad_grid(state)
 
     @Slot()

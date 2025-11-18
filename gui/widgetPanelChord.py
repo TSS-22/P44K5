@@ -15,7 +15,7 @@ class WidgetPanelChord(QFrame):
         "Dim",
     ]
 
-    list_chord_comp = [
+    list_chord_size = [
         "5",
         "X",
         "6",
@@ -64,8 +64,8 @@ class WidgetPanelChord(QFrame):
             lbl_font_size=lbl_font_size * 0.75,
         )
 
-        self.wheel_comp = WidgetWheelChoice(
-            list_val=self.list_chord_comp,
+        self.wheel_chord_size = WidgetWheelChoice(
+            list_val=self.list_chord_size,
             widget_height=self.widget_height,
             widget_width=self.widget_width / 2,
             parent=self,
@@ -74,14 +74,14 @@ class WidgetPanelChord(QFrame):
         self.layout = QHBoxLayout(self)
 
         self.layout.addWidget(self.wheel_type)
-        self.layout.addWidget(self.wheel_comp)
+        self.layout.addWidget(self.wheel_chord_size)
 
     def update_chord(self, panel_chord_val):
-        self.wheel_comp.knob.setValue(
-            (panel_chord_val["raw_knob_chord_type"] / 127) * len(self.list_chord_comp)
+        self.wheel_chord_size.knob.setValue(
+            (panel_chord_val["raw_knob_chord_type"] / 127) * len(self.list_chord_size)
         )
-        idx = self.list_chord_comp.index(panel_chord_val["selected_chord_comp"]["name"])
-        self.wheel_comp.radio_button[idx].setChecked(True)
+        idx = self.list_chord_size.index(panel_chord_val["selected_chord_size"]["name"])
+        self.wheel_chord_size.radio_button[idx].setChecked(True)
 
     def update_play(self, panel_play_val):
         self.wheel_type.knob.setValue(

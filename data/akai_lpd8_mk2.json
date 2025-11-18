@@ -1,0 +1,12 @@
+{
+    "name_midi_in": "LPD8 mk2 0",
+    "name_midi_out": "test_virt_midi 2",
+    "base_note_offset": 36,
+    "pot_max_value": 127,
+    "id_knob_mode": 70,
+    "id_knob_play_type": 71,
+    "id_knob_chord_type": 72,
+    "id_knob_base_note": 74,
+    "id_knob_key_note": 75
+    
+}

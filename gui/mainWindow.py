@@ -83,8 +83,8 @@ class MainWindow(QMainWindow):
         self.wdgt_panel_chord.wheel_type.knob.valueChanged.connect(
             self.logic_worker.gui_change_play
         )
-        self.wdgt_panel_chord.wheel_comp.knob.valueChanged.connect(
-            self.logic_worker.gui_change_chord_comp
+        self.wdgt_panel_chord.wheel_chord_size.knob.valueChanged.connect(
+            self.logic_worker.gui_change_chord_size
         )
 
         self.layout_col = QVBoxLayout(self)
@@ -146,14 +146,14 @@ class MainWindow(QMainWindow):
     @Slot()
     def updt_panel_chord(self, state):
         # Add the update of the pad text with the note(s) played
-        self.wdgt_panel_chord.wheel_comp.knob.blockSignals(True)
+        self.wdgt_panel_chord.wheel_chord_size.knob.blockSignals(True)
         self.wdgt_panel_chord.update_chord(
             {
                 "raw_knob_chord_type": state["raw_knob_chord_type"],
-                "selected_chord_comp": state["selected_chord_comp"],
+                "selected_chord_size": state["selected_chord_size"],
             }
         )
-        self.wdgt_panel_chord.wheel_comp.knob.blockSignals(False)
+        self.wdgt_panel_chord.wheel_chord_size.knob.blockSignals(False)
         self.updt_pad_grid(state)
 
     @Slot()

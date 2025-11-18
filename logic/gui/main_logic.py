@@ -85,8 +85,8 @@ class MainLogic(QRunnable):
         self.signals.panel_play_changed.emit(self.midi_controller.state.to_dict())
 
     @Slot()
-    def gui_change_chord_comp(self, knob_value):
-        self.midi_controller.select_chord_comp(knob_value)
+    def gui_change_chord_size(self, knob_value):
+        self.midi_controller.select_chord_size(knob_value)
         self.midi_controller.state.raw_knob_chord_type = (
             knob_value * 18.142857142
         )  # HARDCODED

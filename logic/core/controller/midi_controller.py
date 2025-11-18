@@ -48,7 +48,7 @@ class MidiController:
         self.state = MidiControllerState(
             selected_mode=self.controller_settings.list_modes[0],
             selected_play_type=self.controller_settings.list_play_type[0],
-            selected_chord_comp=self.controller_settings.list_chord_comp[0],
+            selected_chord_size=self.controller_settings.list_chord_size[0],
         )
 
         self.base_note_offset = data_settings["base_note_offset"]
@@ -188,7 +188,7 @@ class MidiController:
             else:
                 pads_root.append(False)
             # Compute the chord notes
-            for chord_index in self.state.selected_chord_comp["comp"]:
+            for chord_index in self.state.selected_chord_size["comp"]:
                 if self.state.selected_play_type["name"] == "Single" or (
                     self.state.selected_mode == "None"
                     and self.state.selected_play_type["name"] == "Normal"
@@ -414,16 +414,16 @@ class MidiController:
 
     def knob_chordType(self, input_val):
         self.state.raw_knob_chord_type = input_val.value
-        return self.select_chord_comp(
-            int(input_val.value / self.controller_settings.knob_div_chord_comp)
+        return self.select_chord_size(
+            int(input_val.value / self.controller_settings.knob_div_chord_size)
         )
 
-    def select_chord_comp(self, idx_chord_comp):
-        self.state.selected_chord_comp = self.controller_settings.list_chord_comp[
-            idx_chord_comp
+    def select_chord_size(self, idx_chord_size):
+        self.state.selected_chord_size = self.controller_settings.list_chord_size[
+            idx_chord_size
         ]
         print(
-            f"Chord comp: {self.controller_settings.list_chord_comp[idx_chord_comp]}\n"
+            f"Chord comp: {self.controller_settings.list_chord_size[idx_chord_size]}\n"
         )
         return MidiControllerOutput(
             flag=ControllerMessageFlag.CHORD_CHANGED, state=self.get_state()
@@ -445,7 +445,7 @@ class MidiController:
         ):
             for chord_interval in [
                 self.state.selected_mode_chord_prog[id_pad][i]
-                for i in self.state.selected_chord_comp["comp"]
+                for i in self.state.selected_chord_size["comp"]
             ]:
                 midi_message_note_on.append(
                     self.append_note_on(note + chord_interval, velocity, id_pad)
@@ -454,7 +454,7 @@ class MidiController:
         else:
             for chord_interval in [
                 self.state.selected_play_type["chord"][i]
-                for i in self.state.selected_chord_comp["comp"][
+                for i in self.state.selected_chord_size["comp"][
                     : len(self.state.selected_play_type["chord"])
                 ]
             ]:

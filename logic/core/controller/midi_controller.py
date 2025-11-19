@@ -28,13 +28,6 @@ class MidiController:
             data_options_play, midi_device_settings
         )
 
-        # self.buffer = MidiControllerBuffer()
-
-        # self.selected_mode = self.controller_settings.list_modes[0]
-        # self.selected_chord_comp = self.controller_settings.list_chord_comp[0]
-        # self.base_note = 0
-        # self.key_note = 0
-        # self.key_degree = 0
         self.state = MidiControllerState(
             selected_mode=self.controller_settings.list_modes[0],
             selected_chord_comp=self.controller_settings.list_chord_comp[0],
@@ -52,17 +45,16 @@ class MidiController:
         self.selected_pad_interval = []
         self.compute_pad_intervals()
 
-        # TODO I think that the base list for chord should be just 7 chord as the 8th is always a repeat of the first one (and not twice a Major chord as it is now)
         self.state.selected_mode_chord_prog = []
         self.compute_mode_chord_prog()
 
-        self.chord_comp = (
-            []
-        )  # This architecture is prone to error, put list_chord_comp and chord_play_style together
-        # Create a dic with "name", "chord", that way I always have the name for single and normal. Actually that will make single the same as any mono chords comp
-        # Can't I make the normal one also just like any  other chord comp ?
-        # TODO Put the user file parser into a function when the need arise once the GUI is in working
-        self._init_chord_comp(data_options_play)
+        # self.chord_comp = (
+        #     []
+        # )  # This architecture is prone to error, put list_chord_comp and chord_play_style together
+        # # Create a dic with "name", "chord", that way I always have the name for single and normal. Actually that will make single the same as any mono chords comp
+        # # Can't I make the normal one also just like any  other chord comp ?
+        # # TODO Put the user file parser into a function when the need arise once the GUI is in working
+        # self._init_chord_comp(data_options_play)
 
     def _init_mode_prog_chord(self, data):
         for key in data["chord_prog_mode"]:
@@ -77,15 +69,15 @@ class MidiController:
             for val in data["tone_prog_mode"][key]:
                 self.mode_prog_tone[key].append(data["tone_progression"][val])
 
-    def _init_chord_comp(self, data):
-        self.chord_comp.append(
-            {"name": "chord_major", "intervals": data["chord_major"]}
-        )
-        self.chord_comp.append(
-            {"name": "chord_minor", "intervals": data["chord_minor"]}
-        )
-        self.chord_comp.append({"name": "chord_dom7", "intervals": data["chord_dom7"]})
-        self.chord_comp.append({"name": "chord_dim", "intervals": data["chord_dim"]})
+    # def _init_chord_comp(self, data):
+    #     self.chord_comp.append(
+    #         {"name": "chord_major", "intervals": data["chord_major"]}
+    #     )
+    #     self.chord_comp.append(
+    #         {"name": "chord_minor", "intervals": data["chord_minor"]}
+    #     )
+    #     self.chord_comp.append({"name": "chord_dom7", "intervals": data["chord_dom7"]})
+    #     self.chord_comp.append({"name": "chord_dim", "intervals": data["chord_dim"]})
 
     def get_state(self):
         return self.state
@@ -166,7 +158,7 @@ class MidiController:
             pads_note.append(self.list_note[pad_val % len(self.list_note)])
             # Compute the octave
             pads_octave.append(
-                int(pad_val / hc_len_chromatic_scale) - hc_offset_midi_octave
+                int(pad_val / hc_len_chromatic_scale) + hc_offset_midi_octave
             )
             # Compute root
             if (pad_val - self.state.base_note) % hc_len_chromatic_scale == 0:

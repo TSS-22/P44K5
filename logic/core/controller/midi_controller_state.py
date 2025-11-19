@@ -19,6 +19,9 @@ class MidiControllerState:
         self.selected_mode_chord_prog = selected_mode_chord_prog
         self.selected_chord_comp = selected_chord_comp
         self.selected_chord_size = selected_chord_size
+        self.idx_mode = 0
+        self.idx_chord_comp = 0
+        self.idx_chord_size = 0
         self.raw_key_knob = 0
         self.raw_knob_mode = 0
         self.raw_knob_chord_size = 0
@@ -77,6 +80,9 @@ class MidiControllerState:
             "selected_chord_comp": self.selected_chord_comp,
             "selected_chord_size": self.selected_chord_size,
             "selected_mode_chord_prog": self.selected_mode_chord_prog,
+            "idx_mode": self.idx_mode,
+            "idx_chord_comp": self.idx_chord_comp,
+            "idx_chord_size": self.idx_chord_size,
             "raw_key_knob": self.raw_key_knob,
             "raw_knob_mode": self.raw_knob_mode,
             "raw_knob_chord_comp": self.raw_knob_chord_comp,
@@ -89,25 +95,25 @@ class MidiControllerState:
             "pad_notes_chords": self.pad_notes_chords,
         }
 
-    def to_tuple(self):
-        return (
-            ("buffer", self.buffer.to_tuple()),
-            ("base_note", self.base_note),
-            ("key_note", self.key_note),
-            ("key_degree", self.key_degree),
-            ("key_degree_octave", self.key_degree_octave),
-            ("selected_mode", self.selected_mode),
-            ("selected_chord_comp", self.selected_chord_comp),
-            ("selected_chord_size", self.selected_chord_size),
-            ("selected_mode_chord_prog", self.selected_mode_chord_prog),
-            ("raw_key_knob", self.raw_key_knob),
-            ("raw_knob_mode", self.raw_knob_mode),
-            ("raw_knob_chord_comp", self.raw_knob_chord_comp),
-            ("raw_knob_chord_size", self.raw_knob_chord_size),
-            ("pad_intervals", self.pad_intervals),
-            ("pad_values", self.pad_values),
-            ("pad_notes", self.pad_notes),
-            ("pad_octaves", self.pad_octaves),
-            ("pad_roots", self.pad_roots),
-            ("pad_notes_chords", self.pad_notes_chords),
-        )
+    # def to_tuple(self):
+    #     return (
+    #         ("buffer", self.buffer.to_tuple()),
+    #         ("base_note", self.base_note),
+    #         ("key_note", self.key_note),
+    #         ("key_degree", self.key_degree),
+    #         ("key_degree_octave", self.key_degree_octave),
+    #         ("selected_mode", self.selected_mode),
+    #         ("selected_chord_comp", self.selected_chord_comp),
+    #         ("selected_chord_size", self.selected_chord_size),
+    #         ("selected_mode_chord_prog", self.selected_mode_chord_prog),
+    #         ("raw_key_knob", self.raw_key_knob),
+    #         ("raw_knob_mode", self.raw_knob_mode),
+    #         ("raw_knob_chord_comp", self.raw_knob_chord_comp),
+    #         ("raw_knob_chord_size", self.raw_knob_chord_size),
+    #         ("pad_intervals", self.pad_intervals),
+    #         ("pad_values", self.pad_values),
+    #         ("pad_notes", self.pad_notes),
+    #         ("pad_octaves", self.pad_octaves),
+    #         ("pad_roots", self.pad_roots),
+    #         ("pad_notes_chords", self.pad_notes_chords),
+    #     )

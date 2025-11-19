@@ -375,10 +375,11 @@ class MidiController:
     def knob_mode(self, input_val):
         self.state.raw_knob_mode = input_val.value
         return self.select_mode(
-            int(input_val.value / self.controller_settings.knob_div_modes)
+            input_val.value / self.controller_settings.knob_div_modes
         )
 
     def select_mode(self, idx_mode):
+        self.state.idx_mode = idx_mode
         self.state.selected_mode = self.controller_settings.list_modes[idx_mode]
         self.reset_key_degree()
         print(f"Mode: {self.controller_settings.list_modes[idx_mode]}\n")
@@ -390,11 +391,10 @@ class MidiController:
     # Refer to "./data.py/knob_values_chord_comp" for more details about the possible values
     def knob_chord_comp(self, input_val):
         self.state.raw_knob_chord_comp = input_val.value
-        return self.select_chord_comp(
-            int(input_val.value / self.controller_settings.knob_div_chord_comp)
-        )
+        return self.select_chord_comp(self.state.idx_chord_comp)
 
     def select_chord_comp(self, idx_chord_comp):
+        self.state.idx_chord_comp = idx_chord_comp
         self.state.selected_chord_comp = self.controller_settings.list_chord_comp[
             idx_chord_comp
         ]
@@ -412,6 +412,7 @@ class MidiController:
         )
 
     def select_chord_size(self, idx_chord_size):
+        self.state.idx_chord_size = idx_chord_size
         self.state.selected_chord_size = self.controller_settings.list_chord_size[
             idx_chord_size
         ]

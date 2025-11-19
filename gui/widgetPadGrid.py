@@ -69,18 +69,18 @@ class WidgetPadGrid(QFrame):
                 self.grid_layout.addWidget(pad, row, col)
                 id_note = id_note + 1
 
-    def update(self, pad_grid_val):
-        print(pad_grid_val["pad_notes"])
-        for idx, velocity in enumerate(pad_grid_val["velocity"]):
+    def update(self, state):
+        print(state["pad_notes"])
+        for idx, velocity in enumerate(state["velocity"]):
             # Note/Chord display
             self.pads[idx]["pad"].button.setText(
-                f"{pad_grid_val["pad_notes"][idx]} {pad_grid_val["pad_octaves"][idx]}"
+                f"{state["pad_notes"][idx]} {state["pad_octaves"][idx]}"
             )
             self.pads[idx]["pad"].lbl_chord.setText(
-                " - ".join(pad_grid_val["pad_notes_chords"][idx])
+                " - ".join(state["pad_notes_chords"][idx])
             )
             # Root
-            self.pads[idx]["pad"].put_root_backgrnd(pad_grid_val["pad_roots"][idx])
+            self.pads[idx]["pad"].put_root_backgrnd(state["pad_roots"][idx])
 
             # Pressed
             if velocity > 0:

@@ -140,7 +140,7 @@ class MainWindow(QMainWindow):
         self.wdgt_panel_mode.wheel_mode.knob.blockSignals(True)
         self.wdgt_panel_mode.update(
             {
-                "raw_knob_mode": state["raw_knob_mode"],
+                "idx_mode": state["idx_mode"],
                 "selected_mode": state["selected_mode"],
             }
         )
@@ -152,7 +152,7 @@ class MainWindow(QMainWindow):
         self.wdgt_panel_chord.wheel_chord_comp.knob.blockSignals(True)
         self.wdgt_panel_chord.update_chord_comp(
             {
-                "raw_knob_chord_comp": state["raw_knob_chord_comp"],
+                "idx_chord_comp": state["idx_chord_comp"],
                 "selected_chord_comp": state["selected_chord_comp"],
             }
         )
@@ -164,7 +164,7 @@ class MainWindow(QMainWindow):
         self.wdgt_panel_chord.wheel_chord_size.knob.blockSignals(True)
         self.wdgt_panel_chord.update_chord_size(
             {
-                "raw_knob_chord_size": state["raw_knob_chord_size"],
+                "idx_chord_size": state["idx_chord_size"],
                 "selected_chord_size": state["selected_chord_size"],
             }
         )

@@ -71,6 +71,7 @@ class MainLogic(QRunnable):
 
     @Slot()
     def gui_change_mode(self, knob_value):
+        print(knob_value)
         self.midi_controller.knob_mode(GuiInput(int(knob_value * 15.875)))  # HARDCODED
         self.signals.panel_mode_changed.emit(self.midi_controller.state.to_dict())
 

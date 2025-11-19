@@ -26,14 +26,14 @@ class MidiControllerState:
         self.pad_intervals = []
         self.pad_values = []
         self.pad_notes = [
-            "C -3",
-            "C# -3",
-            "D -3",
-            "D# -3",
-            "E -3",
-            "F -3",
-            "F# -3",
-            "G -3",
+            "C",
+            "C#",
+            "D",
+            "D#",
+            "E",
+            "F",
+            "F#",
+            "G",
         ]
         self.pad_octaves = [
             -3,

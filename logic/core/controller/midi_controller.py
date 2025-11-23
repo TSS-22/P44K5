@@ -356,7 +356,6 @@ class MidiController:
     # Used to select the modes.
     # Refer to "./data.py/knob_values_mode" for more details about the possible values
     def knob_mode(self, input_val):
-        self.state.raw_knob_mode = input_val.value
         return self.select_mode(
             int(input_val.value / self.controller_settings.knob_div_modes)
         )
@@ -372,7 +371,6 @@ class MidiController:
     # Used to select the chord comp, either chord like or single note.
     # Refer to "./data.py/knob_values_chord_comp" for more details about the possible values
     def knob_chord_comp(self, input_val):
-        self.state.raw_knob_chord_comp = input_val.value
         return self.select_chord_comp(
             int(input_val.value / self.controller_settings.knob_div_chord_comp)
         )
@@ -387,7 +385,6 @@ class MidiController:
         )
 
     def knob_chord_size(self, input_val):
-        self.state.raw_knob_chord_size = input_val.value
         return self.select_chord_size(
             int(input_val.value / self.controller_settings.knob_div_chord_size)
         )

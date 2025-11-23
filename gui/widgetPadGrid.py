@@ -61,7 +61,6 @@ class WidgetPadGrid(QFrame):
                 id_note = id_note + 1
 
     def update(self, state):
-        print(state["pad_notes"])
         for idx, velocity in enumerate(state["velocity"]):
             # Note/Chord display
             self.pads[idx]["pad"].button.setText(

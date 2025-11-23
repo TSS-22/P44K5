@@ -127,7 +127,6 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def updt_base_note(self, state):
-        print("test")
         self.wdgt_base_note.knob.blockSignals(True)
         self.wdgt_base_note.update(state["base_note"])
         self.wdgt_base_note.knob.blockSignals(False)
@@ -185,7 +184,6 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def updt_pad_grid(self, state):
-        print("test2")
         self.wdgt_pad_grid.update(
             {
                 "velocity": state["buffer"]["velocity"],

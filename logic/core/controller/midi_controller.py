@@ -271,7 +271,6 @@ class MidiController:
 
         if not any_pad_on:
             self.select_base_note(input_val.value)
-            print(f"Base note: {self.state.base_note}")
             return MidiControllerOutput(
                 flag=ControllerMessageFlag.BASE_NOTE_CHANGED, state=self.get_state()
             )
@@ -297,8 +296,6 @@ class MidiController:
         if not any_pad_on:
             self.select_key_note(input_val.value)
             self.state.raw_key_knob = input_val.value
-            print(f"Key note: {self.state.key_note}")
-            print(f"Key degree: {self.state.key_degree}")
             return MidiControllerOutput(
                 flag=ControllerMessageFlag.KEY_NOTE_CHANGED, state=self.get_state()
             )
@@ -368,7 +365,6 @@ class MidiController:
         self.state.idx_mode = idx_mode
         self.state.selected_mode = self.controller_settings.list_modes[idx_mode]
         self.reset_key_degree()
-        print(f"Mode: {self.controller_settings.list_modes[idx_mode]}\n")
         return MidiControllerOutput(
             flag=ControllerMessageFlag.MODE_CHANGED, state=self.get_state()
         )
@@ -386,9 +382,6 @@ class MidiController:
         self.state.selected_chord_comp = self.controller_settings.list_chord_comp[
             idx_chord_comp
         ]
-        print(
-            f"Chord comp: {self.controller_settings.list_chord_comp[idx_chord_comp]}\n"
-        )
         return MidiControllerOutput(
             flag=ControllerMessageFlag.CHORD_COMP_CHANGED, state=self.get_state()
         )
@@ -404,9 +397,6 @@ class MidiController:
         self.state.selected_chord_size = self.controller_settings.list_chord_size[
             idx_chord_size
         ]
-        print(
-            f"Chord size: {self.controller_settings.list_chord_size[idx_chord_size]}\n"
-        )
         return MidiControllerOutput(
             flag=ControllerMessageFlag.CHORD_SIZE_CHANGED, state=self.get_state()
         )
@@ -448,7 +438,6 @@ class MidiController:
 
     def append_note_on(self, note, velocity, id_pad):
         self.state.buffer.notes[id_pad].append(note)
-        print(f"Note on: {note} | Pad: {id_pad + 1}")
         return {"message": "note_on", "note": note, "velocity": velocity}
 
     #######################

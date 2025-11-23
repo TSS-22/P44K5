@@ -253,7 +253,7 @@ class MidiController:
         )
 
     #
-    def knob_base_note(self, input_val):
+    def knob_base_note_changed(self, input_val):
         any_pad_on = False
         for id_pad, pad in enumerate(self.state.buffer.velocity):
             if pad > 0:
@@ -276,7 +276,7 @@ class MidiController:
             )
 
     #
-    def knob_key_note(self, input_val):
+    def knob_key_note_changed(self, input_val):
         any_pad_on = False
         for id_pad, pad in enumerate(self.state.buffer.velocity):
             if pad > 0:
@@ -355,7 +355,7 @@ class MidiController:
 
     # Used to select the modes.
     # Refer to "./data.py/knob_values_mode" for more details about the possible values
-    def knob_mode(self, input_val):
+    def knob_mode_changed(self, input_val):
         return self.select_mode(
             int(input_val.value / self.controller_settings.knob_div_modes)
         )
@@ -370,7 +370,7 @@ class MidiController:
 
     # Used to select the chord comp, either chord like or single note.
     # Refer to "./data.py/knob_values_chord_comp" for more details about the possible values
-    def knob_chord_comp(self, input_val):
+    def knob_chord_comp_changed(self, input_val):
         return self.select_chord_comp(
             int(input_val.value / self.controller_settings.knob_div_chord_comp)
         )
@@ -384,7 +384,7 @@ class MidiController:
             flag=ControllerMessageFlag.CHORD_COMP_CHANGED, state=self.get_state()
         )
 
-    def knob_chord_size(self, input_val):
+    def knob_chord_size_changed(self, input_val):
         return self.select_chord_size(
             int(input_val.value / self.controller_settings.knob_div_chord_size)
         )
@@ -457,23 +457,23 @@ class MidiController:
             elif message.type == "control_change":
                 # Knob 1: select_base_note
                 if message.control == self.controller_settings.id_knob_base_note:
-                    output = self.knob_base_note(message)
+                    output = self.knob_base_note_changed(message)
 
                 # Knob 5: select_keyNote
                 elif message.control == self.controller_settings.id_knob_key_note:
-                    output = self.knob_key_note(message)
+                    output = self.knob_key_note_changed(message)
 
                 # Knob 4: select_mode
                 elif message.control == self.controller_settings.id_knob_mode:
-                    output = self.knob_mode(message)
+                    output = self.knob_mode_changed(message)
 
                 # Knob 8: select_chord_comp
                 elif message.control == self.controller_settings.id_knob_chord_comp:
-                    output = self.knob_chord_comp(message)
+                    output = self.knob_chord_comp_changed(message)
 
                 # Knob 7:select_chord_size
                 elif message.control == self.controller_settings.id_knob_chord_size:
-                    output = self.knob_chord_size(message)
+                    output = self.knob_chord_size_changed(message)
 
                 # Unassigned command
                 else:

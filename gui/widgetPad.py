@@ -10,17 +10,13 @@ class WidgetPad(QFrame):
         parent=None,
         note="C -3",
         root=False,
-        chord=[0],
+        chord_name="",
         pad_pressed=False,
         widget_width=180,
         widget_height=180,
-        canvas_width=1200,
-        canvas_height=760,
         font="Liberation sans",
         font_size=48,
         font_color="#00ff00",
-        rel_x=0.078,
-        rel_y=0.715,
     ):
         super().__init__(parent=parent)
         self.widget_width = widget_width
@@ -81,6 +77,7 @@ class WidgetPad(QFrame):
             """
         )
 
+        # Label chord comp
         self.lbl_chord = QLabel(note.split()[0], parent=self)
         self.lbl_chord_properties = {
             "size_x": self.widget_width,
@@ -104,12 +101,31 @@ class WidgetPad(QFrame):
             self.lbl_chord_properties["size_x"], self.lbl_chord_properties["size_y"]
         )
         self.lbl_chord_position = {
-            "x": self.widget_height * 0.1,
+            "x": self.widget_width * 0.1,
             "y": self.widget_height * 0.80,
         }
         self.lbl_chord.move(self.lbl_chord_position["x"], self.lbl_chord_position["y"])
 
-        # self.stack = QStackedLayout()
+        # Label chord name
+        self.lbl_chord_name = QLabel(chord_name, parent=self)
+        self.lbl_chord_name.setFont(self.chord_font)
+        self.lbl_chord_name.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.lbl_chord_name.setStyleSheet(
+            f"""
+            color: {self.lbl_chord_properties["color"]};
+            background: transparent; 
+            """
+        )
+        self.lbl_chord_name.setFixedSize(
+            self.lbl_chord_properties["size_x"], self.lbl_chord_properties["size_y"]
+        )
+        self.lbl_chord_name_position = {
+            "x": -0.1 * self.widget_height,
+            "y": self.widget_height * 0.70,
+        }
+        self.lbl_chord_name.move(
+            self.lbl_chord_name_position["x"], self.lbl_chord_name_position["y"]
+        )
 
     def update_bckgrnd_only(self, widget, background_style):
         current_style = widget.styleSheet()

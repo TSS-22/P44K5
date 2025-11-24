@@ -12,7 +12,6 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette, QColor, QFont
-from gui.knobShow import KnobShow
 
 
 class WidgetWheelChoice(QFrame):
@@ -84,6 +83,9 @@ class WidgetWheelChoice(QFrame):
                 }
                 QRadioButton:checked {
                     color: #00ff00;
+                }
+                QRadioButton:disabled {
+                    color: gray;
                 }
             """,
         }

@@ -120,10 +120,22 @@ class MainWindow(QMainWindow):
         self.layout_container.setLayout(self.layout_col)
         self.setCentralWidget(self.layout_container)
 
+        self._init_GUI()
+
     def closeEvent(self, event):
         # Ask the worker to stop
         self.logic_worker.stop()
         event.accept()
+
+    def _init_GUI(self):
+        state = self.logic_worker.midi_controller.get_state().to_dict()
+        # state = state
+        self.updt_base_note(state)
+        self.updt_key_degree(state)
+        self.updt_panel_mode(state)
+        self.updt_panel_chord_comp(state)
+        self.updt_panel_chord_size(state)
+        self.updt_pad_grid(state)
 
     @Slot()
     def updt_base_note(self, state):
@@ -156,7 +168,9 @@ class MainWindow(QMainWindow):
             }
         )
         self.wdgt_panel_mode.wheel_mode.knob.blockSignals(False)
+        self.updt_key_degree(state)
         self.updt_pad_grid(state)
+        self.function_activation(state)
 
     @Slot()
     def updt_panel_chord_comp(self, state):
@@ -168,6 +182,7 @@ class MainWindow(QMainWindow):
             }
         )
         self.wdgt_panel_chord.wheel_chord_comp.knob.blockSignals(False)
+        self.function_activation(state)
         self.updt_pad_grid(state)
 
     @Slot()
@@ -196,5 +211,22 @@ class MainWindow(QMainWindow):
                 "pad_octaves": state["pad_octaves"],
                 "pad_roots": state["pad_roots"],
                 "pad_notes_chords": state["pad_notes_chords"],
+                "name_chords": state["name_chords"],
             }
         )
+
+    def function_activation(self, state):
+        if state["idx_chord_comp"] == 0:
+            self.wdgt_panel_chord.wheel_chord_size.setEnabled(False)
+        else:
+            if state["idx_mode"] != 0:
+                self.wdgt_panel_chord.wheel_chord_size.setEnabled(True)
+            else:
+                self.wdgt_panel_chord.wheel_chord_size.setEnabled(False)
+
+        if state["idx_mode"] == 0:
+            self.wdgt_key_note.knob.setEnabled(False)
+            self.wdgt_panel_chord.wheel_chord_comp.radio_button[1].setEnabled(False)
+        else:
+            self.wdgt_key_note.knob.setEnabled(True)
+            self.wdgt_panel_chord.wheel_chord_comp.radio_button[1].setEnabled(True)

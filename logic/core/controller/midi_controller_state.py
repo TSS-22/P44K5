@@ -65,6 +65,16 @@ class MidiControllerState:
             "F#",
             "G",
         ]
+        self.name_chords = [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+        ]
 
     def to_dict(self):
         return {
@@ -87,4 +97,5 @@ class MidiControllerState:
             "pad_octaves": self.pad_octaves,
             "pad_roots": self.pad_roots,
             "pad_notes_chords": self.pad_notes_chords,
+            "name_chords": self.name_chords,
         }

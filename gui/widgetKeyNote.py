@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import QFrame, QVBoxLayout, QDial, QLabel
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette, QColor, QFont
-from gui.knobShow import KnobShow
 
 
 class WidgetKeyNote(QFrame):
@@ -59,7 +58,7 @@ class WidgetKeyNote(QFrame):
         self.knob_palette.setColor(QPalette.Button, QColor(knob_color))
         self.knob_palette.setColor(QPalette.Dark, QColor(lbl_txt_color))
         self.knob.setPalette(self.knob_palette)
-
+        self.knob.setEnabled(False)
         # Label info
         self.lbl_info_size_ratio = 0.8
         self.lbl_info_properties = {

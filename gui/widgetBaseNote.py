@@ -2,7 +2,6 @@ from PySide6.QtWidgets import QFrame, QVBoxLayout, QDial, QLabel, QDial
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette, QColor, QFont
 
-# from gui.knobShow import KnobShow
 from logic.gui.map_note import map_note
 
 

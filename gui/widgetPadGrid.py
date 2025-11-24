@@ -69,6 +69,7 @@ class WidgetPadGrid(QFrame):
             self.pads[idx]["pad"].lbl_chord.setText(
                 " - ".join(state["pad_notes_chords"][idx])
             )
+            self.pads[idx]["pad"].lbl_chord_name.setText(state["name_chords"][idx])
             # Root
             self.pads[idx]["pad"].put_root_backgrnd(state["pad_roots"][idx])
 

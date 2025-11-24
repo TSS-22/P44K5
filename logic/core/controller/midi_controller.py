@@ -72,6 +72,7 @@ class MidiController:
         self.state.key_note = 0
         self.compute_pad_intervals()
         self.compute_mode_chord_prog()
+        self.state.name_chords = self.compute_name_chord_prog()
 
     def compute_pad_intervals(self):
         if self.state.selected_mode == "None":
@@ -171,6 +172,32 @@ class MidiController:
         self.state.pad_octaves = pads_octave
         self.state.pad_roots = pads_root
         self.state.pad_notes_chords = pads_note_chord
+        self.state.name_chords = self.compute_name_chord_prog()
+
+    def compute_name_chord_prog(self):
+        name_chords = [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+        ]
+        if self.state.selected_mode != "None" and self.state.idx_chord_comp == 1:
+            name_chords = (
+                dg.hc_name_chord_prog[self.state.selected_mode][self.state.key_degree :]
+                + dg.hc_name_chord_prog[self.state.selected_mode][
+                    : self.state.key_degree
+                ]
+                + [
+                    dg.hc_name_chord_prog[self.state.selected_mode][
+                        self.state.key_degree
+                    ]
+                ]
+            )
+        return name_chords
 
     ##################
     # PHYSICAL LOGIC #
@@ -425,7 +452,8 @@ class MidiController:
 
                 # Knob 5: select_keyNote
                 elif message.control == self.controller_settings.id_knob_key_note:
-                    output = self.knob_key_note_changed(message)
+                    if self.state.selected_mode != "None":
+                        output = self.knob_key_note_changed(message)
 
                 # Knob 4: select_mode
                 elif message.control == self.controller_settings.id_knob_mode:
@@ -437,7 +465,8 @@ class MidiController:
 
                 # Knob 7:select_chord_size
                 elif message.control == self.controller_settings.id_knob_chord_size:
-                    output = self.knob_chord_size_changed(message)
+                    if self.state.idx_chord_comp != 0:
+                        output = self.knob_chord_size_changed(message)
 
                 # Unassigned command
                 else:

@@ -10,6 +10,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QIcon
 from gui.actions.action_refresh import QActionMidiRefresh
 from gui.configs.combo_midi_list import CmbBoxMidiController
+from gui.configs.wdgt_setup_knob import WidgetSetupKnob
+from gui.configs.config_knob_setup_flag import ConfigKnobSetupFlag
 
 from data.data_general import hc_file_filter
 
@@ -56,6 +58,45 @@ class ConfigNewWindow(QWidget):
         self.layout_window.addWidget(self.lbl_explanation)
 
         # Setup part
+        self.lbl_setup_pad_title = QLabel("Pad setup:")
+        self.lbl_setup_pad_xpln = QLabel("Pad explanation")
+
+        self.lbl_setup_knob_title = QLabel("Knob setup:")
+        self.lbl_setup_knob_xpln = QLabel("Knob explanation")
+
+        self.button_setup_pad = QPushButton("Setup pad")
+
+        self.setup_knob_mode = WidgetSetupKnob(knob_function=ConfigKnobSetupFlag.MODE)
+        self.setup_knob_chord_comp = WidgetSetupKnob(
+            knob_function=ConfigKnobSetupFlag.CHORD_COMP
+        )
+        self.setup_knob_chord_size = WidgetSetupKnob(
+            knob_function=ConfigKnobSetupFlag.CHORD_SIZE
+        )
+        self.setup_knob_base_note = WidgetSetupKnob(
+            knob_function=ConfigKnobSetupFlag.BASE_NOTE
+        )
+        self.setup_knob_key_degree = WidgetSetupKnob(
+            knob_function=ConfigKnobSetupFlag.KEY_DEGREE
+        )
+
+        self.button_refresh.clicked.connect(self.on_setup_pad_clicked)
+
+        self.layout_setup = QVBoxLayout()
+
+        self.layout_setup.addWidget(self.lbl_setup_pad_title)
+        self.layout_setup.addWidget(self.lbl_setup_pad_xpln)
+        self.layout_setup.addWidget(self.button_setup_pad)
+
+        self.layout_setup.addWidget(self.lbl_setup_knob_title)
+        self.layout_setup.addWidget(self.lbl_setup_knob_xpln)
+        self.layout_setup.addWidget(self.setup_knob_mode)
+        self.layout_setup.addWidget(self.setup_knob_chord_comp)
+        self.layout_setup.addWidget(self.setup_knob_chord_size)
+        self.layout_setup.addWidget(self.setup_knob_base_note)
+        self.layout_setup.addWidget(self.setup_knob_key_degree)
+
+        self.layout_window.addLayout(self.layout_setup)
 
         # Exit part
         self.button_save = QPushButton("Save")
@@ -73,8 +114,8 @@ class ConfigNewWindow(QWidget):
 
         self.setLayout(self.layout_window)
 
-    def refresh_list_midi_controller(self):
-        print("refresh midi controller list")
+    def on_setup_pad_clicked(self):
+        print("setup pad")
 
     def on_save_click(self):
         self.open_save_dialog()

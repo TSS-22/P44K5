@@ -122,7 +122,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         # Ask the worker to stop
         self.logic_worker.stop()
-        self.config_new_windows().close()
+        self.config_new_window.close()
         event.accept()
 
     def _init_GUI(self):

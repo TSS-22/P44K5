@@ -178,3 +178,7 @@ hc_dialog_select_device = "Select a device"
 hc_name_midi_out = "test_virt_midi 2"
 
 hc_file_filter = "Midi controller config files (*.cnfmidi);;All Files (*);;"
+
+hc_diag_knob_setup_txt = """
+Move the knob you want to associate with
+"""

@@ -2,11 +2,12 @@ from PySide6.QtWidgets import QWidget, QCheckBox, QLabel, QPushButton, QHBoxLayo
 from PySide6.QtCore import Signal
 
 from gui.configs.config_knob_setup_flag import ConfigKnobSetupFlag
+from gui.configs.information_dialogs.DiagKnobSetup import DiagKnobSetup
 
 
 class WidgetSetupKnob(QWidget):
 
-    signal_button_setup_clicked = Signal()
+    signal_button_setup_clicked = Signal(str)
 
     def __init__(
         self,
@@ -18,11 +19,16 @@ class WidgetSetupKnob(QWidget):
 
         self.function = knob_function
 
+        self.diag_window = DiagKnobSetup(
+            title="Instructions",
+            knob_function=self.function,
+        )
+
         # Create widgets
         self.checkbox = QCheckBox(checkbox_text)
         self.label = QLabel(knob_function.value)
         self.button = QPushButton(button_text)
-        self.button.clicked.connect(self.signal_button_setup_clicked.emit)
+        self.button.clicked.connect(self.button_clicked)
 
         self.button.setEnabled(False)
         self.checkbox.stateChanged.connect(self.checkbox_action)
@@ -43,3 +49,6 @@ class WidgetSetupKnob(QWidget):
             self.button.setEnabled(False)
         else:
             self.button.setEnabled(True)
+
+    def button_clicked(self):
+        self.signal_button_setup_clicked.emit(self.function.value)

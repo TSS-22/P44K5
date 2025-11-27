@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QToolButton,
     QFileDialog,
+    QMessageBox,
 )
 from PySide6.QtGui import QIcon
 from gui.actions.action_refresh import QActionMidiRefresh
@@ -80,7 +81,10 @@ class ConfigNewWindow(QWidget):
             knob_function=ConfigKnobSetupFlag.KEY_DEGREE
         )
 
-        self.button_refresh.clicked.connect(self.on_setup_pad_clicked)
+        self.button_setup_pad.clicked.connect(self.on_setup_pad_clicked)
+        self.setup_knob_mode.signal_button_setup_clicked.connect(
+            self.on_knob_setup_clicked
+        )
 
         self.layout_setup = QVBoxLayout()
 
@@ -135,3 +139,41 @@ class ConfigNewWindow(QWidget):
             print(file_path)
             # Here you would write your file saving logic
             self.close()
+
+    def on_knob_setup_clicked(self, knob_function):
+        # Open an instruction pop up
+        if knob_function == ConfigKnobSetupFlag.MODE.value:
+            self.setup_knob_mode.diag_window.show()
+        elif knob_function == ConfigKnobSetupFlag.CHORD_COMP.value:
+            self.setup_knob_chord_comp.diag_window.show()
+        elif knob_function == ConfigKnobSetupFlag.CHORD_SIZE.value:
+            self.setup_knob_chord_size.diag_window.show()
+        elif knob_function == ConfigKnobSetupFlag.BASE_NOTE.value:
+            self.setup_knob_base_note.diag_window.show()
+        elif knob_function == ConfigKnobSetupFlag.KEY_DEGREE.value:
+            self.setup_knob_key_degree.diag_window.show()
+
+        # Need to transfer this logic linked to the pop up opening due to cancel? Or maybe a simple signal
+        # Asses the knob
+        # Assert success
+        # If success, change value corresponding knob
+        # Else tell the user
+        # Close the instruction pop up
+
+        else:
+            # IMPROVE
+            # show error dialog
+            pass
+
+
+# if knob_function == ConfigKnobSetupFlag.UNKOWN.value:
+
+#         elif knob_function == ConfigKnobSetupFlag.MODE.value:
+
+#         elif knob_function == ConfigKnobSetupFlag.CHORD_COMP.value:
+
+#         elif knob_function == ConfigKnobSetupFlag.CHORD_SIZE.value:
+
+#         elif knob_function == ConfigKnobSetupFlag.BASE_NOTE.value:
+
+#         elif knob_function == ConfigKnobSetupFlag.KEY_DEGREE.value:

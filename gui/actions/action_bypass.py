@@ -17,13 +17,13 @@ class QActionBypass(QAction):
         self.icon_go = QIcon.fromTheme("media-playback-start")
         self.toggled.connect(self.on_toggled)  # Connect the signal
         self.setIcon(self.icon_stop)
-        self.setShortcut(Qt.Key_Return)
+        self.setShortcut(Qt.Key_Space)
 
     def on_toggled(self, checked):
         self.signal_toggled.emit(checked)
         if checked:
-            self.setStatusTip("Midi bypass turned on (Enter)")
+            self.setStatusTip("Midi bypass turned on (Space bar)")
             self.setIcon(self.icon_go)
         else:
-            self.setStatusTip("Midi bypass turned off (Enter)")
+            self.setStatusTip("Midi bypass turned off (Space bar)")
             self.setIcon(self.icon_stop)

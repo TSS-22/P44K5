@@ -10,17 +10,15 @@ from PySide6.QtWidgets import (
     QFileDialog,
 )
 from PySide6.QtCore import QThread, QThreadPool, Slot, QSize, Qt
-from PySide6.QtGui import QIcon, QAction
+from PySide6.QtGui import QIcon
 
 from gui.main_window.widgetBaseNote import WidgetBaseNote
 from gui.main_window.widgetKeyNote import WidgetKeyNote
 from gui.main_window.widgetPanelMode import WidgetPanelMode
 from gui.main_window.widgetPanelChord import WidgetPanelChord
 from gui.main_window.widgetPadGrid import WidgetPadGrid
-from gui.actions.action_bypass import QActionBypass
-from gui.actions.action_load import QActionConfigLoad
-from gui.actions.action_new import QActionConfigNew
-from gui.actions.action_edit import QActionConfigEdit
+from gui.main_bars.main_tool_bar import MainToolBar
+from gui.configs.ConfigNewWindow import ConfigNewWindow
 
 from logic.gui.main_logic import MainLogic
 
@@ -44,38 +42,8 @@ class MainWindow(QMainWindow):
             """
         )
 
-        self.toolbar = QToolBar("Top bar action")
-        self.toolbar.setStyleSheet(
-            """
-            border: none;
-            background: #eeeeee;
-            """
-        )
-
-        # Toolbar
-        self.toolbar.setIconSize(QSize(22, 22))
-        self.toolbar.setMovable(False)  # Prevents the toolbar from being dragged
-        self.toolbar.setFloatable(
-            False
-        )  # Prevents the toolbar from being detached as a floating window
-        self.toolbar.setContextMenuPolicy(Qt.NoContextMenu)
-        self.addToolBar(self.toolbar)
-        self.toolbar.setAllowedAreas(Qt.TopToolBarArea | Qt.BottomToolBarArea)
-        self.toolbar.setVisible(True)
-
-        self.toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
-
-        self.action_new = QActionConfigNew()
-        self.action_load = QActionConfigLoad()
-        self.action_edit = QActionConfigEdit()
-
-        self.action_bypass = QActionBypass()
-
-        self.toolbar.addAction(self.action_new)
-        self.toolbar.addAction(self.action_load)
-        self.toolbar.addAction(self.action_edit)
-        self.toolbar.addSeparator()
-        self.toolbar.addAction(self.action_bypass)
+        self.tool_bar = MainToolBar()
+        self.addToolBar(self.tool_bar)
 
         self.wdgt_base_note = WidgetBaseNote(self)
         self.wdgt_key_note = WidgetKeyNote(self)
@@ -83,6 +51,12 @@ class MainWindow(QMainWindow):
         self.wdgt_panel_chord = WidgetPanelChord(self)
         self.wdgt_pad_grid = WidgetPadGrid(self)
 
+        # QAction driven changes
+        self.tool_bar.action_refresh.signal_clicked.connect(self.refresh_midi_input)
+        self.tool_bar.action_new.signal_clicked.connect(self.open_new_config_window)
+        self.tool_bar.cmb_midi_controller.currentTextChanged.connect(
+            self.on_choice_controller_changed
+        )
         # User GUI driven changes signal connections
         self.wdgt_base_note.knob.valueChanged.connect(
             self.logic_worker.gui_change_base_note
@@ -109,6 +83,7 @@ class MainWindow(QMainWindow):
             self.logic_worker.gui_change_chord_size
         )
 
+        # Physically driven change
         self.logic_worker.signals.base_note_changed.connect(self.updt_base_note)
         self.logic_worker.signals.key_note_changed.connect(self.updt_key_degree)
         self.logic_worker.signals.panel_mode_changed.connect(self.updt_panel_mode)
@@ -140,11 +115,14 @@ class MainWindow(QMainWindow):
         self.layout_container.setLayout(self.layout_col)
         self.setCentralWidget(self.layout_container)
 
+        self.config_new_window = ConfigNewWindow(parent=self)
+
         self._init_GUI()
 
     def closeEvent(self, event):
         # Ask the worker to stop
         self.logic_worker.stop()
+        self.config_new_windows().close()
         event.accept()
 
     def _init_GUI(self):
@@ -156,6 +134,7 @@ class MainWindow(QMainWindow):
         self.updt_panel_chord_comp(state)
         self.updt_panel_chord_size(state)
         self.updt_pad_grid(state)
+        self.refresh_midi_input()
 
     @Slot()
     def updt_base_note(self, state):
@@ -250,3 +229,19 @@ class MainWindow(QMainWindow):
         else:
             self.wdgt_key_note.knob.setEnabled(True)
             self.wdgt_panel_chord.wheel_chord_comp.radio_button[1].setEnabled(True)
+
+    @Slot()
+    def refresh_midi_input(self):
+        self.tool_bar.cmb_midi_controller.refresh(self.logic_worker.get_midi_input())
+        self.config_new_window.cmb_midi_controller.refresh(
+            self.logic_worker.get_midi_input()
+        )
+
+    @Slot()
+    def on_choice_controller_changed(self, controller_name):
+        self.logic_worker.midi_bridge.disconnect()
+        self.logic_worker.midi_bridge.connect_to_controller(controller_name)
+
+    @Slot()
+    def open_new_config_window(self):
+        self.config_new_window.show()

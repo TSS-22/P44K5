@@ -88,3 +88,6 @@ class MainLogic(QRunnable):
         self.midi_controller.select_chord_size(knob_value)
         self.midi_controller.compute_pad_note()
         self.signals.panel_chord_size_changed.emit(self.midi_controller.state.to_dict())
+
+    def get_midi_input(self):
+        return self.midi_bridge.get_midi_input()

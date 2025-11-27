@@ -1,6 +1,7 @@
 from PySide6.QtGui import QAction, QIcon, QKeySequence
 from PySide6.QtWidgets import QStyle, QFileDialog
 from PySide6.QtCore import Signal
+from data.data_general import hc_file_filter
 
 
 class QActionConfigLoad(QAction):
@@ -19,7 +20,7 @@ class QActionConfigLoad(QAction):
             None,
             "Open File",
             "",
-            "Midi controller config files (*.cnfmidi);;All Files (*);;",
+            hc_file_filter,
         )
         if file_path:
             print(f"Selected file: {file_path}")

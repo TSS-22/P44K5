@@ -172,3 +172,9 @@ hc_name_chord_prog = {
         "Min",
     ],
 }
+
+hc_dialog_select_device = "Select a device"
+
+hc_name_midi_out = "test_virt_midi 2"
+
+hc_file_filter = "Midi controller config files (*.cnfmidi);;All Files (*);;"

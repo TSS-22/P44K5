@@ -3,18 +3,22 @@ import os
 import json
 import rtmidi
 import mido
+from data.data_general import hc_dialog_select_device, hc_name_midi_out
 
 
 class MidiBridge:
 
     def __init__(self):
-        with open("./data/akai_lpd8_mk2.json", "r", encoding="UTF-8") as file_settings:
-            midi_device_settings = json.load(file_settings)
+        # CLEAN
+        # with open("./data/akai_lpd8_mk2.json", "r", encoding="UTF-8") as file_settings:
+        #     midi_device_settings = json.load(file_settings)
 
-        self.input_port = midi_device_settings["name_midi_in"]
-        self.output_port = midi_device_settings["name_midi_out"]
+        # self.input_port = midi_device_settings["name_midi_in"]
+        self.output_port = hc_name_midi_out
 
-        self.init_midi_in()
+        self.input = mido.open_input()
+
+        # self.init_midi_in()
         self.init_midi_out()
 
     def init_midi_in(self):
@@ -90,3 +94,25 @@ class MidiBridge:
 
     def get_selected_ouput(self):
         return self.output
+
+    def get_midi_input(self):
+        list_midi_input = mido.get_input_names()
+        print(mido.get_input_names())
+        return [hc_dialog_select_device] + list_midi_input
+
+    def connect_to_controller(self, controller_name):
+        if (controller_name != hc_dialog_select_device) and (controller_name != ""):
+            try:
+                # IMPROVE
+                # Add a status connection item in the status bar
+                self.input = mido.open_input(controller_name)
+                print(f"Successfully opened MIDI input: {controller_name}")
+
+            except Exception as e:
+                # IMPROVE
+                # Add a popup
+                print(f"Failed to open MIDI input: {e}")
+
+    def disconnect(self):
+        # check if connected first
+        self.input.close()

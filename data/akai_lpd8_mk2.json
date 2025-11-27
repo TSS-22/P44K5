@@ -1,6 +1,4 @@
 {
-    "name_midi_in": "LPD8 mk2 0",
-    "name_midi_out": "test_virt_midi 2",
     "base_note_offset": 36,
     "pot_max_value": 127,
     "id_knob_mode": 70,

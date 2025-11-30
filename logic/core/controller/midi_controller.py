@@ -11,6 +11,7 @@ class MidiController:
     list_note = dg.hc_chromatic_scale
 
     def __init__(self):
+        # Put the automatic loading of the last config here
         with open("./data/akai_lpd8_mk2.json", "r", encoding="UTF-8") as file_settings:
             midi_device_settings = json.load(file_settings)
 
@@ -49,8 +50,8 @@ class MidiController:
     def get_state(self):
         return self.state
 
-    def set_configuration_mode(self, val):
-        self.state.configuration = val
+    def load_micro_controller_settings(self, midi_device_settings):
+        self.controller_settings = MidiControllerSettings(midi_device_settings)
 
     #############################
     # GENERAL LOGIC / UTILITIES #

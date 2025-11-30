@@ -184,3 +184,6 @@ hc_file_extension = "cnfmidi"
 hc_diag_knob_setup_txt = """
 Move the knob you want to associate with
 """
+
+hc_pad_mode_note = "note"
+hc_pad_mode_cc = "control_change"

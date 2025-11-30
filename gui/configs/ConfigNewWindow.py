@@ -18,7 +18,12 @@ from gui.configs.config_knob_setup_flag import ConfigSetupFlag
 from gui.configs.information_dialogs.DiagKnobSetup import DiagKnobSetup
 from gui.configs.information_dialogs.DiagPadSetup import DiagPadSetup
 
-from data.data_general import hc_file_filter, hc_diag_knob_setup_txt, hc_file_extension
+from data.data_general import (
+    hc_file_filter,
+    hc_diag_knob_setup_txt,
+    hc_pad_mode_note,
+    hc_pad_mode_cc,
+)
 
 
 class ConfigNewWindow(QWidget):
@@ -183,11 +188,26 @@ class ConfigNewWindow(QWidget):
         )
         if file_path:  # If user didn't cancel
             print(file_path)
-            # IMPROVE
-            # Make the dictionnary cleaner
-            # Here you would write your file saving logic
+            data_dump = {
+                "pad_mode": self.midi_control_value["pad_mode"],
+                "base_note_offset": self.midi_control_value[ConfigSetupFlag.PAD.value],
+                "pot_max_value": 127,
+                "id_knob_mode": self.midi_control_value[ConfigSetupFlag.MODE.value],
+                "id_knob_chord_comp": self.midi_control_value[
+                    ConfigSetupFlag.CHORD_COMP.value
+                ],
+                "id_knob_chord_size": self.midi_control_value[
+                    ConfigSetupFlag.CHORD_SIZE.value
+                ],
+                "id_knob_base_note": self.midi_control_value[
+                    ConfigSetupFlag.BASE_NOTE.value
+                ],
+                "id_knob_key_note": self.midi_control_value[
+                    ConfigSetupFlag.KEY_DEGREE.value
+                ],
+            }
             with open(file_path, "w", encoding="utf-8") as f:
-                json.dump(self.midi_control_value, f, indent=4)
+                json.dump(data_dump, f, indent=4)
             self.close()
 
     def on_knob_setup_clicked(self, knob_function):
@@ -273,12 +293,12 @@ class ConfigNewWindow(QWidget):
         base_note = 9999
         if self.polled_messages:
             if self.polled_messages[0].is_cc():
-                self.midi_control_value.update({"pad_mode": "control_change"})
+                self.midi_control_value.update({"pad_mode": hc_pad_mode_cc})
                 for msg in self.polled_messages:
                     if msg.control < base_note:
                         base_note = msg.control
             else:
-                self.midi_control_value.update({"pad_mode": "note"})
+                self.midi_control_value.update({"pad_mode": hc_pad_mode_note})
                 for msg in self.polled_messages:
                     if msg.note < base_note:
                         base_note = msg.note

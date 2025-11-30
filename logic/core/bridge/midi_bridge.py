@@ -9,11 +9,6 @@ from data.data_general import hc_dialog_select_device, hc_name_midi_out
 class MidiBridge:
 
     def __init__(self):
-        # CLEAN
-        # with open("./data/akai_lpd8_mk2.json", "r", encoding="UTF-8") as file_settings:
-        #     midi_device_settings = json.load(file_settings)
-
-        # self.input_port = midi_device_settings["name_midi_in"]
         output_ports = mido.get_output_names()
         self.output_port = [
             item for item in output_ports if item.startswith(hc_name_midi_out)
@@ -21,7 +16,6 @@ class MidiBridge:
 
         self.input = mido.ports.BaseInput()
 
-        # self.init_midi_in()
         self.init_midi_out()
 
     def init_midi_in(self):

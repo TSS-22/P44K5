@@ -8,6 +8,7 @@ class MidiControllerSettings:
         self.list_chord_comp = dg.knob_values_chord_comp
         self.list_chord_size = dg.knob_values_chord_size
 
+        self.pad_mode = midi_device_settings["pad_mode"]
         self.id_knob_base_note = midi_device_settings["id_knob_base_note"]
         self.id_knob_key_note = midi_device_settings["id_knob_key_note"]
         self.id_knob_mode = midi_device_settings["id_knob_mode"]

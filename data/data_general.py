@@ -179,6 +179,8 @@ hc_name_midi_out = "test_virt_midi"
 
 hc_file_filter = "Midi controller config files (*.cnfmidi);;All Files (*);;"
 
+hc_file_extension = "cnfmidi"
+
 hc_diag_knob_setup_txt = """
 Move the knob you want to associate with
 """

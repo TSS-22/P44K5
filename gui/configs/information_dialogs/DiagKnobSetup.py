@@ -9,7 +9,7 @@ class DiagKnobSetup(QMessageBox):
     def __init__(
         self,
         parent=None,
-        title="Information",
+        title="Instructions",
     ):
         super().__init__(parent)
         self.setIcon(QMessageBox.Information)

@@ -1,3 +1,4 @@
+import json
 from PySide6.QtWidgets import (
     QWidget,
     QLabel,
@@ -17,7 +18,7 @@ from gui.configs.config_knob_setup_flag import ConfigSetupFlag
 from gui.configs.information_dialogs.DiagKnobSetup import DiagKnobSetup
 from gui.configs.information_dialogs.DiagPadSetup import DiagPadSetup
 
-from data.data_general import hc_file_filter, hc_diag_knob_setup_txt
+from data.data_general import hc_file_filter, hc_diag_knob_setup_txt, hc_file_extension
 
 
 class ConfigNewWindow(QWidget):
@@ -31,6 +32,7 @@ class ConfigNewWindow(QWidget):
         self.midi_control_value = {}
         for val in ConfigSetupFlag:
             self.midi_control_value[val.value] = None
+        self.midi_control_value.update({"pad_mode": None})
 
         self.setWindowTitle("Create MIDI controller configuration")
 
@@ -158,7 +160,7 @@ class ConfigNewWindow(QWidget):
         self.diag_window_pad.show()
         self.polled_messages = []
         self.midi_poll_timer.timeout.connect(self.poll_midi_messages_pad)
-        self.midi_poll_timer.start(10)
+        self.midi_poll_timer.start(2)
 
     def on_save_click(self):
         self.open_save_dialog()
@@ -177,7 +179,11 @@ class ConfigNewWindow(QWidget):
         )
         if file_path:  # If user didn't cancel
             print(file_path)
+            # IMPROVE
+            # Make the dictionnary cleaner
             # Here you would write your file saving logic
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(self.midi_control_value, f, indent=4)
             self.close()
 
     def on_knob_setup_clicked(self, knob_function):
@@ -188,7 +194,7 @@ class ConfigNewWindow(QWidget):
 
         # Start a timer to poll for MIDI messages
         self.midi_poll_timer.timeout.connect(self.poll_midi_messages_knob)
-        self.midi_poll_timer.start(10)  # Check every 10ms
+        self.midi_poll_timer.start(5)  # Check every 10ms
 
     def poll_midi_messages_knob(self):
         print("polling knob")
@@ -201,7 +207,7 @@ class ConfigNewWindow(QWidget):
             self.on_midi_message_received(messages)
 
     def poll_midi_messages_pad(self):
-        print("polling knob")
+        print("polling pad")
 
         messages = self.parent.logic_worker.midi_bridge.input.iter_pending()
         if messages:
@@ -226,6 +232,7 @@ class ConfigNewWindow(QWidget):
 
     def closeEvent(self, event):
         self.diag_window_knob.close()
+        self.diag_window_pad.close()
         self.midi_poll_timer.stop()
 
     def set_text_diag_knob_setup(self, val_function):
@@ -257,4 +264,18 @@ class ConfigNewWindow(QWidget):
         print("ok pad")
         self.midi_poll_timer.stop()
         print(self.polled_messages)
+        base_note = 9999
+        if self.polled_messages:
+            if self.polled_messages[0].is_cc():
+                self.midi_control_value.update({"pad_mode": "control_change"})
+                for msg in self.polled_messages:
+                    if msg.control < base_note:
+                        base_note = msg.control
+            else:
+                self.midi_control_value.update({"pad_mode": "note"})
+                for msg in self.polled_messages:
+                    if msg.note < base_note:
+                        base_note = msg.note
+        self.midi_control_value[self.active_setup.value] = base_note
+        self.active_setup = ConfigSetupFlag.NONE
         self.polled_messages = []

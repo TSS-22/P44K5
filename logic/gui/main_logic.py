@@ -91,3 +91,6 @@ class MainLogic(QRunnable):
 
     def get_midi_input(self):
         return self.midi_bridge.get_midi_input()
+
+    # def set_configuration_mode(self, val):
+    #     self.midi_controller.set_configuration_mode(val)

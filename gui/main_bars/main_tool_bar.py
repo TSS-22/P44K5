@@ -40,7 +40,7 @@ class MainToolBar(QToolBar):
 
         self.addAction(self.action_new)
         self.addAction(self.action_load)
-        self.addAction(self.action_edit)
+        # self.addAction(self.action_edit)
         self.addSeparator()
         self.addWidget(self.cmb_midi_controller)
         self.addAction(self.action_refresh)

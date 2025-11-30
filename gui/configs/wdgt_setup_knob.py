@@ -1,8 +1,7 @@
 from PySide6.QtWidgets import QWidget, QCheckBox, QLabel, QPushButton, QHBoxLayout
 from PySide6.QtCore import Signal
 
-from gui.configs.config_knob_setup_flag import ConfigKnobSetupFlag
-from gui.configs.information_dialogs.DiagKnobSetup import DiagKnobSetup
+from gui.configs.config_knob_setup_flag import ConfigSetupFlag
 
 
 class WidgetSetupKnob(QWidget):
@@ -11,7 +10,7 @@ class WidgetSetupKnob(QWidget):
 
     def __init__(
         self,
-        knob_function=ConfigKnobSetupFlag.UNKOWN,
+        knob_function=ConfigSetupFlag.UNKOWN,
         button_text="Setup",
         checkbox_text="activate",
     ):
@@ -19,14 +18,10 @@ class WidgetSetupKnob(QWidget):
 
         self.function = knob_function
 
-        self.diag_window = DiagKnobSetup(
-            title="Instructions",
-            knob_function=self.function,
-        )
-
         # Create widgets
         self.checkbox = QCheckBox(checkbox_text)
-        self.label = QLabel(knob_function.value)
+        self.lbl_knob_function = QLabel(knob_function.value)
+        self.lbl_knob_value = QLabel("None")
         self.button = QPushButton(button_text)
         self.button.clicked.connect(self.button_clicked)
 
@@ -38,8 +33,9 @@ class WidgetSetupKnob(QWidget):
 
         # Add widgets to the layout
         layout.addWidget(self.checkbox)
-        layout.addWidget(self.label)
+        layout.addWidget(self.lbl_knob_function)
         layout.addWidget(self.button)
+        layout.addWidget(self.lbl_knob_value)
 
         # Set the layout for this widget
         self.setLayout(layout)

@@ -49,6 +49,9 @@ class MidiController:
     def get_state(self):
         return self.state
 
+    def set_configuration_mode(self, val):
+        self.state.configuration = val
+
     #############################
     # GENERAL LOGIC / UTILITIES #
     #############################

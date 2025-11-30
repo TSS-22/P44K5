@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
         self.threadpool = QThreadPool()
         thread_count = self.threadpool.maxThreadCount()
         self.logic_worker = MainLogic()
-
+        self.setFixedSize(1200, 760)
         # Window property
         self.setWindowTitle("8P4K PowerHouse")
         self.setStyleSheet(
@@ -224,10 +224,10 @@ class MainWindow(QMainWindow):
                 self.wdgt_panel_chord.wheel_chord_size.setEnabled(False)
 
         if state["idx_mode"] == 0:
-            self.wdgt_key_note.knob.setEnabled(False)
+            self.wdgt_key_note.setEnabled(False)
             self.wdgt_panel_chord.wheel_chord_comp.radio_button[1].setEnabled(False)
         else:
-            self.wdgt_key_note.knob.setEnabled(True)
+            self.wdgt_key_note.setEnabled(True)
             self.wdgt_panel_chord.wheel_chord_comp.radio_button[1].setEnabled(True)
 
     @Slot()

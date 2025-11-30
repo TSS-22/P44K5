@@ -8,13 +8,15 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QMessageBox,
 )
+from PySide6.QtCore import QTimer
 from PySide6.QtGui import QIcon
 from gui.actions.action_refresh import QActionMidiRefresh
 from gui.configs.combo_midi_list import CmbBoxMidiController
 from gui.configs.wdgt_setup_knob import WidgetSetupKnob
-from gui.configs.config_knob_setup_flag import ConfigKnobSetupFlag
+from gui.configs.config_knob_setup_flag import ConfigSetupFlag
+from gui.configs.information_dialogs.DiagKnobSetup import DiagKnobSetup
 
-from data.data_general import hc_file_filter
+from data.data_general import hc_file_filter, hc_diag_knob_setup_txt
 
 
 class ConfigNewWindow(QWidget):
@@ -23,7 +25,16 @@ class ConfigNewWindow(QWidget):
         super().__init__()
         self.parent = parent
 
+        # Setup data
+        midi_control_value = {}
+        for val in ConfigSetupFlag:
+            midi_control_value[val.value] = None
+
         self.setWindowTitle("Create MIDI controller configuration")
+
+        self.active_setup = ConfigSetupFlag.NONE
+        self.midi_poll_timer = QTimer()
+        self.midi_poll_timer.timeout.connect(self.poll_midi_messages)
 
         self.layout_window = QVBoxLayout()
 
@@ -47,6 +58,12 @@ class ConfigNewWindow(QWidget):
 
         self.layout_window.addLayout(self.layout_top)
 
+        # Dialog windows
+        self.diag_window_knob = DiagKnobSetup(
+            title="Instructions",
+        )
+        self.diag_window_knob.sig_cancel.connect(self.cancel_knob_setup)
+
         # Explanation part
         self.lbl_explanation = QLabel(
             """
@@ -59,6 +76,7 @@ class ConfigNewWindow(QWidget):
         self.layout_window.addWidget(self.lbl_explanation)
 
         # Setup part
+        ## Pads
         self.lbl_setup_pad_title = QLabel("Pad setup:")
         self.lbl_setup_pad_xpln = QLabel("Pad explanation")
 
@@ -67,25 +85,40 @@ class ConfigNewWindow(QWidget):
 
         self.button_setup_pad = QPushButton("Setup pad")
 
-        self.setup_knob_mode = WidgetSetupKnob(knob_function=ConfigKnobSetupFlag.MODE)
+        ## Knobs
+        self.setup_knob_mode = WidgetSetupKnob(knob_function=ConfigSetupFlag.MODE)
         self.setup_knob_chord_comp = WidgetSetupKnob(
-            knob_function=ConfigKnobSetupFlag.CHORD_COMP
+            knob_function=ConfigSetupFlag.CHORD_COMP
         )
         self.setup_knob_chord_size = WidgetSetupKnob(
-            knob_function=ConfigKnobSetupFlag.CHORD_SIZE
+            knob_function=ConfigSetupFlag.CHORD_SIZE
         )
         self.setup_knob_base_note = WidgetSetupKnob(
-            knob_function=ConfigKnobSetupFlag.BASE_NOTE
+            knob_function=ConfigSetupFlag.BASE_NOTE
         )
         self.setup_knob_key_degree = WidgetSetupKnob(
-            knob_function=ConfigKnobSetupFlag.KEY_DEGREE
+            knob_function=ConfigSetupFlag.KEY_DEGREE
         )
 
+        ## Signals/Slots
         self.button_setup_pad.clicked.connect(self.on_setup_pad_clicked)
         self.setup_knob_mode.signal_button_setup_clicked.connect(
             self.on_knob_setup_clicked
         )
+        self.setup_knob_chord_comp.signal_button_setup_clicked.connect(
+            self.on_knob_setup_clicked
+        )
+        self.setup_knob_chord_size.signal_button_setup_clicked.connect(
+            self.on_knob_setup_clicked
+        )
+        self.setup_knob_base_note.signal_button_setup_clicked.connect(
+            self.on_knob_setup_clicked
+        )
+        self.setup_knob_key_degree.signal_button_setup_clicked.connect(
+            self.on_knob_setup_clicked
+        )
 
+        ## Layout
         self.layout_setup = QVBoxLayout()
 
         self.layout_setup.addWidget(self.lbl_setup_pad_title)
@@ -126,6 +159,7 @@ class ConfigNewWindow(QWidget):
 
     def on_cancel_click(self):
         self.close()
+        self.midi_poll_timer.stop()
 
     def open_save_dialog(self):
         # Open the save file dialog
@@ -141,39 +175,66 @@ class ConfigNewWindow(QWidget):
             self.close()
 
     def on_knob_setup_clicked(self, knob_function):
+        self.active_setup = knob_function
+        print(self.active_setup)
         # Open an instruction pop up
-        if knob_function == ConfigKnobSetupFlag.MODE.value:
-            self.setup_knob_mode.diag_window.show()
-        elif knob_function == ConfigKnobSetupFlag.CHORD_COMP.value:
-            self.setup_knob_chord_comp.diag_window.show()
-        elif knob_function == ConfigKnobSetupFlag.CHORD_SIZE.value:
-            self.setup_knob_chord_size.diag_window.show()
-        elif knob_function == ConfigKnobSetupFlag.BASE_NOTE.value:
-            self.setup_knob_base_note.diag_window.show()
-        elif knob_function == ConfigKnobSetupFlag.KEY_DEGREE.value:
-            self.setup_knob_key_degree.diag_window.show()
+        self.set_text_diag_knob_setup(knob_function)
+        self.diag_window_knob.show()
 
-        # Need to transfer this logic linked to the pop up opening due to cancel? Or maybe a simple signal
-        # Asses the knob
-        # Assert success
-        # If success, change value corresponding knob
-        # Else tell the user
-        # Close the instruction pop up
+        # Start a timer to poll for MIDI messages
+        self.midi_poll_timer.start(50)  # Check every 50ms
 
+    def poll_midi_messages(self):
+        print("polling")
+        messages = list(self.parent.logic_worker.midi_bridge.input.iter_pending())
+        if messages:
+            self.midi_poll_timer.stop()  # Stop the timer
+            print("Received:", messages)
+            # Process messages here
+            self.on_midi_message_received(messages)
+
+    def on_midi_message_received(self, messages):
+        print(messages)
+        print(self.active_setup)
+        control = "None"
+        if messages[0].is_cc():
+            control = messages[0].control
+            print(control)
         else:
-            # IMPROVE
-            # show error dialog
-            pass
+            print("Invalid knob")
 
+        self.midi_control_value[self.active_setup.value] = control
+        self.update_setup_val_disp()
+        self.diag_window_knob.hide()
+        print("done")
+        self.active_setup = ConfigSetupFlag.NONE
 
-# if knob_function == ConfigKnobSetupFlag.UNKOWN.value:
+    def closeEvent(self, event):
+        print("test")
+        self.diag_window_knob.close()
+        self.midi_poll_timer.stop()
 
-#         elif knob_function == ConfigKnobSetupFlag.MODE.value:
+    def set_text_diag_knob_setup(self, val_function):
+        self.diag_window_knob.setText(hc_diag_knob_setup_txt + " " + val_function)
 
-#         elif knob_function == ConfigKnobSetupFlag.CHORD_COMP.value:
+    def cancel_knob_setup(self):
+        print("dede")
+        self.midi_poll_timer.stop()
+        self.diag_window_knob.hide()
 
-#         elif knob_function == ConfigKnobSetupFlag.CHORD_SIZE.value:
-
-#         elif knob_function == ConfigKnobSetupFlag.BASE_NOTE.value:
-
-#         elif knob_function == ConfigKnobSetupFlag.KEY_DEGREE.value:
+    def update_setup_val_disp(self):
+        self.setup_knob_mode.lbl_knob_value.setText(
+            str(self.midi_control_value[ConfigSetupFlag.MODE.value])
+        )
+        self.setup_knob_chord_comp.lbl_knob_value.setText(
+            str(self.midi_control_value[ConfigSetupFlag.CHORD_COMP.value])
+        )
+        self.setup_knob_chord_size.lbl_knob_value.setText(
+            str(self.midi_control_value[ConfigSetupFlag.CHORD_SIZE.value])
+        )
+        self.setup_knob_base_note.lbl_knob_value.setText(
+            str(self.midi_control_value[ConfigSetupFlag.BASE_NOTE.value])
+        )
+        self.setup_knob_key_degree.lbl_knob_value.setText(
+            str(self.midi_control_value[ConfigSetupFlag.KEY_DEGREE.value])
+        )

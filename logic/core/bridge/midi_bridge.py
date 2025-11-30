@@ -14,9 +14,12 @@ class MidiBridge:
         #     midi_device_settings = json.load(file_settings)
 
         # self.input_port = midi_device_settings["name_midi_in"]
-        self.output_port = hc_name_midi_out
+        output_ports = mido.get_output_names()
+        self.output_port = [
+            item for item in output_ports if item.startswith(hc_name_midi_out)
+        ][0]
 
-        self.input = mido.open_input()
+        self.input = mido.ports.BaseInput()
 
         # self.init_midi_in()
         self.init_midi_out()
@@ -101,6 +104,7 @@ class MidiBridge:
         return [hc_dialog_select_device] + list_midi_input
 
     def connect_to_controller(self, controller_name):
+        self.disconnect()
         if (controller_name != hc_dialog_select_device) and (controller_name != ""):
             try:
                 # IMPROVE
@@ -115,4 +119,7 @@ class MidiBridge:
 
     def disconnect(self):
         # check if connected first
+        for ports in mido.get_input_names():
+            input_port_to_close = mido.ports.BaseInput(name=ports)
+            input_port_to_close.close()
         self.input.close()

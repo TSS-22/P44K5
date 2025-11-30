@@ -95,6 +95,7 @@ class MainLogic(QRunnable):
         return self.midi_bridge.get_midi_input()
 
     def load_micro_controller_settings(self, settings_path):
+        print(settings_path)
         try:
             with open(settings_path, "r", encoding="UTF-8") as file_settings:
                 midi_device_settings = json.load(file_settings)

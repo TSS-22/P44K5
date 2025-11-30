@@ -37,7 +37,11 @@ class ConfigNewWindow(QWidget):
         self.setWindowTitle("Create MIDI controller configuration")
 
         self.active_setup = ConfigSetupFlag.NONE
-        self.midi_poll_timer = QTimer()
+        self.midi_poll_timer_pad = QTimer()
+        self.midi_poll_timer_pad.timeout.connect(self.poll_midi_messages_pad)
+
+        self.midi_poll_timer_knob = QTimer()
+        self.midi_poll_timer_knob.timeout.connect(self.poll_midi_messages_knob)
 
         self.layout_window = QVBoxLayout()
 
@@ -159,15 +163,15 @@ class ConfigNewWindow(QWidget):
         self.active_setup = ConfigSetupFlag.PAD
         self.diag_window_pad.show()
         self.polled_messages = []
-        self.midi_poll_timer.timeout.connect(self.poll_midi_messages_pad)
-        self.midi_poll_timer.start(2)
+        self.midi_poll_timer_pad.start(2)
 
     def on_save_click(self):
         self.open_save_dialog()
 
     def on_cancel_click(self):
         self.close()
-        self.midi_poll_timer.stop()
+        self.midi_poll_timer_pad.stop()
+        self.midi_poll_timer_knob.stop()
 
     def open_save_dialog(self):
         # Open the save file dialog
@@ -193,15 +197,15 @@ class ConfigNewWindow(QWidget):
         self.diag_window_knob.show()
 
         # Start a timer to poll for MIDI messages
-        self.midi_poll_timer.timeout.connect(self.poll_midi_messages_knob)
-        self.midi_poll_timer.start(5)  # Check every 10ms
+
+        self.midi_poll_timer_knob.start(5)  # Check every 10ms
 
     def poll_midi_messages_knob(self):
         print("polling knob")
         messages = list(self.parent.logic_worker.midi_bridge.input.iter_pending())
         if messages:
 
-            self.midi_poll_timer.stop()  # Stop the timer
+            self.midi_poll_timer_knob.stop()  # Stop the timer
             print("Received:", messages)
             # Process messages here
             self.on_midi_message_received(messages)
@@ -233,13 +237,15 @@ class ConfigNewWindow(QWidget):
     def closeEvent(self, event):
         self.diag_window_knob.close()
         self.diag_window_pad.close()
-        self.midi_poll_timer.stop()
+        self.midi_poll_timer_pad.stop()
+        self.midi_poll_timer_knob.stop()
 
     def set_text_diag_knob_setup(self, val_function):
         self.diag_window_knob.setText(hc_diag_knob_setup_txt + " " + val_function)
 
     def on_cancel_setup(self):
-        self.midi_poll_timer.stop()
+        self.midi_poll_timer_pad.stop()
+        self.midi_poll_timer_knob.stop()
         self.diag_window_knob.hide()
         self.diag_window_pad.hide()
 
@@ -262,7 +268,7 @@ class ConfigNewWindow(QWidget):
 
     def on_ok_pad_setup(self):
         print("ok pad")
-        self.midi_poll_timer.stop()
+        self.midi_poll_timer_pad.stop()
         print(self.polled_messages)
         base_note = 9999
         if self.polled_messages:

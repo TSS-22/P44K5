@@ -141,8 +141,6 @@ class MainWindow(QMainWindow):
         self.updt_panel_chord_size(state)
         self.updt_pad_grid(state)
         self.refresh_midi_input()
-        # IMRPOVE
-        # So that it doesn't depends on the number suffix
         if (
             self.tool_bar.cmb_midi_controller.findText(
                 self.user_settings["last_connected_midi"],
@@ -254,6 +252,9 @@ class MainWindow(QMainWindow):
     @Slot()
     def refresh_midi_input(self):
         self.tool_bar.cmb_midi_controller.refresh(self.logic_worker.get_midi_input())
+
+    @Slot()
+    def refresh_midi_input_new_config_window(self):
         self.config_new_window.cmb_midi_controller.refresh(
             self.logic_worker.get_midi_input()
         )
@@ -262,6 +263,8 @@ class MainWindow(QMainWindow):
     def on_choice_controller_changed(self, controller_name):
         self.logic_worker.midi_bridge.disconnect()
         self.logic_worker.midi_bridge.connect_to_controller(controller_name)
+        self.user_settings["last_connected_midi"] = controller_name
+        self.logic_worker.save_user_settings(self.user_settings)
 
     @Slot()
     def open_new_config_window(self):
@@ -269,4 +272,4 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_load_midi_config(self, file_path):
-        self.logic_worker.load_micro_controller_settings(file_path)
+        self.logic_worker.load_micro_controller_settings(file_path, self.user_settings)

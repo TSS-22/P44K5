@@ -96,7 +96,7 @@ class MainLogic(QRunnable):
 
     # CLEAN
     # I put micro_controller and not midi_controller
-    def load_micro_controller_settings(self, settings_path):
+    def load_micro_controller_settings(self, settings_path, user_settings):
         print(settings_path)
         try:
             with open(settings_path, "r", encoding="UTF-8") as file_settings:
@@ -105,6 +105,8 @@ class MainLogic(QRunnable):
                     self.midi_controller.load_micro_controller_settings(
                         midi_device_settings
                     )
+                    user_settings["last_load_config"] = settings_path
+                    self.save_user_settings(user_settings)
                 else:
                     raise Exception("Invalid configuration")
         except Exception as e:
@@ -118,3 +120,9 @@ class MainLogic(QRunnable):
             return True
         else:
             return False
+
+    def save_user_settings(self, user_settings):
+        with open(
+            "./data/user_settings.json", "w", encoding="UTF-8"
+        ) as file_settings_user:
+            json.dump(user_settings, file_settings_user, indent=4)

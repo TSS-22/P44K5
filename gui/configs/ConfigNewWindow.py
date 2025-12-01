@@ -57,7 +57,9 @@ class ConfigNewWindow(QWidget):
         self.button_refresh.setDefaultAction(self.action_refresh)
         self.cmb_midi_controller = CmbBoxMidiController()
 
-        self.button_refresh.clicked.connect(self.parent.refresh_midi_input)
+        self.button_refresh.clicked.connect(
+            self.parent.refresh_midi_input_new_config_window
+        )
         self.cmb_midi_controller.currentTextChanged.connect(
             self.parent.on_choice_controller_changed
         )

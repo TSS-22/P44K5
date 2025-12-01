@@ -12,6 +12,7 @@ class CmbBoxMidiController(QComboBox):
             min-height: 22px;
             """
         )
+        self.setPlaceholderText("Select a device...")
 
     def refresh(self, list_midi_controller):
         self.clear()

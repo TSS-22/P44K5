@@ -8,13 +8,13 @@ class MidiControllerSettings:
         self.list_chord_comp = dg.knob_values_chord_comp
         self.list_chord_size = dg.knob_values_chord_size
 
-        self.pad_mode = midi_device_settings["pad_mode"] or "note"
+        self.pad_mode = midi_device_settings["pad_mode"]
         self.base_note_offset = midi_device_settings["base_note_offset"]
-        self.id_knob_mode = midi_device_settings["id_knob_mode"] or 999
-        self.id_knob_chord_comp = midi_device_settings["id_knob_chord_comp"] or 999
-        self.id_knob_chord_size = midi_device_settings["id_knob_chord_size"] or 999
-        self.id_knob_base_note = midi_device_settings["id_knob_base_note"] or 999
-        self.id_knob_key_note = midi_device_settings["id_knob_key_note"] or 999
+        self.id_knob_mode = midi_device_settings["id_knob_mode"]
+        self.id_knob_chord_comp = midi_device_settings["id_knob_chord_comp"]
+        self.id_knob_chord_size = midi_device_settings["id_knob_chord_size"]
+        self.id_knob_base_note = midi_device_settings["id_knob_base_note"]
+        self.id_knob_key_note = midi_device_settings["id_knob_key_note"]
 
         # Most likely will need to put that into a function to allow for user to change the settings.
         self.pot_max_value = (

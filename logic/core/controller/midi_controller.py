@@ -459,19 +459,22 @@ class MidiController:
                 elif message.type == "note_off":
                     output = self.pad_released(message)
 
-            elif message.type == "control_change":
-                if (message.control >= self.controller_settings.base_note_offset) and (
-                    message.control <= self.controller_settings.base_note_offset + 7
-                ):
-                    if message.value > 0:
-                        output = self.pad_pressed(
-                            InputPad(note=message.control, velocity=message.value)
-                        )
-                    else:
-                        output = self.pad_released(InputPad(note=message.control))
+            if message.type == "control_change":
+                if self.controller_settings.pad_mode == dg.hc_pad_mode_cc:
+                    if (
+                        message.control >= self.controller_settings.base_note_offset
+                    ) and (
+                        message.control <= self.controller_settings.base_note_offset + 7
+                    ):
+                        if message.value > 0:
+                            output = self.pad_pressed(
+                                InputPad(note=message.control, velocity=message.value)
+                            )
+                        else:
+                            output = self.pad_released(InputPad(note=message.control))
 
                 # Knob 1: select_base_note
-                elif message.control == self.controller_settings.id_knob_base_note:
+                if message.control == self.controller_settings.id_knob_base_note:
                     output = self.knob_base_note_changed(message)
 
                 # Knob 2: select_keyNote

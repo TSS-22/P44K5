@@ -86,14 +86,14 @@ hc_knob_chord_comp_multiplier = 21.166667
 hc_knob_chord_size_multiplier = 18.142857142
 
 hc_list_note_startup = [
-    "C" + " " + hc_offset_midi_octave,
-    "C#" + " " + hc_offset_midi_octave,
-    "D" + " " + hc_offset_midi_octave,
-    "D#" + " " + hc_offset_midi_octave,
-    "E" + " " + hc_offset_midi_octave,
-    "F" + " " + hc_offset_midi_octave,
-    "F#" + " " + hc_offset_midi_octave,
-    "G" + " " + hc_offset_midi_octave,
+    "C" + " " + str(hc_offset_midi_octave),
+    "C#" + " " + str(hc_offset_midi_octave),
+    "D" + " " + str(hc_offset_midi_octave),
+    "D#" + " " + str(hc_offset_midi_octave),
+    "E" + " " + str(hc_offset_midi_octave),
+    "F" + " " + str(hc_offset_midi_octave),
+    "F#" + " " + str(hc_offset_midi_octave),
+    "G" + " " + str(hc_offset_midi_octave),
 ]
 
 hc_list_mode = [

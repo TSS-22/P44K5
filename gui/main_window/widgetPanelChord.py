@@ -3,27 +3,29 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette, QColor, QFont
 from gui.main_window.widgetWheelChoice import WidgetWheelChoice
 
+from data.data_general import hc_chord_comp_name, hc_chord_size_name
+
 
 class WidgetPanelChord(QFrame):
+    # CLEAN
+    # list_chord_comp = [
+    #     "Single",
+    #     "Normal",
+    #     "Major",
+    #     "Minor",
+    #     "Dom",
+    #     "Dim",
+    # ]
 
-    list_chord_comp = [
-        "Single",
-        "Normal",
-        "Major",
-        "Minor",
-        "Dom",
-        "Dim",
-    ]
-
-    list_chord_size = [
-        "5",
-        "X",
-        "6",
-        "7",
-        "9",
-        "11",
-        "13",
-    ]
+    # list_chord_size = [
+    #     "5",
+    #     "X",
+    #     "6",
+    #     "7",
+    #     "9",
+    #     "11",
+    #     "13",
+    # ]
 
     def __init__(
         self,
@@ -57,7 +59,7 @@ class WidgetPanelChord(QFrame):
         )
 
         self.wheel_chord_comp = WidgetWheelChoice(
-            list_val=self.list_chord_comp,
+            list_val=hc_chord_comp_name,
             widget_height=self.widget_height,
             widget_width=self.widget_width / 2,
             parent=self,
@@ -65,7 +67,7 @@ class WidgetPanelChord(QFrame):
         )
 
         self.wheel_chord_size = WidgetWheelChoice(
-            list_val=self.list_chord_size,
+            list_val=hc_chord_size_name,
             widget_height=self.widget_height,
             widget_width=self.widget_width / 2,
             parent=self,
@@ -79,14 +81,16 @@ class WidgetPanelChord(QFrame):
 
     def update_chord_comp(self, state):
         self.wheel_chord_comp.knob.setValue(state["idx_chord_comp"])
+        # CLEAN
         #  Bad  data architecture correct this
-        if state["selected_chord_comp"] == "Single":
-            idx = 0
-        else:
-            idx = self.list_chord_comp.index(state["selected_chord_comp"]["name"])
+        # if state["selected_chord_comp"] == "Single":
+        #     idx = 0
+        # else:
+        #     idx = hc_chord_comp_name.index(state["selected_chord_comp"]["name"])
+        idx = hc_chord_comp_name.index(state["selected_chord_comp"]["name"])
         self.wheel_chord_comp.radio_button[idx].setChecked(True)
 
     def update_chord_size(self, state):
         self.wheel_chord_size.knob.setValue(state["idx_chord_size"])
-        idx = self.list_chord_size.index(state["selected_chord_size"]["name"])
+        idx = hc_chord_size_name.index(state["selected_chord_size"]["name"])
         self.wheel_chord_size.radio_button[idx].setChecked(True)

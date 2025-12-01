@@ -32,8 +32,6 @@ class MidiController:
         # Init state and class variables
         self.compute_pad_intervals()
 
-        # self.base_note_offset = midi_device_settings["base_note_offset"]
-
         self.mode_prog_chord = {}
         self._init_mode_prog_chord()
 
@@ -148,7 +146,7 @@ class MidiController:
                 pads_root.append(False)
             # Compute the chord notes
             for chord_index in self.state.selected_chord_size["comp"]:
-                if self.state.selected_chord_comp["name"] == "Single" or (
+                if (
                     self.state.selected_mode == "None"
                     and self.state.selected_chord_comp["name"] == "Normal"
                 ):
@@ -199,7 +197,11 @@ class MidiController:
             "",
             "",
         ]
+        # IMPROVE
+        # self.state.idx_chord_comp == 1, this smell like problem
+        print(f"protential problem: {self.state.idx_chord_comp}")
         if self.state.selected_mode != "None" and self.state.idx_chord_comp == 1:
+            print(f"protential problem value == 1: {self.state.idx_chord_comp}")
             name_chords = (
                 dg.hc_name_chord_prog[self.state.selected_mode][self.state.key_degree :]
                 + dg.hc_name_chord_prog[self.state.selected_mode][

@@ -3,7 +3,7 @@ import os
 import json
 import rtmidi
 import mido
-from data.data_general import hc_dialog_select_device, hc_name_midi_out
+from data.data_general import hc_name_midi_out
 
 
 class MidiBridge:
@@ -92,13 +92,11 @@ class MidiBridge:
         return self.output
 
     def get_midi_input(self):
-        list_midi_input = mido.get_input_names()
-        print(mido.get_input_names())
-        return [hc_dialog_select_device] + list_midi_input
+        return mido.get_input_names()
 
     def connect_to_controller(self, controller_name):
         self.disconnect()
-        if (controller_name != hc_dialog_select_device) and (controller_name != ""):
+        if controller_name != "":
             try:
                 # IMPROVE
                 # Add a status connection item in the status bar

@@ -143,8 +143,12 @@ class MainWindow(QMainWindow):
         self.refresh_midi_input()
         # IMRPOVE
         # So that it doesn't depends on the number suffix
-        if self.tool_bar.cmb_midi_controller.findText(
-            self.user_settings["last_connected_midi"], flags=Qt.MatchFlag.MatchContains
+        if (
+            self.tool_bar.cmb_midi_controller.findText(
+                self.user_settings["last_connected_midi"],
+                flags=Qt.MatchFlag.MatchContains,
+            )
+            > -1
         ):
             self.tool_bar.cmb_midi_controller.setCurrentIndex(
                 self.tool_bar.cmb_midi_controller.findText(

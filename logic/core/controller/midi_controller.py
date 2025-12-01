@@ -13,8 +13,14 @@ class MidiController:
 
     def __init__(self):
         # Put the automatic loading of the last config here
-        with open("./data/akai_lpd8_mk2.json", "r", encoding="UTF-8") as file_settings:
-            midi_device_settings = json.load(file_settings)
+        with open(
+            "./data/user_settings.json", "r", encoding="UTF-8"
+        ) as file_settings_user:
+            self.user_settings = json.load(file_settings_user)
+            with open(
+                self.user_settings["last_load_config"], "r", encoding="UTF-8"
+            ) as file_settings_controller:
+                midi_device_settings = json.load(file_settings_controller)
 
         self.controller_settings = MidiControllerSettings(midi_device_settings)
 

@@ -1,5 +1,4 @@
-import sys
-import math
+import json
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -26,6 +25,11 @@ from logic.gui.main_logic import MainLogic
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        with open(
+            "./data/user_settings.json", "r", encoding="UTF-8"
+        ) as file_settings_user:
+            self.user_settings = json.load(file_settings_user)
+
         # Connecting the MidiCOntroller and MidiBridge to the UI
         self.threadpool = QThreadPool()
         thread_count = self.threadpool.maxThreadCount()
@@ -137,6 +141,17 @@ class MainWindow(QMainWindow):
         self.updt_panel_chord_size(state)
         self.updt_pad_grid(state)
         self.refresh_midi_input()
+        # IMRPOVE
+        # So that it doesn't depends on the number suffix
+        if self.tool_bar.cmb_midi_controller.findText(
+            self.user_settings["last_connected_midi"], flags=Qt.MatchFlag.MatchContains
+        ):
+            self.tool_bar.cmb_midi_controller.setCurrentIndex(
+                self.tool_bar.cmb_midi_controller.findText(
+                    self.user_settings["last_connected_midi"],
+                    flags=Qt.MatchFlag.MatchContains,
+                )
+            )
 
     @Slot()
     def updt_base_note(self, state):

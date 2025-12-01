@@ -12,10 +12,9 @@ class MidiBridge:
         self.input = mido.ports.BaseInput()
         self.output_port = mido.ports.BaseOutput()
         output_ports = mido.get_output_names()
-        if output_ports:
-            self.output_port = [
-                item for item in output_ports if item.startswith(hc_name_midi_out)
-            ][0]
+        self.output_port = [
+            item for item in output_ports if item.startswith(hc_name_midi_out)
+        ][0]
         self.init_midi_out()
 
     def init_midi_in(self):

@@ -79,21 +79,21 @@ hc_chromatic_scale = [
 
 hc_len_chromatic_scale = 12
 
-hc_offset_midi_octave = -3
+hc_offset_midi_octave = -2
 
 hc_knob_mode_multiplier = 15.875
 hc_knob_chord_comp_multiplier = 21.166667
 hc_knob_chord_size_multiplier = 18.142857142
 
 hc_list_note_startup = [
-    "C -3",
-    "C# -3",
-    "D -3",
-    "D# -3",
-    "E -3",
-    "F -3",
-    "F# -3",
-    "G -3",
+    "C" + " " + hc_offset_midi_octave,
+    "C#" + " " + hc_offset_midi_octave,
+    "D" + " " + hc_offset_midi_octave,
+    "D#" + " " + hc_offset_midi_octave,
+    "E" + " " + hc_offset_midi_octave,
+    "F" + " " + hc_offset_midi_octave,
+    "F#" + " " + hc_offset_midi_octave,
+    "G" + " " + hc_offset_midi_octave,
 ]
 
 hc_list_mode = [

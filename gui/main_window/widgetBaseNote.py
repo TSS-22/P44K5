@@ -3,6 +3,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette, QColor, QFont
 
 from logic.gui.map_note import map_note
+from data.data_general import hc_offset_midi_octave
 
 
 class WidgetBaseNote(QFrame):
@@ -96,7 +97,7 @@ class WidgetBaseNote(QFrame):
             "font_size": lbl_note_size,
             "color": lbl_note_color,
         }
-        self.lbl_note = QLabel("C -3", parent=self)
+        self.lbl_note = QLabel("C -2", parent=self)
         self.font_txt = self.lbl_note.font()
         self.font_txt.setFamily(self.lbl_note_properties["font"])
         self.font_txt.setPointSize(self.lbl_note_properties["font_size"])
@@ -133,5 +134,5 @@ class WidgetBaseNote(QFrame):
     def update(self, state):
         self.knob.setValue(state)
         note = map_note[state % 12]
-        octave = int(state / 12) - 3
+        octave = int(state / 12) + hc_offset_midi_octave
         self.lbl_note.setText(f"{note} {octave}")

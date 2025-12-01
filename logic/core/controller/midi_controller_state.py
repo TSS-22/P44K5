@@ -1,4 +1,5 @@
 from logic.core.controller.midi_controller_buffer import MidiControllerBuffer
+from data.data_general import hc_offset_midi_octave
 
 
 class MidiControllerState:
@@ -37,14 +38,14 @@ class MidiControllerState:
             "G",
         ]
         self.pad_octaves = [
-            -3,
-            -3,
-            -3,
-            -3,
-            -3,
-            -3,
-            -3,
-            -3,
+            hc_offset_midi_octave,
+            hc_offset_midi_octave,
+            hc_offset_midi_octave,
+            hc_offset_midi_octave,
+            hc_offset_midi_octave,
+            hc_offset_midi_octave,
+            hc_offset_midi_octave,
+            hc_offset_midi_octave,
         ]
         self.pad_roots = [
             True,

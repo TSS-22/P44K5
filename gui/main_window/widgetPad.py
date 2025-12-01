@@ -8,7 +8,7 @@ class WidgetPad(QFrame):
     def __init__(
         self,
         parent=None,
-        note="C -3",
+        note="C -2",
         root=False,
         chord_name="",
         pad_pressed=False,

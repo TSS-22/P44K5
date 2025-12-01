@@ -234,20 +234,15 @@ class MainWindow(QMainWindow):
         )
 
     def function_activation(self, state):
-        if state["idx_chord_comp"] == 0:
+        if (state["idx_mode"] == 0) and (state["idx_chord_comp"] == 0):
             self.wdgt_panel_chord.wheel_chord_size.setEnabled(False)
         else:
-            if state["idx_mode"] != 0:
-                self.wdgt_panel_chord.wheel_chord_size.setEnabled(True)
-            else:
-                self.wdgt_panel_chord.wheel_chord_size.setEnabled(False)
+            self.wdgt_panel_chord.wheel_chord_size.setEnabled(True)
 
         if state["idx_mode"] == 0:
-            self.wdgt_key_note.setEnabled(False)
-            self.wdgt_panel_chord.wheel_chord_comp.radio_button[1].setEnabled(False)
+            self.wdgt_key_note.knob.setEnabled(False)
         else:
-            self.wdgt_key_note.setEnabled(True)
-            self.wdgt_panel_chord.wheel_chord_comp.radio_button[1].setEnabled(True)
+            self.wdgt_key_note.knob.setEnabled(True)
 
     @Slot()
     def refresh_midi_input(self):

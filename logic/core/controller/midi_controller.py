@@ -199,9 +199,8 @@ class MidiController:
         ]
         # IMPROVE
         # self.state.idx_chord_comp == 1, this smell like problem
-        print(f"protential problem: {self.state.idx_chord_comp}")
-        if self.state.selected_mode != "None" and self.state.idx_chord_comp == 1:
-            print(f"protential problem value == 1: {self.state.idx_chord_comp}")
+        # print(f"protential problem: {self.state.idx_chord_comp}")
+        if self.state.selected_mode != "None" and self.state.idx_chord_comp == 0:
             name_chords = (
                 dg.hc_name_chord_prog[self.state.selected_mode][self.state.key_degree :]
                 + dg.hc_name_chord_prog[self.state.selected_mode][
@@ -500,8 +499,7 @@ class MidiController:
 
                 # Knob 5:select_chord_size
                 elif message.control == self.controller_settings.id_knob_chord_size:
-                    if self.state.idx_chord_comp != 0:
-                        output = self.knob_chord_size_changed(message)
+                    output = self.knob_chord_size_changed(message)
 
                 # Unassigned command
                 else:

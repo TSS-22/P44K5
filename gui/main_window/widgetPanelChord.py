@@ -77,7 +77,6 @@ class WidgetPanelChord(QFrame):
 
         self.layout.addWidget(self.wheel_chord_comp)
         self.layout.addWidget(self.wheel_chord_size)
-        self.wheel_chord_size.setEnabled(False)
 
     def update_chord_comp(self, state):
         self.wheel_chord_comp.knob.setValue(state["idx_chord_comp"])

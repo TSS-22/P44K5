@@ -220,7 +220,7 @@ class MidiController:
     # Pad pressed
     def pad_pressed(self, input_val):
         print("micro: pressed")
-        print(input_val)
+        # print(input_val)
         id_pad = input_val.note - self.controller_settings.base_note_offset
         self.state.buffer.velocity[id_pad] = input_val.velocity
         note = self.check_note(

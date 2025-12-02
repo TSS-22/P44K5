@@ -64,12 +64,9 @@ class MidiBridge:
         # input("Press ENTER to exit...")
 
     def bridge_out(self, midi_controller_ouput):
-        # message_out = []
-
         if midi_controller_ouput.messages:
             for msg in midi_controller_ouput.messages:
                 self.output.send(msg)
-                # message_out.append(msg)
         else:
             pass
 

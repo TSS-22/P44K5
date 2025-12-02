@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QFrame, QPushButton, QStackedLayout, QLabel
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QPalette, QColor, QFont
+from PySide6.QtGui import QPalette, QColor, QFont, QMouseEvent
 
 
 class WidgetPad(QFrame):
@@ -132,8 +132,8 @@ class WidgetPad(QFrame):
             self.lbl_chord_name_position["x"], self.lbl_chord_name_position["y"]
         )
 
-        self.mousePressEvent = self.sig_clicked.emit(self.id_pad)
-        self.button.clicked.connect(lambda: self.sig_clicked.emit(self.id_pad))
+        self.mousePressEvent = self.clicked_event
+        self.button.clicked.connect(self.clicked_event)
 
     def update_bckgrnd_only(self, widget, background_style):
         current_style = widget.styleSheet()
@@ -169,4 +169,6 @@ class WidgetPad(QFrame):
             )
         self.update_bckgrnd_only(self.active, background_style)
 
-    # def clicked(self):
+    def clicked_event(self, event):
+        if (event is False) or (event.button().name):
+            self.sig_clicked.emit(self.id_pad)

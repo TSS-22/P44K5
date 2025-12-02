@@ -80,12 +80,6 @@ class WidgetPanelChord(QFrame):
 
     def update_chord_comp(self, state):
         self.wheel_chord_comp.knob.setValue(state["idx_chord_comp"])
-        # CLEAN
-        #  Bad  data architecture correct this
-        # if state["selected_chord_comp"] == "Single":
-        #     idx = 0
-        # else:
-        #     idx = hc_chord_comp_name.index(state["selected_chord_comp"]["name"])
         idx = hc_chord_comp_name.index(state["selected_chord_comp"]["name"])
         self.wheel_chord_comp.radio_button[idx].setChecked(True)
 

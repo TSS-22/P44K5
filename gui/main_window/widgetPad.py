@@ -1,13 +1,17 @@
 from PySide6.QtWidgets import QFrame, QPushButton, QStackedLayout, QLabel
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPalette, QColor, QFont
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QPalette, QColor, QFont, QMouseEvent
 
 
 class WidgetPad(QFrame):
 
+    sig_pressed = Signal(int)
+    sig_released = Signal(int)
+
     def __init__(
         self,
         parent=None,
+        id_pad=0,
         note="C -2",
         root=False,
         chord_name="",
@@ -19,6 +23,8 @@ class WidgetPad(QFrame):
         font_color="#00ff00",
     ):
         super().__init__(parent=parent)
+        self.id_pad = id_pad
+
         self.widget_width = widget_width
         self.widget_height = widget_height
         self.setFixedSize(self.widget_width, self.widget_height)
@@ -71,7 +77,7 @@ class WidgetPad(QFrame):
             f"""
                 background-repeat: no-repeat;
                 background-position: center;
-                border: none; 	
+                border: none;
                 background-image: url(ressources/gui/png/{self.bckgnd_button});
                 color: {font_color};
             """
@@ -127,6 +133,11 @@ class WidgetPad(QFrame):
             self.lbl_chord_name_position["x"], self.lbl_chord_name_position["y"]
         )
 
+        self.mousePressEvent = self.on_pressed_event
+        self.mouseReleaseEvent = self.on_released_event
+        self.button.pressed.connect(self.on_pressed_event)
+        self.button.clicked.connect(self.on_released_event)
+
     def update_bckgrnd_only(self, widget, background_style):
         current_style = widget.styleSheet()
         properties = [p.strip() for p in current_style.split(";") if p.strip()]
@@ -160,3 +171,11 @@ class WidgetPad(QFrame):
                 "background-image: url(ressources/gui/png/bckgnd-pad_inactive.png);"
             )
         self.update_bckgrnd_only(self.active, background_style)
+
+    # DIRTY
+    # event filter is not working, this is dirty, but works. CEEBS to be honest
+    def on_pressed_event(self, *args):
+        self.sig_pressed.emit(self.id_pad)
+
+    def on_released_event(self, *args):
+        self.sig_released.emit(self.id_pad)

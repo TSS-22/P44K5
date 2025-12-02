@@ -34,6 +34,7 @@ class MainToolBar(QToolBar):
 
         self.action_connect = QActionMidiConnect()
         self.cmb_midi_controller = CmbBoxMidiController([])
+
         self.action_refresh = QActionMidiRefresh()
 
         self.action_bypass = QActionBypass()

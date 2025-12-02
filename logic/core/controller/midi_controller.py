@@ -32,8 +32,6 @@ class MidiController:
         # Init state and class variables
         self.compute_pad_intervals()
 
-        # self.base_note_offset = midi_device_settings["base_note_offset"]
-
         self.mode_prog_chord = {}
         self._init_mode_prog_chord()
 
@@ -148,7 +146,7 @@ class MidiController:
                 pads_root.append(False)
             # Compute the chord notes
             for chord_index in self.state.selected_chord_size["comp"]:
-                if self.state.selected_chord_comp["name"] == "Single" or (
+                if (
                     self.state.selected_mode == "None"
                     and self.state.selected_chord_comp["name"] == "Normal"
                 ):
@@ -199,7 +197,10 @@ class MidiController:
             "",
             "",
         ]
-        if self.state.selected_mode != "None" and self.state.idx_chord_comp == 1:
+        # IMPROVE
+        # self.state.idx_chord_comp == 1, this smell like problem
+        # print(f"protential problem: {self.state.idx_chord_comp}")
+        if self.state.selected_mode != "None" and self.state.idx_chord_comp == 0:
             name_chords = (
                 dg.hc_name_chord_prog[self.state.selected_mode][self.state.key_degree :]
                 + dg.hc_name_chord_prog[self.state.selected_mode][
@@ -218,29 +219,27 @@ class MidiController:
     ##################
     # Pad pressed
     def pad_pressed(self, input_val):
-        if self.controller_settings.base_note_offset:
-            id_pad = input_val.note - self.controller_settings.base_note_offset
-            self.state.buffer.velocity[id_pad] = input_val.velocity
-            note = self.check_note(
-                input_val.note
-                - self.controller_settings.base_note_offset
-                + self.state.base_note
-                + self.state.key_note
-                + self.count_interval(id_pad)
-                - id_pad
-            )
-            return MidiControllerOutput(
-                flag=ControllerMessageFlag.PAD_PRESSED,
-                state=self.get_state(),
-                list_message=self.note_on(note, input_val.velocity, id_pad),
-            )
-        else:
-            # IMPROVE
-            # Handle case with improper config (prevent it when loading)
-            pass
+        print("micro: pressed")
+        # print(input_val)
+        id_pad = input_val.note - self.controller_settings.base_note_offset
+        self.state.buffer.velocity[id_pad] = input_val.velocity
+        note = self.check_note(
+            input_val.note
+            - self.controller_settings.base_note_offset
+            + self.state.base_note
+            + self.state.key_note
+            + self.count_interval(id_pad)
+            - id_pad
+        )
+        return MidiControllerOutput(
+            flag=ControllerMessageFlag.PAD_PRESSED,
+            state=self.get_state(),
+            list_message=self.note_on(note, input_val.velocity, id_pad),
+        )
 
     # Pad released
     def pad_released(self, input_val):
+        print("micro: released")
         id_pad = input_val.note - self.controller_settings.base_note_offset
         self.state.buffer.velocity[id_pad] = 0
         list_note_off = []
@@ -451,6 +450,7 @@ class MidiController:
     # COMMUNICATION LAYER #
     #######################
     def receive_message(self, message):
+        print(message)
         output = MidiControllerOutput(
             flag=ControllerMessageFlag.BYPASS,
             state=self.get_state(),
@@ -498,8 +498,7 @@ class MidiController:
 
                 # Knob 5:select_chord_size
                 elif message.control == self.controller_settings.id_knob_chord_size:
-                    if self.state.idx_chord_comp != 0:
-                        output = self.knob_chord_size_changed(message)
+                    output = self.knob_chord_size_changed(message)
 
                 # Unassigned command
                 else:

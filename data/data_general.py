@@ -11,13 +11,15 @@ chords = {
 }
 
 knob_values_chord_comp = [
-    {"name": "Single", "chord": [0]},
+    # {"name": "Single", "chord": [0]},
     {"name": "Normal", "chord": [0]},
     {"name": "Major", "chord": chords["major"]},
     {"name": "Minor", "chord": chords["minor"]},
     {"name": "Dom", "chord": chords["dominant"]},
     {"name": "Dim", "chord": chords["diminished"]},
 ]
+
+hc_chord_comp_name = [item["name"] for item in knob_values_chord_comp]
 
 tone_progression = [2, 2, 1, 2, 2, 2, 1]
 
@@ -42,14 +44,16 @@ chord_prog_mode = {
 }
 
 knob_values_chord_size = [
+    {"name": "Single", "comp": [0]},
     {"name": "5", "comp": [0, 2]},
-    {"name": "X", "comp": [0, 1, 2]},
+    {"name": "Triad", "comp": [0, 1, 2]},
     {"name": "6", "comp": [0, 1, 2, 3]},
     {"name": "7", "comp": [0, 1, 2, 4]},
     {"name": "9", "comp": [0, 1, 2, 4, 5]},
     {"name": "11", "comp": [0, 1, 2, 4, 5, 6]},
     {"name": "13", "comp": [0, 1, 2, 4, 5, 6, 7]},
 ]
+hc_chord_size_name = [item["name"] for item in knob_values_chord_size]
 
 ionian_chord_prog = [
     "major",

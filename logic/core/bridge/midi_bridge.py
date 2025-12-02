@@ -3,7 +3,7 @@ import os
 import json
 import rtmidi
 import mido
-from data.data_general import hc_dialog_select_device, hc_name_midi_out
+from data.data_general import hc_name_midi_out
 
 
 class MidiBridge:
@@ -16,16 +16,6 @@ class MidiBridge:
             item for item in output_ports if item.startswith(hc_name_midi_out)
         ][0]
         self.init_midi_out()
-
-    def init_midi_in(self):
-        try:
-            self.input = mido.open_input(self.input_port)
-            print(f"Successfully opened MIDI input: {self.input_port}")
-
-        except Exception as e:
-            print(f"Failed to open MIDI input: {e}")
-            input("Press ENTER to exit...")
-            sys.exit(1)
 
     def init_midi_out(self):
         if os.name == "posix":
@@ -74,12 +64,9 @@ class MidiBridge:
         # input("Press ENTER to exit...")
 
     def bridge_out(self, midi_controller_ouput):
-        # message_out = []
-
         if midi_controller_ouput.messages:
             for msg in midi_controller_ouput.messages:
                 self.output.send(msg)
-                # message_out.append(msg)
         else:
             pass
 
@@ -92,13 +79,11 @@ class MidiBridge:
         return self.output
 
     def get_midi_input(self):
-        list_midi_input = mido.get_input_names()
-        print(mido.get_input_names())
-        return [hc_dialog_select_device] + list_midi_input
+        return mido.get_input_names()
 
     def connect_to_controller(self, controller_name):
         self.disconnect()
-        if (controller_name != hc_dialog_select_device) and (controller_name != ""):
+        if controller_name != "":
             try:
                 # IMPROVE
                 # Add a status connection item in the status bar

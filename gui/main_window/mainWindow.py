@@ -88,6 +88,8 @@ class MainWindow(QMainWindow):
         self.wdgt_panel_chord.wheel_chord_size.radio_button_group.idClicked.connect(
             self.logic_worker.gui_change_chord_size
         )
+        self.wdgt_pad_grid.sig_pad_pressed.connect(self.logic_worker.gui_pad_pressed)
+        self.wdgt_pad_grid.sig_pad_released.connect(self.logic_worker.gui_pad_released)
 
         # Physically driven change
         self.logic_worker.signals.base_note_changed.connect(self.updt_base_note)
@@ -141,10 +143,12 @@ class MainWindow(QMainWindow):
         self.updt_panel_chord_size(state)
         self.updt_pad_grid(state)
         self.refresh_midi_input()
-        # IMRPOVE
-        # So that it doesn't depends on the number suffix
-        if self.tool_bar.cmb_midi_controller.findText(
-            self.user_settings["last_connected_midi"], flags=Qt.MatchFlag.MatchContains
+        if (
+            self.tool_bar.cmb_midi_controller.findText(
+                self.user_settings["last_connected_midi"],
+                flags=Qt.MatchFlag.MatchContains,
+            )
+            > -1
         ):
             self.tool_bar.cmb_midi_controller.setCurrentIndex(
                 self.tool_bar.cmb_midi_controller.findText(
@@ -232,24 +236,22 @@ class MainWindow(QMainWindow):
         )
 
     def function_activation(self, state):
-        if state["idx_chord_comp"] == 0:
+        if (state["idx_mode"] == 0) and (state["idx_chord_comp"] == 0):
             self.wdgt_panel_chord.wheel_chord_size.setEnabled(False)
         else:
-            if state["idx_mode"] != 0:
-                self.wdgt_panel_chord.wheel_chord_size.setEnabled(True)
-            else:
-                self.wdgt_panel_chord.wheel_chord_size.setEnabled(False)
+            self.wdgt_panel_chord.wheel_chord_size.setEnabled(True)
 
         if state["idx_mode"] == 0:
-            self.wdgt_key_note.setEnabled(False)
-            self.wdgt_panel_chord.wheel_chord_comp.radio_button[1].setEnabled(False)
+            self.wdgt_key_note.knob.setEnabled(False)
         else:
-            self.wdgt_key_note.setEnabled(True)
-            self.wdgt_panel_chord.wheel_chord_comp.radio_button[1].setEnabled(True)
+            self.wdgt_key_note.knob.setEnabled(True)
 
     @Slot()
     def refresh_midi_input(self):
         self.tool_bar.cmb_midi_controller.refresh(self.logic_worker.get_midi_input())
+
+    @Slot()
+    def refresh_midi_input_new_config_window(self):
         self.config_new_window.cmb_midi_controller.refresh(
             self.logic_worker.get_midi_input()
         )
@@ -258,6 +260,8 @@ class MainWindow(QMainWindow):
     def on_choice_controller_changed(self, controller_name):
         self.logic_worker.midi_bridge.disconnect()
         self.logic_worker.midi_bridge.connect_to_controller(controller_name)
+        self.user_settings["last_connected_midi"] = controller_name
+        self.logic_worker.save_user_settings(self.user_settings)
 
     @Slot()
     def open_new_config_window(self):
@@ -265,4 +269,4 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_load_midi_config(self, file_path):
-        self.logic_worker.load_micro_controller_settings(file_path)
+        self.logic_worker.load_micro_controller_settings(file_path, self.user_settings)

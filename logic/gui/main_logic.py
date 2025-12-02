@@ -7,6 +7,7 @@ from logic.core.bridge.midi_bridge import MidiBridge
 from logic.gui.main_logic_signals import MainLogicSignals
 from logic.gui.gui_input import GuiInput
 from logic.core.controller.controller_message_flag import ControllerMessageFlag
+from logic.core.controller.input_pad import InputPad
 
 
 class MainLogic(QRunnable):
@@ -41,6 +42,7 @@ class MainLogic(QRunnable):
         self.signals.stopped.emit()
 
     def handle_midi(self, midi_controller_output):
+        print(midi_controller_output)
         if midi_controller_output["flag"] == ControllerMessageFlag.BASE_NOTE_CHANGED:
             self.signals.base_note_changed.emit(midi_controller_output["state"])
         elif midi_controller_output["flag"] == ControllerMessageFlag.KEY_NOTE_CHANGED:
@@ -91,12 +93,33 @@ class MainLogic(QRunnable):
         self.midi_controller.compute_pad_note()
         self.signals.panel_chord_size_changed.emit(self.midi_controller.state.to_dict())
 
+    @Slot()
+    def gui_pad_pressed(self, id_pad):
+        midi_controller_output = self.midi_controller.pad_pressed(
+            InputPad(
+                note=id_pad + self.midi_controller.controller_settings.base_note_offset,
+                velocity=self.midi_controller.controller_settings.pot_max_value - 1,
+            )
+        )
+        self.midi_bridge.bridge_out(midi_controller_output)
+        self.handle_midi(midi_controller_output.to_dict())
+
+    @Slot()
+    def gui_pad_released(self, id_pad):
+        midi_controller_output = self.midi_controller.pad_released(
+            InputPad(
+                note=id_pad + self.midi_controller.controller_settings.base_note_offset
+            )
+        )
+        self.midi_bridge.bridge_out(midi_controller_output)
+        self.handle_midi(midi_controller_output.to_dict())
+
     def get_midi_input(self):
         return self.midi_bridge.get_midi_input()
 
     # CLEAN
     # I put micro_controller and not midi_controller
-    def load_micro_controller_settings(self, settings_path):
+    def load_micro_controller_settings(self, settings_path, user_settings):
         print(settings_path)
         try:
             with open(settings_path, "r", encoding="UTF-8") as file_settings:
@@ -105,6 +128,8 @@ class MainLogic(QRunnable):
                     self.midi_controller.load_micro_controller_settings(
                         midi_device_settings
                     )
+                    user_settings["last_load_config"] = settings_path
+                    self.save_user_settings(user_settings)
                 else:
                     raise Exception("Invalid configuration")
         except Exception as e:
@@ -118,3 +143,9 @@ class MainLogic(QRunnable):
             return True
         else:
             return False
+
+    def save_user_settings(self, user_settings):
+        with open(
+            "./data/user_settings.json", "w", encoding="UTF-8"
+        ) as file_settings_user:
+            json.dump(user_settings, file_settings_user, indent=4)

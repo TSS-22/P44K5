@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QFrame, QGridLayout
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Slot, Signal
 from PySide6.QtGui import QPalette, QColor, QFont
 from gui.main_window.widgetPad import WidgetPad
 from data.data_general import hc_list_note_startup
@@ -8,6 +8,8 @@ from data.data_general import hc_list_note_startup
 class WidgetPadGrid(QFrame):
 
     list_note = hc_list_note_startup
+    sig_pad_pressed = Signal(int)
+    sig_pad_released = Signal(int)
 
     def __init__(
         self,
@@ -46,10 +48,15 @@ class WidgetPadGrid(QFrame):
             for col in range(4):
                 if row == 1 and col == 0:
                     pad = WidgetPad(
-                        parent=self, root=True, note=self.list_note[id_note]
+                        parent=self,
+                        id_pad=id_note,
+                        root=True,
+                        note=self.list_note[id_note],
                     )
                 else:
-                    pad = WidgetPad(parent=self, note=self.list_note[id_note])
+                    pad = WidgetPad(
+                        parent=self, id_pad=id_note, note=self.list_note[id_note]
+                    )
                 self.pads.append(
                     {
                         "pad": pad,
@@ -58,6 +65,8 @@ class WidgetPadGrid(QFrame):
                     }
                 )
                 self.grid_layout.addWidget(pad, row, col)
+                self.pads[id_note]["pad"].sig_pressed.connect(self.on_pad_pressed)
+                self.pads[id_note]["pad"].sig_released.connect(self.on_pad_released)
                 id_note = id_note + 1
 
     def update(self, state):
@@ -78,3 +87,9 @@ class WidgetPadGrid(QFrame):
                 self.pads[idx]["pad"].put_pressed_backgrnd(True)
             else:
                 self.pads[idx]["pad"].put_pressed_backgrnd(False)
+
+    def on_pad_pressed(self, id_pad):
+        self.sig_pad_pressed.emit(id_pad)
+
+    def on_pad_released(self, id_pad):
+        self.sig_pad_released.emit(id_pad)

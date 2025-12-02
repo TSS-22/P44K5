@@ -17,10 +17,19 @@ class MidiController:
             "./data/user_settings.json", "r", encoding="UTF-8"
         ) as file_settings_user:
             self.user_settings = json.load(file_settings_user)
-            with open(
-                self.user_settings["last_load_config"], "r", encoding="UTF-8"
-            ) as file_settings_controller:
-                midi_device_settings = json.load(file_settings_controller)
+            # IMPROVE
+            # via the use of os.file_exist() or somthing like that
+            try:
+                with open(
+                    self.user_settings["last_load_config"], "r", encoding="UTF-8"
+                ) as file_settings_controller:
+                    midi_device_settings = json.load(file_settings_controller)
+            except Exception as e:
+                print(f"Error loading config: {e}")
+                with open(
+                    "./data/akai_lpd8_mk2.json", "r", encoding="UTF-8"
+                ) as file_settings_controller:
+                    midi_device_settings = json.load(file_settings_controller)
 
         self.controller_settings = MidiControllerSettings(midi_device_settings)
 

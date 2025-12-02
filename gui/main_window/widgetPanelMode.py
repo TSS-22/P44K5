@@ -45,6 +45,7 @@ class WidgetPanelMode(QFrame):
             widget_width=self.widget_width,
             parent=self,
         )
+        self.setStatusTip("Select the mode you want to play in.")
 
     def update(self, state):
         self.wheel_mode.knob.setValue(state["idx_mode"])

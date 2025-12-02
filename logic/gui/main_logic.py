@@ -130,10 +130,12 @@ class MainLogic(QRunnable):
                     )
                     user_settings["last_load_config"] = settings_path
                     self.save_user_settings(user_settings)
+                    return True
                 else:
                     raise Exception("Invalid configuration")
         except Exception as e:
             print(f"Failed to open configuration: {e}")
+            return False
 
     def assert_midi_device_settings(self, midi_device_settings):
         if (

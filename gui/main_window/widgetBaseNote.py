@@ -131,6 +131,8 @@ class WidgetBaseNote(QFrame):
         self.lbl_txt.move(self.lbl_txt_position["x"], self.lbl_txt_position["y"])
         self.lbl_note.move(self.lbl_note_position["x"], self.lbl_note_position["y"])
 
+        self.setStatusTip("Select your root note and corresponding octave.")
+
     def update(self, state):
         self.knob.setValue(state)
         note = map_note[state % 12]

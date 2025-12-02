@@ -1,4 +1,5 @@
 import json
+import os
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -17,6 +18,8 @@ from gui.main_window.widgetPanelMode import WidgetPanelMode
 from gui.main_window.widgetPanelChord import WidgetPanelChord
 from gui.main_window.widgetPadGrid import WidgetPadGrid
 from gui.main_bars.main_tool_bar import MainToolBar
+from gui.main_bars.main_status_bar import MainStatusBar
+
 from gui.configs.ConfigNewWindow import ConfigNewWindow
 
 from logic.gui.main_logic import MainLogic
@@ -46,6 +49,8 @@ class MainWindow(QMainWindow):
             """
         )
 
+        self.status_bar = MainStatusBar()
+        self.setStatusBar(self.status_bar)
         self.tool_bar = MainToolBar()
         self.addToolBar(self.tool_bar)
 
@@ -269,4 +274,12 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def on_load_midi_config(self, file_path):
-        self.logic_worker.load_micro_controller_settings(file_path, self.user_settings)
+        config_loaded = self.logic_worker.load_micro_controller_settings(
+            file_path, self.user_settings
+        )
+        if config_loaded:
+            basename = os.path.basename(file_path)
+            name = os.path.splitext(basename)[0]
+            self.status_bar.new_config_loaded(name)
+        else:
+            pass

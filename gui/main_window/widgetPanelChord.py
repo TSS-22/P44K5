@@ -78,6 +78,13 @@ class WidgetPanelChord(QFrame):
         self.layout.addWidget(self.wheel_chord_comp)
         self.layout.addWidget(self.wheel_chord_size)
 
+        self.wheel_chord_comp.setStatusTip(
+            "Choose the chord you want to play. Normal is chord progression of the selected mode."
+        )
+        self.wheel_chord_size.setStatusTip(
+            "Select the size of the chord you want to play"
+        )
+
     def update_chord_comp(self, state):
         self.wheel_chord_comp.knob.setValue(state["idx_chord_comp"])
         idx = hc_chord_comp_name.index(state["selected_chord_comp"]["name"])

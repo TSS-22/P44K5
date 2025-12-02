@@ -13,6 +13,7 @@ class CmbBoxMidiController(QComboBox):
             """
         )
         self.setPlaceholderText("Select a device...")
+        self.setStatusTip("Available MIDI device. Select to connect.")
 
     def refresh(self, list_midi_controller):
         self.clear()

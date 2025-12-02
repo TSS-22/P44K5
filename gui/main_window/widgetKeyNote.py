@@ -181,6 +181,10 @@ class WidgetKeyNote(QFrame):
             self.lbl_octave_val_position["x"], self.lbl_octave_val_position["y"]
         )
 
+        self.setStatusTip(
+            "Select the degree of the key you want the pads to start from"
+        )
+
     def update(self, state):
         self.lbl_key_val.setText(f"{state["key_degree"]+1}")
         if state["key_note"] >= 0:

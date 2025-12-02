@@ -42,6 +42,7 @@ class MainLogic(QRunnable):
         self.signals.stopped.emit()
 
     def handle_midi(self, midi_controller_output):
+        print(midi_controller_output)
         if midi_controller_output["flag"] == ControllerMessageFlag.BASE_NOTE_CHANGED:
             self.signals.base_note_changed.emit(midi_controller_output["state"])
         elif midi_controller_output["flag"] == ControllerMessageFlag.KEY_NOTE_CHANGED:
@@ -94,24 +95,24 @@ class MainLogic(QRunnable):
 
     @Slot()
     def gui_pad_pressed(self, id_pad):
-        print("pressed")
-        print(id_pad)
-        self.midi_controller.pad_pressed(
+        midi_controller_output = self.midi_controller.pad_pressed(
             InputPad(
                 note=id_pad + self.midi_controller.controller_settings.base_note_offset,
                 velocity=self.midi_controller.controller_settings.pot_max_value - 1,
             )
         )
+        self.midi_bridge.bridge_out(midi_controller_output)
+        self.handle_midi(midi_controller_output.to_dict())
 
     @Slot()
     def gui_pad_released(self, id_pad):
-        print("released")
-        print(id_pad)
-        self.midi_controller.pad_released(
+        midi_controller_output = self.midi_controller.pad_released(
             InputPad(
                 note=id_pad + self.midi_controller.controller_settings.base_note_offset
             )
         )
+        self.midi_bridge.bridge_out(midi_controller_output)
+        self.handle_midi(midi_controller_output.to_dict())
 
     def get_midi_input(self):
         return self.midi_bridge.get_midi_input()

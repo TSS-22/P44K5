@@ -219,29 +219,27 @@ class MidiController:
     ##################
     # Pad pressed
     def pad_pressed(self, input_val):
-        if self.controller_settings.base_note_offset:
-            id_pad = input_val.note - self.controller_settings.base_note_offset
-            self.state.buffer.velocity[id_pad] = input_val.velocity
-            note = self.check_note(
-                input_val.note
-                - self.controller_settings.base_note_offset
-                + self.state.base_note
-                + self.state.key_note
-                + self.count_interval(id_pad)
-                - id_pad
-            )
-            return MidiControllerOutput(
-                flag=ControllerMessageFlag.PAD_PRESSED,
-                state=self.get_state(),
-                list_message=self.note_on(note, input_val.velocity, id_pad),
-            )
-        else:
-            # IMPROVE
-            # Handle case with improper config (prevent it when loading)
-            pass
+        print("micro: pressed")
+        print(input_val)
+        id_pad = input_val.note - self.controller_settings.base_note_offset
+        self.state.buffer.velocity[id_pad] = input_val.velocity
+        note = self.check_note(
+            input_val.note
+            - self.controller_settings.base_note_offset
+            + self.state.base_note
+            + self.state.key_note
+            + self.count_interval(id_pad)
+            - id_pad
+        )
+        return MidiControllerOutput(
+            flag=ControllerMessageFlag.PAD_PRESSED,
+            state=self.get_state(),
+            list_message=self.note_on(note, input_val.velocity, id_pad),
+        )
 
     # Pad released
     def pad_released(self, input_val):
+        print("micro: released")
         id_pad = input_val.note - self.controller_settings.base_note_offset
         self.state.buffer.velocity[id_pad] = 0
         list_note_off = []
@@ -452,6 +450,7 @@ class MidiController:
     # COMMUNICATION LAYER #
     #######################
     def receive_message(self, message):
+        print(message)
         output = MidiControllerOutput(
             flag=ControllerMessageFlag.BYPASS,
             state=self.get_state(),

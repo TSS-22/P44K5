@@ -17,17 +17,6 @@ class MidiBridge:
         ][0]
         self.init_midi_out()
 
-    # CLEAN
-    # def init_midi_in(self):
-    #     try:
-    #         self.input = mido.open_input(self.input_port)
-    #         print(f"Successfully opened MIDI input: {self.input_port}")
-
-    #     except Exception as e:
-    #         print(f"Failed to open MIDI input: {e}")
-    #         input("Press ENTER to exit...")
-    #         sys.exit(1)
-
     def init_midi_out(self):
         if os.name == "posix":
             try:

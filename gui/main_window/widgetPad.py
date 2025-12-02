@@ -5,7 +5,8 @@ from PySide6.QtGui import QPalette, QColor, QFont, QMouseEvent
 
 class WidgetPad(QFrame):
 
-    sig_clicked = Signal(int)
+    sig_pressed = Signal(int)
+    sig_released = Signal(int)
 
     def __init__(
         self,
@@ -132,8 +133,10 @@ class WidgetPad(QFrame):
             self.lbl_chord_name_position["x"], self.lbl_chord_name_position["y"]
         )
 
-        self.mousePressEvent = self.clicked_event
-        self.button.clicked.connect(self.clicked_event)
+        self.mousePressEvent = self.on_pressed_event
+        self.mouseReleaseEvent = self.on_released_event
+        self.button.pressed.connect(self.on_pressed_event)
+        self.button.clicked.connect(self.on_released_event)
 
     def update_bckgrnd_only(self, widget, background_style):
         current_style = widget.styleSheet()
@@ -169,6 +172,10 @@ class WidgetPad(QFrame):
             )
         self.update_bckgrnd_only(self.active, background_style)
 
-    def clicked_event(self, event):
-        if (event is False) or (event.button().name):
-            self.sig_clicked.emit(self.id_pad)
+    # DIRTY
+    # event filter is not working, this is dirty, but works. CEEBS to be honest
+    def on_pressed_event(self, *args):
+        self.sig_pressed.emit(self.id_pad)
+
+    def on_released_event(self, *args):
+        self.sig_released.emit(self.id_pad)

@@ -8,7 +8,8 @@ from data.data_general import hc_list_note_startup
 class WidgetPadGrid(QFrame):
 
     list_note = hc_list_note_startup
-    sig_pad_clicked = Signal(int)
+    sig_pad_pressed = Signal(int)
+    sig_pad_released = Signal(int)
 
     def __init__(
         self,
@@ -64,7 +65,8 @@ class WidgetPadGrid(QFrame):
                     }
                 )
                 self.grid_layout.addWidget(pad, row, col)
-                self.pads[id_note]["pad"].sig_clicked.connect(self.pad_clicked)
+                self.pads[id_note]["pad"].sig_pressed.connect(self.on_pad_pressed)
+                self.pads[id_note]["pad"].sig_released.connect(self.on_pad_released)
                 id_note = id_note + 1
 
     def update(self, state):
@@ -86,6 +88,8 @@ class WidgetPadGrid(QFrame):
             else:
                 self.pads[idx]["pad"].put_pressed_backgrnd(False)
 
-    @Slot()
-    def pad_clicked(self, id_pad):
-        self.sig_pad_clicked.emit(id_pad)
+    def on_pad_pressed(self, id_pad):
+        self.sig_pad_pressed.emit(id_pad)
+
+    def on_pad_released(self, id_pad):
+        self.sig_pad_released.emit(id_pad)

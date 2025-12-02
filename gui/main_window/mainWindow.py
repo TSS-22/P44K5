@@ -88,7 +88,8 @@ class MainWindow(QMainWindow):
         self.wdgt_panel_chord.wheel_chord_size.radio_button_group.idClicked.connect(
             self.logic_worker.gui_change_chord_size
         )
-        self.wdgt_pad_grid.sig_pad_clicked.connect(self.logic_worker.gui_pad_clicked)
+        self.wdgt_pad_grid.sig_pad_pressed.connect(self.logic_worker.gui_pad_pressed)
+        self.wdgt_pad_grid.sig_pad_released.connect(self.logic_worker.gui_pad_released)
 
         # Physically driven change
         self.logic_worker.signals.base_note_changed.connect(self.updt_base_note)

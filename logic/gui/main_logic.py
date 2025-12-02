@@ -92,7 +92,13 @@ class MainLogic(QRunnable):
         self.signals.panel_chord_size_changed.emit(self.midi_controller.state.to_dict())
 
     @Slot()
-    def gui_pad_clicked(self, id_pad):
+    def gui_pad_pressed(self, id_pad):
+        print("pressed")
+        print(id_pad)
+
+    @Slot()
+    def gui_pad_released(self, id_pad):
+        print("released")
         print(id_pad)
 
     def get_midi_input(self):

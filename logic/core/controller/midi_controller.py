@@ -8,7 +8,6 @@ from data import data_general as dg
 
 
 class MidiController:
-
     list_note = dg.hc_chromatic_scale
 
     def __init__(self):
@@ -206,9 +205,6 @@ class MidiController:
             "",
             "",
         ]
-        # IMPROVE
-        # self.state.idx_chord_comp == 1, this smell like problem
-        # print(f"protential problem: {self.state.idx_chord_comp}")
         if self.state.selected_mode != "Chromatic" and self.state.idx_chord_comp == 0:
             name_chords = (
                 dg.hc_name_chord_prog[self.state.selected_mode][self.state.key_degree :]
@@ -228,8 +224,6 @@ class MidiController:
     ##################
     # Pad pressed
     def pad_pressed(self, input_val):
-        print("micro: pressed")
-        # print(input_val)
         id_pad = input_val.note - self.controller_settings.base_note_offset
         self.state.buffer.velocity[id_pad] = input_val.velocity
         note = self.check_note(
@@ -248,7 +242,6 @@ class MidiController:
 
     # Pad released
     def pad_released(self, input_val):
-        print("micro: released")
         id_pad = input_val.note - self.controller_settings.base_note_offset
         self.state.buffer.velocity[id_pad] = 0
         list_note_off = []
@@ -459,7 +452,6 @@ class MidiController:
     # COMMUNICATION LAYER #
     #######################
     def receive_message(self, message):
-        print(message)
         output = MidiControllerOutput(
             flag=ControllerMessageFlag.BYPASS,
             state=self.get_state(),

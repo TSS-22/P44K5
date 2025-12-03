@@ -69,24 +69,6 @@ class WidgetPadGrid(QFrame):
                 self.pads[id_note]["pad"].sig_released.connect(self.on_pad_released)
                 id_note = id_note + 1
 
-        # self.shortcut_pad_0 = QShortcut(Qt.Key_S, self)
-        # self.shortcut_pad_1 = QShortcut(Qt.Key_D, self)
-        # self.shortcut_pad_2 = QShortcut(Qt.Key_F, self)
-        # self.shortcut_pad_3 = QShortcut(Qt.Key_G, self)
-        # self.shortcut_pad_4 = QShortcut(Qt.Key_H, self)
-        # self.shortcut_pad_5 = QShortcut(Qt.Key_J, self)
-        # self.shortcut_pad_6 = QShortcut(Qt.Key_K, self)
-        # self.shortcut_pad_7 = QShortcut(Qt.Key_L, self)
-
-        # # self.shortcut_pad_0.activated.connect(lambda: print("Save All triggered!"))
-        # # self.shortcut_pad_1.activated.connect(lambda: print("Save All triggered!"))
-        # # self.shortcut_pad_2.activated.connect(lambda: print("Save All triggered!"))
-        # # self.shortcut_pad_3.activated.connect(lambda: print("Save All triggered!"))
-        # # self.shortcut_pad_4.activated.connect(lambda: print("Save All triggered!"))
-        # # self.shortcut_pad_5.activated.connect(lambda: print("Save All triggered!"))
-        # # self.shortcut_pad_6.activated.connect(lambda: print("Save All triggered!"))
-        # # self.shortcut_pad_7.activated.connect(lambda: print("Save All triggered!"))
-
     def update(self, state):
         for idx, velocity in enumerate(state["velocity"]):
             # Note/Chord display

@@ -224,36 +224,28 @@ class ConfigNewWindow(QWidget):
         self.midi_poll_timer_knob.start(5)  # Check every 10ms
 
     def poll_midi_messages_knob(self):
-        print("polling knob")
         messages = list(self.parent.logic_worker.midi_bridge.input.iter_pending())
         if messages:
             self.midi_poll_timer_knob.stop()  # Stop the timer
-            print("Received:", messages)
             # Process messages here
             self.on_midi_message_received(messages)
 
     def poll_midi_messages_pad(self):
-        print("polling pad")
-
         messages = self.parent.logic_worker.midi_bridge.input.iter_pending()
         if messages:
             for msg in messages:
                 self.polled_messages.append(msg)
 
     def on_midi_message_received(self, messages):
-        print(messages)
-        print(self.active_setup)
         control = "None"
         if messages[0].is_cc():
             control = messages[0].control
-            print(control)
         else:
             print("Invalid knob")
 
         self.midi_control_value[self.active_setup] = control
         self.update_setup_val_disp()
         self.diag_window_knob.hide()
-        print("done")
         self.active_setup = ConfigSetupFlag.NONE
 
     def closeEvent(self, event):
@@ -289,9 +281,7 @@ class ConfigNewWindow(QWidget):
         )
 
     def on_ok_pad_setup(self):
-        print("ok pad")
         self.midi_poll_timer_pad.stop()
-        print(self.polled_messages)
         base_note = 9999
         if self.polled_messages:
             if self.polled_messages[0].is_cc():

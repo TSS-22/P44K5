@@ -4,15 +4,10 @@ from PySide6.QtCore import Signal
 
 
 class QActionConfigEdit(QAction):
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setText("Edit MIDI controller config")
         self.setStatusTip("Edit MIDI controller config (Ctrl + H)")
         self.icon = QIcon.fromTheme("document-properties")
         self.setIcon(self.icon)
-        self.triggered.connect(self.clicked)
         self.setShortcut(QKeySequence.Replace)
-
-    def clicked(self):
-        print("Action edit clicked.")

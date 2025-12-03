@@ -58,14 +58,14 @@ class MidiControllerState:
             False,
         ]
         self.pad_notes_chords = [
-            "C",
-            "C#",
-            "D",
-            "D#",
-            "E",
-            "F",
-            "F#",
-            "G",
+            ["C"],
+            ["C#"],
+            ["D"],
+            ["D#"],
+            ["E"],
+            ["F"],
+            ["F#"],
+            ["G"],
         ]
         self.name_chords = [
             "",

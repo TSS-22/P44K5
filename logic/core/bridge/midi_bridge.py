@@ -77,8 +77,6 @@ class MidiBridge:
         return self.output
 
     def get_midi_input(self):
-        input_ports = mido.get_input_names()
-
         return [
             port
             for port in mido.get_input_names()

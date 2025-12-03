@@ -1,6 +1,6 @@
 {
-    "pad_mode": "control_change",
-    "base_note_offset": 13,
+    "pad_mode": "note",
+    "base_note_offset": 0,
     "pot_max_value": 127,
     "id_knob_mode": null,
     "id_knob_chord_comp": null,

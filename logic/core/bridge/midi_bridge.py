@@ -77,7 +77,13 @@ class MidiBridge:
         return self.output
 
     def get_midi_input(self):
-        return mido.get_input_names()
+        input_ports = mido.get_input_names()
+
+        return [
+            port
+            for port in mido.get_input_names()
+            if not port.startswith(hc_name_midi_out)
+        ]
 
     def connect_to_controller(self, controller_name):
         self.disconnect()

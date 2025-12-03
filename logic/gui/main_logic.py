@@ -11,7 +11,6 @@ from logic.core.controller.input_pad import InputPad
 
 
 class MainLogic(QRunnable):
-
     def __init__(self):
         super().__init__()
         self.signals = MainLogicSignals()

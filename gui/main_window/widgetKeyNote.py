@@ -1,10 +1,8 @@
-from PySide6.QtWidgets import QFrame, QVBoxLayout, QDial, QLabel
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPalette, QColor, QFont
+from PySide6.QtWidgets import QFrame, QDial, QLabel
+from PySide6.QtGui import QPalette, QColor
 
 
 class WidgetKeyNote(QFrame):
-
     def __init__(
         self,
         parent=None,
@@ -186,9 +184,9 @@ class WidgetKeyNote(QFrame):
         )
 
     def update(self, state):
-        self.lbl_key_val.setText(f"{state["key_degree"]+1}")
+        self.lbl_key_val.setText(f"{state['key_degree'] + 1}")
         if state["key_note"] >= 0:
-            self.lbl_octave_val.setText(f"{int(state["key_degree_octave"]/12)}")
+            self.lbl_octave_val.setText(f"{int(state['key_degree_octave'] / 12)}")
         else:
-            self.lbl_octave_val.setText(f"{int(state["key_degree_octave"]/12 - 1)}")
+            self.lbl_octave_val.setText(f"{int(state['key_degree_octave'] / 12 - 1)}")
         self.knob.setValue(state["raw_key_knob"])

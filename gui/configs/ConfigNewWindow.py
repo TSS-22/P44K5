@@ -7,10 +7,8 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QToolButton,
     QFileDialog,
-    QMessageBox,
 )
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QIcon
 from gui.actions.action_refresh import QActionMidiRefresh
 from gui.configs.combo_midi_list import CmbBoxMidiController
 from gui.configs.wdgt_setup_knob import WidgetSetupKnob
@@ -27,7 +25,6 @@ from data.data_general import (
 
 
 class ConfigNewWindow(QWidget):
-
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
@@ -230,7 +227,6 @@ class ConfigNewWindow(QWidget):
         print("polling knob")
         messages = list(self.parent.logic_worker.midi_bridge.input.iter_pending())
         if messages:
-
             self.midi_poll_timer_knob.stop()  # Stop the timer
             print("Received:", messages)
             # Process messages here

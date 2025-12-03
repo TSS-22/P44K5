@@ -4,7 +4,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
     QHBoxLayout,
-    QSizePolicy,
 )
 from PySide6.QtCore import Signal
 
@@ -12,7 +11,6 @@ from gui.configs.config_knob_setup_flag import ConfigSetupFlag
 
 
 class WidgetSetupKnob(QWidget):
-
     signal_button_setup_clicked = Signal(str)
 
     def __init__(

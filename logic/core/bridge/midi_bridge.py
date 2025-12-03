@@ -1,13 +1,11 @@
 import sys
 import os
-import json
 import rtmidi
 import mido
 from data.data_general import hc_name_midi_out
 
 
 class MidiBridge:
-
     def __init__(self):
         self.input = mido.ports.BaseInput()
         self.output_port = mido.ports.BaseOutput()

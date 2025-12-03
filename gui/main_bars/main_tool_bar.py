@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QToolBar, QMainWindow, QComboBox
+from PySide6.QtWidgets import QToolBar
 from PySide6.QtCore import Qt, QEvent, QSize
 from gui.actions.action_bypass import QActionBypass
 from gui.actions.action_load import QActionConfigLoad

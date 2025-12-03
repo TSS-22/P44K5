@@ -1,6 +1,6 @@
 import json
 
-from PySide6.QtCore import QRunnable, Slot, QObject
+from PySide6.QtCore import QRunnable, Slot
 
 from logic.core.controller.midi_controller import MidiController
 from logic.core.bridge.midi_bridge import MidiBridge

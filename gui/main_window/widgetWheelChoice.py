@@ -2,20 +2,15 @@ import math
 
 from PySide6.QtWidgets import (
     QFrame,
-    QVBoxLayout,
     QDial,
-    QLabel,
     QButtonGroup,
     QRadioButton,
-    QWidget,
-    QDial,
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette, QColor, QFont
 
 
 class WidgetWheelChoice(QFrame):
-
     def __init__(
         self,
         list_val,

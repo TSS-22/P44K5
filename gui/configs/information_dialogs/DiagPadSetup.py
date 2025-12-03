@@ -1,9 +1,8 @@
 from PySide6.QtWidgets import QMessageBox
-from PySide6.QtCore import Signal, QTimer
+from PySide6.QtCore import Signal
 
 
 class DiagPadSetup(QMessageBox):
-
     sig_cancel = Signal()
     sig_ok = Signal()
 

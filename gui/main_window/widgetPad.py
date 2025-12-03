@@ -1,10 +1,9 @@
-from PySide6.QtWidgets import QFrame, QPushButton, QStackedLayout, QLabel
+from PySide6.QtWidgets import QFrame, QPushButton, QLabel
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QPalette, QColor, QFont, QMouseEvent
+from PySide6.QtGui import QFont
 
 
 class WidgetPad(QFrame):
-
     sig_pressed = Signal(int)
     sig_released = Signal(int)
 

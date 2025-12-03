@@ -1,16 +1,12 @@
 import json
 import os
 from PySide6.QtWidgets import (
-    QApplication,
     QMainWindow,
     QHBoxLayout,
     QVBoxLayout,
     QWidget,
-    QToolBar,
-    QFileDialog,
 )
-from PySide6.QtCore import QThread, QThreadPool, Slot, QSize, Qt
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import QThreadPool, Slot, Qt
 
 from gui.main_window.widgetBaseNote import WidgetBaseNote
 from gui.main_window.widgetKeyNote import WidgetKeyNote

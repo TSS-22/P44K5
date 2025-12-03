@@ -1,12 +1,10 @@
 from PySide6.QtWidgets import QFrame, QGridLayout
-from PySide6.QtCore import Qt, Slot, Signal
-from PySide6.QtGui import QPalette, QColor, QFont
+from PySide6.QtCore import Signal
 from gui.main_window.widgetPad import WidgetPad
 from data.data_general import hc_list_note_startup
 
 
 class WidgetPadGrid(QFrame):
-
     list_note = hc_list_note_startup
     sig_pad_pressed = Signal(int)
     sig_pad_released = Signal(int)
@@ -73,7 +71,7 @@ class WidgetPadGrid(QFrame):
         for idx, velocity in enumerate(state["velocity"]):
             # Note/Chord display
             self.pads[idx]["pad"].button.setText(
-                f"{state["pad_notes"][idx]} {state["pad_octaves"][idx]}"
+                f"{state['pad_notes'][idx]} {state['pad_octaves'][idx]}"
             )
             self.pads[idx]["pad"].lbl_chord.setText(
                 " - ".join(state["pad_notes_chords"][idx])

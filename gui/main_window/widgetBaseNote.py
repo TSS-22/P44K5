@@ -1,13 +1,10 @@
-from PySide6.QtWidgets import QFrame, QVBoxLayout, QDial, QLabel, QDial
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPalette, QColor, QFont
+from PySide6.QtWidgets import QFrame, QDial, QLabel
+from PySide6.QtGui import QPalette, QColor
 
-from logic.gui.map_note import map_note
-from data.data_general import hc_offset_midi_octave
+from data.data_general import hc_offset_midi_octave, hc_chromatic_scale
 
 
 class WidgetBaseNote(QFrame):
-
     def __init__(
         self,
         parent=None,
@@ -135,6 +132,6 @@ class WidgetBaseNote(QFrame):
 
     def update(self, state):
         self.knob.setValue(state)
-        note = map_note[state % 12]
+        note = hc_chromatic_scale[state % 12]
         octave = int(state / 12) + hc_offset_midi_octave
         self.lbl_note.setText(f"{note} {octave}")

@@ -1,6 +1,4 @@
 from PySide6.QtWidgets import QFrame, QHBoxLayout
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPalette, QColor, QFont
 from gui.main_window.widgetWheelChoice import WidgetWheelChoice
 
 from data.data_general import hc_chord_comp_name, hc_chord_size_name

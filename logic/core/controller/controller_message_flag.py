@@ -13,4 +13,3 @@ class ControllerMessageFlag(Enum):
     KNOB_KEY_SLIDE = "knob_key_slide"
     BYPASS = "bypass"
     GUI_CHANGE = "gui_change"
-    # CONFIGURATION = "configuration"

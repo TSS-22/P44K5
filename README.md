@@ -1,6 +1,7 @@
 # P44K5
 
 ![License](https://img.shields.io/badge/license-BSD-blue)
+![Python 3.13.3](https://img.shields.io/badge/python-3.13.3-blue?logo=python&logoColor=white)
 
 ![P44K5 main window snapshot](./ressources/readme/snapshot.png)
 

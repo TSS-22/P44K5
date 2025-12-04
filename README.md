@@ -10,7 +10,7 @@
 - [Presentation](#presentation)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
+- [Issues](#issues)
 - [Acknowledgment](#acknowledgment)
 
 ## Presentation
@@ -56,7 +56,7 @@ py ./P44K5.py
 
 insert doc link
 
-## Contributing
+## Issues
 
 If you happen to encounter a bug or an issue, please open an issue indicating the steps to reproduce the issue as accurately as possible to help improve P44K5.
 

@@ -9,3 +9,8 @@ gui/main_window/__pycache__/main_window.cpython-313.pyc
 *.cmd
 /build
 /dist
+/.vscode
+/__pycache__
+/data/__pycache__
+/logic/core/bridge/__pycache__
+/logic/core/controller/__pycache__

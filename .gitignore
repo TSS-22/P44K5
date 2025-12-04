@@ -6,3 +6,4 @@
 gui/main_window/__pycache__/main_window.cpython-313.pyc
 /main.dist
 /gui/main_window/__pycache__
+*.cmd

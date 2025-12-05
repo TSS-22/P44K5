@@ -181,7 +181,7 @@ hc_name_chord_prog = {
 
 hc_dialog_select_device = "Select a device"
 
-hc_name_midi_out = "P44K5_virt"
+hc_name_midi_out = "P44D5_virt"
 
 hc_file_filter = "Midi controller configuration files (*.cnfmidi);;All Files (*);;"
 

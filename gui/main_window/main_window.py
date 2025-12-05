@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.logic_worker = MainLogic()
         self.setFixedSize(1200, 760)
         # Window property
-        self.setWindowTitle("8P4K PowerHouse")
+        self.setWindowTitle("P44D5")
         self.setStyleSheet(
             """            
             background-repeat: no-repeat;

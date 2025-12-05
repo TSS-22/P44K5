@@ -13,4 +13,4 @@ py -m nuitka ^
     --follow-imports ^
     --include-data-dir=./data=data ^
     --include-data-dir=./ressources/gui/png=ressources/gui/png ^
-    P44K5.py
+    P44D5.py
